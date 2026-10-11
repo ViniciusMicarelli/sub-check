@@ -3,6 +3,12 @@ import SwiftData
 import Charts
 import WidgetKit
 
+#if os(macOS)
+import AppKit
+#else
+import UIKit
+#endif
+
 // MARK: - 1. Dashboard de Alta Fidelidade com Swift Charts
 
 struct EnhancedDashboardView: View {
@@ -67,7 +73,7 @@ struct EnhancedDashboardView: View {
                             .chartLegend(position: .bottom, alignment: .center, spacing: 12)
                         }
                         .padding(16)
-                        .background(Color(.secondarySystemGroupedBackground))
+                        .background(Color.secondarySystemGroupedBackground)
                         .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
                     }
                     
@@ -108,7 +114,7 @@ struct EnhancedDashboardView: View {
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
             }
-            .background(Color(.systemGroupedBackground))
+            .background(Color.ultraDark)
             .navigationTitle("SubCheck")
             .sheet(isPresented: $isAddingSubscription) {
                 AddSubscriptionView()
@@ -185,7 +191,7 @@ struct HeroMetricCard: View {
         .padding(20)
         .background(
             LinearGradient(
-                colors: [Color.blue, Color.indigo],
+                colors: [.blue, .indigo],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
@@ -246,7 +252,7 @@ struct SubscriptionCardView: View {
             }
         }
         .padding(14)
-        .background(Color(.secondarySystemGroupedBackground))
+        .background(Color.secondarySystemGroupedBackground)
         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
     
@@ -316,6 +322,14 @@ struct SubCheckWidgetProvider: TimelineProvider {
 struct SubCheckWidgetEntryView: View {
     var entry: SubCheckWidgetProvider.Entry
     @Environment(\.widgetFamily) var family
+
+    private var systemBackground: Color {
+        #if os(macOS)
+        Color(nsColor: .windowBackgroundColor)
+        #else
+        Color(uiColor: .systemBackground)
+        #endif
+    }
     
     var body: some View {
         switch family {
@@ -340,7 +354,7 @@ struct SubCheckWidgetEntryView: View {
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }
-            .containerBackground(for: .widget) { Color(.systemBackground) }
+            .containerBackground(for: .widget) { Color.ultraDark }
             
         case .systemMedium:
             HStack(spacing: 16) {
@@ -381,16 +395,15 @@ struct SubCheckWidgetEntryView: View {
                         .foregroundStyle(.secondary)
                 }
             }
-            .containerBackground(for: .widget) { Color(.systemBackground) }
+            .containerBackground(for: .widget) { systemBackground }
             
         default:
             Text("SubCheck Widget")
-                .containerBackground(for: .widget) { Color(.systemBackground) }
+                .containerBackground(for: .widget) { systemBackground }
         }
     }
 }
 
-@main
 struct SubCheckWidget: Widget {
     let kind: String = "SubCheckWidget"
 

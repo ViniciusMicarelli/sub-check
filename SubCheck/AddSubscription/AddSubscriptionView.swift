@@ -66,6 +66,7 @@ struct AddSubscriptionView: View {
             cost: costValue,
             startDate: startDate,
             frequency: frequency,
+            category: SubscriptionManager.shared.categorize(name: name),
             enableReminders: enableReminders,
             daysNoticeBefore: daysNoticeBefore
         )
