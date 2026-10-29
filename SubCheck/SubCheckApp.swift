@@ -2,7 +2,8 @@
 //  SubCheckApp.swift
 //  SubCheck
 //
-//  Main app entry point with integrated router
+//  App entry point. Uses the App Group backed SwiftData container so the
+//  widget extension reads the same data.
 //
 
 import SwiftUI
@@ -10,19 +11,15 @@ import SwiftData
 
 @main
 struct SubCheckApp: App {
-    @StateObject private var router = NavigationRouter()
-    
-    @MainActor
-    var persistedModelContainer: ModelContainer {
-        let schema = [Subscription.schema, Purchase.schema, DeletedSubscription.schema]
-        return try! ModelContainer(schema: schema)
-    }
-    
+
     var body: some Scene {
         WindowGroup {
-            RouterStack()
-                .environmentObject(router)
-                .modelContainer(modelContainer: persistedModelContainer)
+            RootView()
+                .task {
+                    await NotificationService.shared.requestAuthorization()
+                    SampleDataSeeder.seedIfNeeded(in: SharedModelContainer.shared.mainContext)
+                }
         }
+        .modelContainer(SharedModelContainer.shared)
     }
 }

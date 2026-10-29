@@ -11,8 +11,9 @@ final class Subscription {
     var frequency: RecurrenceFrequency
     var category: String
     var enableReminders: Bool
-    var daysNoticeBefore: Int // Ex: 2 dias antes
-    
+    var daysNoticeBefore: Int
+    var isCancelled: Bool
+
     init(
         id: UUID = UUID(),
         name: String,
@@ -20,9 +21,10 @@ final class Subscription {
         currencyCode: String = "BRL",
         startDate: Date = Date(),
         frequency: RecurrenceFrequency = .monthly,
-        category: String = "Entretenimento",
+        category: String = CategoryType.entertainment.rawValue,
         enableReminders: Bool = true,
-        daysNoticeBefore: Int = 2
+        daysNoticeBefore: Int = 2,
+        isCancelled: Bool = false
     ) {
         self.id = id
         self.name = name
@@ -33,15 +35,20 @@ final class Subscription {
         self.category = category
         self.enableReminders = enableReminders
         self.daysNoticeBefore = daysNoticeBefore
+        self.isCancelled = isCancelled
     }
-    
-    /// Calcula a próxima data de cobrança a partir da data atual
+}
+
+// MARK: - Derived values
+
+extension Subscription {
+    /// Próxima data de cobrança a partir de hoje.
     var nextBillingDate: Date {
         let calendar = Calendar.current
         let now = Date()
-        
+
         if startDate > now { return startDate }
-        
+
         var nextDate = startDate
         while nextDate <= now {
             switch frequency {
@@ -55,13 +62,31 @@ final class Subscription {
         }
         return nextDate
     }
-    
-    /// Normaliza o custo para uma média mensal
+
+    /// Dias restantes até a próxima cobrança (nunca negativo).
+    var daysUntilNextBilling: Int {
+        let days = Calendar.current.dateComponents([.day], from: Date(), to: nextBillingDate).day ?? 0
+        return max(0, days)
+    }
+
+    /// Custo normalizado para uma média mensal.
     var monthlyCost: Double {
         switch frequency {
         case .weekly: return cost * 4.33
         case .monthly: return cost
         case .yearly: return cost / 12.0
         }
+    }
+
+    /// Custo anualizado.
+    var yearlyCost: Double { monthlyCost * 12 }
+
+    var categoryType: CategoryType {
+        CategoryType(rawValue: category) ?? .miscellaneous
+    }
+
+    /// Cobrança nos próximos N dias.
+    func isDue(within days: Int) -> Bool {
+        !isCancelled && daysUntilNextBilling <= days
     }
 }

@@ -1,0 +1,72 @@
+name: SubCheck
+
+options:
+  bundleIdPrefix: github.com-ViniciusMicarelli
+  deploymentTarget:
+    iOS: "27.0"
+  createIntermediateGroups: true
+  groupSortPosition: top
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    CODE_SIGN_STYLE: Automatic
+    ENABLE_USER_SCRIPT_SANDBOXING: "YES"
+
+targets:
+
+  SubCheck:
+    type: application
+    platform: iOS
+    sources:
+      - path: SubCheck
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: github.com-ViniciusMicarelli.SubCheck
+        PRODUCT_NAME: SubCheck
+        TARGETED_DEVICE_FAMILY: "1,2"
+        GENERATE_INFOPLIST_FILE: "YES"
+        CODE_SIGN_ENTITLEMENTS: Config/SubCheck.entitlements
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        INFOPLIST_KEY_CFBundleDisplayName: SubCheck
+        INFOPLIST_KEY_UILaunchScreen_Generation: "YES"
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: "YES"
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+    dependencies:
+      - target: SubCheckWidgets
+        embed: true
+
+  SubCheckWidgets:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: SubCheckWidgets
+      # Shared code compiled into both targets.
+      - path: SubCheck/models
+      - path: SubCheck/Services/SharedModelContainer.swift
+      - path: SubCheck/DesignSystem/Theme.swift
+      - path: SubCheck/DesignSystem/CategoryStyle.swift
+      - path: SubCheck/DesignSystem/Formatters.swift
+      - path: SubCheck/Color.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: github.com-ViniciusMicarelli.SubCheck.widgets
+        PRODUCT_NAME: SubCheckWidgets
+        TARGETED_DEVICE_FAMILY: "1,2"
+        GENERATE_INFOPLIST_FILE: "NO"
+        INFOPLIST_FILE: SubCheckWidgets/Info.plist
+        CODE_SIGN_ENTITLEMENTS: Config/SubCheckWidgets.entitlements
+        SKIP_INSTALL: "YES"
+
+schemes:
+  SubCheck:
+    build:
+      targets:
+        SubCheck: all
+    run:
+      config: Debug
+    archive:
+      config: Release
