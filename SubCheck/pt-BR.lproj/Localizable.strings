@@ -1,0 +1,232 @@
+/* SubCheck — Português (Brasil)
+   Idioma de origem: as chaves são as frases em português. */
+
+// MARK: - Categorias
+"category.finance"       = "Financeiro";
+"category.subscriptions" = "Assinaturas";
+"category.transport"     = "Transporte";
+"category.health"        = "Saúde";
+"category.education"     = "Educação";
+"category.utilities"     = "Utilidades";
+"category.entertainment" = "Entretenimento";
+"category.news"          = "Jornalismo";
+"category.productivity"  = "Produtividade";
+"category.miscellaneous" = "Outros";
+
+// MARK: - Frequência
+"frequency.monthly"  = "Mensal";
+"frequency.yearly"   = "Anual";
+"frequency.weekly"   = "Semanal";
+"frequency.perMonth" = "por mês";
+"frequency.perYear"  = "por ano";
+"frequency.perWeek"  = "por semana";
+
+// MARK: - Aparência e idioma
+"appearance.system" = "Automático";
+"appearance.light"  = "Claro";
+"appearance.dark"   = "Escuro";
+"language.system"   = "Idioma do aparelho";
+
+// MARK: - Ícone
+"icon.category" = "Ícone da categoria";
+
+// MARK: - Valores com dados
+"dashboard.perYear"         = "%@ por ano";
+"dashboard.services"        = "%lld serviços";
+"subscription.perMonth"     = "%@/mês";
+"subscription.perMonthYear" = "%@/mês · %@/ano";
+"due.inDays"                = "em %lld dias";
+"due.days"                  = "%lld dias";
+"reminder.stepper"          = "Avisar %lld dia(s) antes";
+"category.empty"            = "Nada em %@";
+
+// MARK: - Seletor de ícone
+"iconPicker.suggested"  = "Sugerido para “%@”";
+"iconPicker.brandsCount" = "Marcas (%lld)";
+"iconPicker.noMatch"     = "Nenhuma marca encontrada para “%@”.";
+
+// MARK: - Widget
+"widget.services"       = "%lld serviços";
+"widget.servicesYear"   = "%lld serviços · %@/ano";
+"widget.servicesActive" = "%lld serviços ativos · %@ por ano";
+"widget.header"         = "SubCheck · %@/mês";
+"widget.nextLine"       = "%@ · %@ · %@";
+"widget.today"          = "hoje";
+"widget.tomorrow"       = "amanhã";
+"widget.inDays"         = "%lldd";
+
+// MARK: - Resumo
+"Resumo"                       = "Resumo";
+"Total mensal"                  = "Total mensal";
+"Assinaturas ativas"            = "Assinaturas ativas";
+"Custo anual"                   = "Custo anual";
+"Vencem em 7 dias"              = "Vencem em 7 dias";
+"Média por serviço"             = "Média por serviço";
+"Nenhuma assinatura"            = "Nenhuma assinatura";
+"Toque em + para adicionar sua primeira assinatura e acompanhar seus gastos." = "Toque em + para adicionar sua primeira assinatura e acompanhar seus gastos.";
+"Adicionar assinatura"          = "Adicionar assinatura";
+"Nova assinatura"               = "Nova assinatura";
+"Gastos por categoria"          = "Gastos por categoria";
+"Sem dados ainda"               = "Sem dados ainda";
+"Adicione assinaturas para ver a distribuição por categoria." = "Adicione assinaturas para ver a distribuição por categoria.";
+"Maiores gastos mensais"        = "Maiores gastos mensais";
+"Sem assinaturas ativas."       = "Sem assinaturas ativas.";
+"Próximas cobranças"            = "Próximas cobranças";
+"30 dias"                       = "30 dias";
+"Nenhuma cobrança nos próximos 30 dias." = "Nenhuma cobrança nos próximos 30 dias.";
+"Hoje"                          = "Hoje";
+"Amanhã"                        = "Amanhã";
+
+// MARK: - Assinaturas
+"Assinaturas"                   = "Assinaturas";
+"Sem assinaturas"               = "Sem assinaturas";
+"Adicione serviços para acompanhar cobranças e gastos." = "Adicione serviços para acompanhar cobranças e gastos.";
+"Ativas"                        = "Ativas";
+"Canceladas"                    = "Canceladas";
+"Buscar assinatura"             = "Buscar assinatura";
+"Excluir"                       = "Excluir";
+"Reativar"                      = "Reativar";
+"Cancelar"                      = "Cancelar";
+"Cancelar assinatura"           = "Cancelar assinatura";
+"Cancelada"                     = "Cancelada";
+"Cobra hoje"                    = "Cobra hoje";
+"Salvar"                        = "Salvar";
+
+// MARK: - Detalhes da assinatura
+"Ícone"                         = "Ícone";
+"Automático"                    = "Automático";
+"Personalizado"                 = "Personalizado";
+"Detalhes"                      = "Detalhes";
+"Nome"                          = "Nome";
+"Nome do serviço (ex: Netflix)" = "Nome do serviço (ex: Netflix)";
+"Valor"                         = "Valor";
+"Frequência"                    = "Frequência";
+"Início"                        = "Início";
+"Primeira cobrança"             = "Primeira cobrança";
+"Categoria"                     = "Categoria";
+"Detectar automaticamente"      = "Detectar automaticamente";
+"Detectado automaticamente"     = "Detectado automaticamente";
+"Lembrete"                      = "Lembrete";
+"Notificar antes da cobrança"   = "Notificar antes da cobrança";
+"Próxima cobrança"              = "Próxima cobrança";
+"Data"                          = "Data";
+"Faltam"                        = "Faltam";
+"Reativar assinatura"           = "Reativar assinatura";
+"Excluir assinatura"            = "Excluir assinatura";
+"Excluir assinatura?"           = "Excluir assinatura?";
+"A assinatura será movida para o histórico." = "A assinatura será movida para o histórico.";
+"Moeda"                         = "Moeda";
+"Moeda da assinatura"           = "Moeda da assinatura";
+
+// MARK: - Categorias
+"Categorias"                    = "Categorias";
+"Serviços"                      = "Serviços";
+"Nenhuma assinatura ativa nesta categoria." = "Nenhuma assinatura ativa nesta categoria.";
+"Total mensal do período"       = "Total mensal do período";
+
+// MARK: - Histórico
+"Histórico"                     = "Histórico";
+"Histórico vazio"               = "Histórico vazio";
+"Assinaturas excluídas aparecem aqui para referência." = "Assinaturas excluídas aparecem aqui para referência.";
+"Assinaturas encerradas"        = "Assinaturas encerradas";
+"Valor encerrado"               = "Valor encerrado";
+"Registros"                     = "Registros";
+"Limpar"                        = "Limpar";
+"Limpar todo o histórico?"      = "Limpar todo o histórico?";
+
+// MARK: - Ajustes
+"Ajustes"                       = "Ajustes";
+"Notificações"                  = "Notificações";
+"Permitir notificações"         = "Permitir notificações";
+"Reagendar lembretes"           = "Reagendar lembretes";
+"Status"                        = "Status";
+"Ativadas"                      = "Ativadas";
+"Negadas"                       = "Negadas";
+"Aparência"                     = "Aparência";
+"Tema"                          = "Tema";
+"Idioma"                        = "Idioma";
+"Dados"                         = "Dados";
+"Carregar dados de exemplo"     = "Carregar dados de exemplo";
+"Apagar todos os dados"         = "Apagar todos os dados";
+"Sobre"                         = "Sobre";
+"Versão"                        = "Versão";
+"Widget"                        = "Widget";
+"Adicione pela tela inicial"    = "Adicione pela tela inicial";
+"Apagar todos os dados?"        = "Apagar todos os dados?";
+"Apagar tudo"                   = "Apagar tudo";
+"Todas as assinaturas e o histórico serão removidos. Esta ação não pode ser desfeita." = "Todas as assinaturas e o histórico serão removidos. Esta ação não pode ser desfeita.";
+
+// MARK: - Moeda e cotação
+"Moeda base"                    = "Moeda base";
+"Formato dos valores"           = "Formato dos valores";
+"Totais e gráficos são convertidos para esta moeda." = "Totais e gráficos são convertidos para esta moeda.";
+"Cotacao"                       = "Cotação";
+"Cotação"                       = "Cotação";
+"Atualizar cotação"             = "Atualizar cotação";
+"Buscando cotação..."           = "Buscando cotação...";
+"Cotações atualizadas"          = "Cotações atualizadas";
+"Cotação indisponível"          = "Cotação indisponível";
+"Usando valores aproximados offline." = "Usando valores aproximados offline.";
+"Nunca atualizada"              = "Nunca atualizada";
+"Atualizada em %@"              = "Atualizada em %@";
+"Taxa de câmbio"                = "Taxa de câmbio";
+
+// MARK: - Análise
+"Análise"                       = "Análise";
+"Ver análise"                   = "Ver análise";
+"Evolução dos gastos"           = "Evolução dos gastos";
+"Últimos 12 meses"              = "Últimos 12 meses";
+"Comparar períodos"             = "Comparar períodos";
+"Este mês"                      = "Este mês";
+"Mês anterior"                  = "Mês anterior";
+"Este ano"                      = "Este ano";
+"Ano anterior"                  = "Ano anterior";
+"Progressão"                    = "Progressão";
+"Variação"                      = "Variação";
+"Total no período"              = "Total no período";
+"Cobranças"                     = "Cobranças";
+"Média por mês"                 = "Média por mês";
+"Sem histórico ainda"           = "Sem histórico ainda";
+"As cobranças aparecem aqui conforme forem registradas." = "As cobranças aparecem aqui conforme forem registradas.";
+"Registrar pagamento"           = "Registrar pagamento";
+"Pagamento registrado"          = "Pagamento registrado";
+"Histórico de pagamentos"       = "Histórico de pagamentos";
+"Filtrar por categoria"         = "Filtrar por categoria";
+"Limpar filtro"                 = "Limpar filtro";
+"Todos"                         = "Todos";
+"Gastos por categoria ao longo do tempo" = "Gastos por categoria ao longo do tempo";
+"Comparação mês a mês"          = "Comparação mês a mês";
+"vs. mês anterior"              = "vs. mês anterior";
+"vs. ano anterior"              = "vs. ano anterior";
+"sem base de comparação"        = "sem base de comparação";
+"mostrando %@"                  = "mostrando %@";
+"Estimado a partir do início e da frequência da assinatura." = "Estimado a partir do início e da frequência da assinatura.";
+
+// MARK: - Seletor de ícone
+"Buscar marca"                          = "Buscar marca";
+"Fechar"                                = "Fechar";
+"Automático (pelo nome)"                = "Automático (pelo nome)";
+"O ícone é escolhido pela marca ou categoria do serviço." = "O ícone é escolhido pela marca ou categoria do serviço.";
+"Logo incluído no app"                  = "Logo incluído no app";
+"Ícone genérico"                        = "Ícone genérico";
+"Baixar e usar esta imagem"             = "Baixar e usar esta imagem";
+"Imagem por endereço"                   = "Imagem por endereço";
+"Cole o link de uma imagem (PNG, JPG ou SVG). Ela fica guardada no aparelho." = "Cole o link de uma imagem (PNG, JPG ou SVG). Ela fica guardada no aparelho.";
+"Categoria do serviço"                  = "Categoria do serviço";
+"Marcas"                                = "Marcas";
+
+// MARK: - Contagem, idioma e widget
+"service.one"                = "1 serviço";
+"widget.inline"              = "SubCheck: %@/mês";
+"Nenhuma cobrança próxima"   = "Nenhuma cobrança próxima";
+"Seus gastos mensais e as próximas cobranças." = "Seus gastos mensais e as próximas cobranças.";
+"O widget usa o mesmo idioma do aplicativo." = "O widget usa o mesmo idioma do aplicativo.";
+
+// MARK: - Moeda e pagamentos
+"Moeda e cotação"               = "Moeda e cotação";
+"Pagamentos"                    = "Pagamentos";
+"Último pagamento"              = "Último pagamento";
+"Convertido para %@"            = "Convertido para %@";
+"Equivale a %@"                 = "Equivale a %@";
+"A próxima cobrança foi movida para o próximo ciclo." = "A próxima cobrança foi movida para o próximo ciclo.";
+"Os totais são convertidos para a moeda base. As cotações são atualizadas automaticamente e usadas offline quando não há internet." = "Os totais são convertidos para a moeda base. As cotações são atualizadas automaticamente e usadas offline quando não há internet.";

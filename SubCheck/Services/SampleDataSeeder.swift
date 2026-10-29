@@ -59,6 +59,7 @@ enum SampleDataSeeder {
     static func eraseAll(in context: ModelContext) {
         try? context.delete(model: Subscription.self)
         try? context.delete(model: DeletedSubscription.self)
+        try? context.delete(model: PaymentRecord.self)
         try? context.save()
     }
 }

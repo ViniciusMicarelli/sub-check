@@ -17,7 +17,8 @@ struct UpcomingItem: Identifiable {
     let name: String
     let cost: Double
     let days: Int
-    let icon: String
+    let dueDate: Date
+    let icon: SubscriptionIcon
     let color: Color
     let currencyCode: String
 }
@@ -30,18 +31,22 @@ struct SubCheckEntry: TimelineEntry {
     let upcoming: [UpcomingItem]
 
     static var placeholder: SubCheckEntry {
-        SubCheckEntry(
-            date: Date(),
+        let now = Date()
+        return SubCheckEntry(
+            date: now,
             monthlyTotal: 412.90,
             yearlyTotal: 4954.80,
             activeCount: 8,
             upcoming: [
                 UpcomingItem(id: UUID(), name: "Netflix", cost: 55.90, days: 2,
-                             icon: "play.tv.fill", color: .purple, currencyCode: "BRL"),
+                             dueDate: now.addingTimeInterval(172_800),
+                             icon: .brand("netflix"), color: .purple, currencyCode: "BRL"),
                 UpcomingItem(id: UUID(), name: "Spotify", cost: 21.90, days: 5,
-                             icon: "play.tv.fill", color: .green, currencyCode: "BRL"),
+                             dueDate: now.addingTimeInterval(432_000),
+                             icon: .brand("spotify"), color: .green, currencyCode: "BRL"),
                 UpcomingItem(id: UUID(), name: "iCloud+", cost: 12.90, days: 9,
-                             icon: "bolt.fill", color: .orange, currencyCode: "BRL")
+                             dueDate: now.addingTimeInterval(777_600),
+                             icon: .brand("icloud"), color: .orange, currencyCode: "BRL")
             ]
         )
     }
@@ -68,7 +73,8 @@ struct SubCheckProvider: TimelineProvider {
         let context = ModelContext(SharedModelContainer.shared)
         let subscriptions = (try? context.fetch(FetchDescriptor<Subscription>())) ?? []
         let active = subscriptions.filter { !$0.isCancelled }
-        let monthly = active.reduce(0) { $0 + $1.monthlyCost }
+        // Totais já convertidos para a moeda base escolhida no app.
+        let monthly = active.monthlyTotal(in: .shared)
 
         let upcoming = active
             .sorted { $0.daysUntilNextBilling < $1.daysUntilNextBilling }
@@ -79,7 +85,8 @@ struct SubCheckProvider: TimelineProvider {
                     name: subscription.name,
                     cost: subscription.cost,
                     days: subscription.daysUntilNextBilling,
-                    icon: subscription.categoryIcon,
+                    dueDate: subscription.nextBillingDate,
+                    icon: subscription.resolvedIcon,
                     color: subscription.categoryColor,
                     currencyCode: subscription.currencyCode
                 )
@@ -106,7 +113,7 @@ struct SubCheckWidget: Widget {
             SubCheckWidgetView(entry: entry)
         }
         .configurationDisplayName("SubCheck")
-        .description("Seus gastos mensais e as próximas cobranças.")
+        .description(L.t("Seus gastos mensais e as próximas cobranças."))
         .supportedFamilies([
             .systemSmall,
             .systemMedium,

@@ -55,4 +55,54 @@ extension Subscription {
     /// Styling helpers derived from the stored category string.
     var categoryIcon: String { categoryType.icon }
     var categoryColor: Color { categoryType.color }
+
+    /// Ícone escolhido pelo usuário ou, na falta dele, detectado pelo nome.
+    var resolvedIcon: SubscriptionIcon {
+        if let raw = iconRaw, let icon = SubscriptionIcon(rawValue: raw) {
+            return icon
+        }
+        return automaticIcon
+    }
+
+    /// Ícone usado no modo automático: marca detectada pelo nome ou a
+    /// categoria do serviço.
+    var automaticIcon: SubscriptionIcon {
+        if let brand = BrandIconCatalog.match(name: name) {
+            return .brand(brand.id)
+        }
+        return .symbol(categoryType.icon)
+    }
+}
+
+// MARK: - Conversão de moeda
+
+extension Subscription {
+
+    /// Custo cadastrado convertido para a moeda base.
+    func cost(in service: CurrencyService) -> Double {
+        service.convert(cost, from: currencyCode)
+    }
+
+    /// Média mensal convertida para a moeda base.
+    func monthlyCost(in service: CurrencyService) -> Double {
+        service.convert(monthlyCost, from: currencyCode)
+    }
+
+    /// Custo anualizado convertido para a moeda base.
+    func yearlyCost(in service: CurrencyService) -> Double {
+        service.convert(yearlyCost, from: currencyCode)
+    }
+
+    /// `true` quando a assinatura está em uma moeda diferente da base.
+    func isForeignCurrency(base: String) -> Bool {
+        currencyCode.uppercased() != base.uppercased()
+    }
+}
+
+extension Array where Element == Subscription {
+
+    /// Soma das médias mensais já convertidas para a moeda base.
+    func monthlyTotal(in service: CurrencyService) -> Double {
+        reduce(0) { $0 + $1.monthlyCost(in: service) }
+    }
 }

@@ -23,7 +23,7 @@ struct SubscriptionsView: View {
     private var cancelledList: [Subscription] { filtered.filter(\.isCancelled) }
 
     private var monthlyTotal: Double {
-        activeList.reduce(0) { $0 + $1.monthlyCost }
+        activeList.monthlyTotal(in: .shared)
     }
 
     var body: some View {
@@ -33,9 +33,9 @@ struct SubscriptionsView: View {
                     ScrollView {
                         EmptyStateView(
                             icon: "list.bullet.rectangle.portrait",
-                            title: "Sem assinaturas",
-                            message: "Adicione serviços para acompanhar cobranças e gastos.",
-                            actionTitle: "Adicionar assinatura"
+                            title: L.t("Sem assinaturas"),
+                            message: L.t("Adicione serviços para acompanhar cobranças e gastos."),
+                            actionTitle: L.t("Adicionar assinatura")
                         ) { showAddSheet = true }
                         .cardSurface()
                         .padding(Spacing.lg)
@@ -60,6 +60,8 @@ struct SubscriptionsView: View {
                         }
                     }
                     .listStyle(.insetGrouped)
+                    .animation(.snappy, value: monthlyTotal)
+                    .animation(.snappy, value: activeList.map(\.id))
                 }
             }
             .navigationTitle("Assinaturas")
@@ -82,10 +84,11 @@ struct SubscriptionsView: View {
 
     private func sectionHeader(_ title: String, count: Int) -> some View {
         HStack {
-            Text(title)
+            Text(L.t(title))
             Spacer()
             if title == "Ativas" {
-                Text("\(Money.format(monthlyTotal))/mês")
+                Text(L.t("subscription.perMonth", Money.format(monthlyTotal)))
+                    .contentTransition(.numericText())
             } else {
                 Text("\(count)")
             }

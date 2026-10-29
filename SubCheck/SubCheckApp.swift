@@ -8,6 +8,7 @@
 
 import SwiftUI
 import SwiftData
+import WidgetKit
 
 @main
 struct SubCheckApp: App {
@@ -17,7 +18,17 @@ struct SubCheckApp: App {
             RootView()
                 .task {
                     await NotificationService.shared.requestAuthorization()
-                    SampleDataSeeder.seedIfNeeded(in: SharedModelContainer.shared.mainContext)
+
+                    let context = SharedModelContainer.shared.mainContext
+                    SampleDataSeeder.seedIfNeeded(in: context)
+
+                    // Reconstrói o histórico de cobranças a partir do início de cada assinatura.
+                    let subscriptions = (try? context.fetch(FetchDescriptor<Subscription>())) ?? []
+                    if PaymentLedger.reconcile(subscriptions, in: context) > 0 {
+                        WidgetCenter.shared.reloadAllTimelines()
+                    }
+
+                    await CurrencyService.shared.refreshIfStale()
                 }
         }
         .modelContainer(SharedModelContainer.shared)

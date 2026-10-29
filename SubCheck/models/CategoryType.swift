@@ -14,28 +14,19 @@ enum CategoryType: String, CaseIterable {
     case productivity = "Produtividade"
     case miscellaneous = "Outros"
     
+    /// Nome traduzido para exibição.
     var displayName: String {
         switch self {
-        case .finance:
-            return "Financeiro"
-        case .subscriptions:
-            return "Assinaturas"
-        case .transport:
-            return "Transporte"
-        case .health:
-            return "Saúde"
-        case .education:
-            return "Educação"
-        case .utilities:
-            return "Utilidades"
-        case .entertainment:
-            return "Entretenimento"
-        case .news:
-            return "Jornalismo"
-        case .productivity:
-            return "Produtividade"
-        case .miscellaneous:
-            return "Outros"
+        case .finance:       L.t("category.finance")
+        case .subscriptions: L.t("category.subscriptions")
+        case .transport:     L.t("category.transport")
+        case .health:        L.t("category.health")
+        case .education:     L.t("category.education")
+        case .utilities:     L.t("category.utilities")
+        case .entertainment: L.t("category.entertainment")
+        case .news:          L.t("category.news")
+        case .productivity:  L.t("category.productivity")
+        case .miscellaneous: L.t("category.miscellaneous")
         }
     }
     

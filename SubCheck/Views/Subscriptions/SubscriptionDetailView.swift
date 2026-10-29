@@ -5,6 +5,7 @@
 
 import SwiftUI
 import SwiftData
+import WidgetKit
 
 struct SubscriptionDetailView: View {
 
@@ -14,17 +15,35 @@ struct SubscriptionDetailView: View {
     @Bindable var subscription: Subscription
 
     @State private var showDeleteConfirmation = false
+    @State private var showIconPicker = false
+    @State private var showPaymentConfirmation = false
 
     var body: some View {
         Form {
             headerSection
+            iconSection
             detailsSection
             billingSection
+            paymentsSection
             reminderSection
             actionsSection
         }
         .navigationTitle(subscription.name)
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showIconPicker) {
+            IconPickerView(
+                serviceName: subscription.name,
+                fallbackColor: subscription.categoryColor,
+                automaticIcon: subscription.automaticIcon,
+                current: subscription.iconRaw.flatMap(SubscriptionIcon.init(rawValue:))
+            ) { icon in
+                subscription.iconRaw = icon?.rawValue
+                try? context.save()
+            }
+        }
+        .onChange(of: subscription.currencyCode) { _, _ in
+            try? context.save()
+        }
         .onChange(of: subscription.enableReminders) { _, _ in
             NotificationService.shared.scheduleNotification(for: subscription)
             try? context.save()
@@ -32,6 +51,11 @@ struct SubscriptionDetailView: View {
         .onChange(of: subscription.daysNoticeBefore) { _, _ in
             NotificationService.shared.scheduleNotification(for: subscription)
             try? context.save()
+        }
+        .alert("Pagamento registrado", isPresented: $showPaymentConfirmation) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("A próxima cobrança foi movida para o próximo ciclo.")
         }
         .confirmationDialog(
             "Excluir assinatura?",
@@ -52,25 +76,61 @@ struct SubscriptionDetailView: View {
     private var headerSection: some View {
         Section {
             HStack(spacing: Spacing.lg) {
-                ZStack {
-                    Circle()
-                        .fill(subscription.categoryColor.opacity(0.16))
-                        .frame(width: 60, height: 60)
-                    Image(systemName: subscription.categoryIcon)
-                        .font(.title2)
-                        .foregroundStyle(subscription.categoryColor)
-                }
+                SubscriptionIconView(
+                    icon: subscription.resolvedIcon,
+                    fallbackColor: subscription.categoryColor,
+                    size: 60
+                )
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(Money.format(subscription.cost, code: subscription.currencyCode))
                         .font(.title2.weight(.bold))
                         .contentTransition(.numericText())
-                    Text("\(Money.format(subscription.monthlyCost))/mês · \(Money.compact(subscription.yearlyCost))/ano")
+                    Text(L.t("subscription.perMonthYear",
+                             Money.format(subscription.monthlyCost(in: .shared)),
+                             Money.compact(subscription.yearlyCost(in: .shared))))
                         .font(.caption)
                         .foregroundStyle(Color.textSecondary)
+
+                    if subscription.isForeignCurrency(base: CurrencyService.shared.baseCode) {
+                        Text(L.t("Convertido para %@", CurrencyService.shared.baseCode))
+                            .font(.caption2)
+                            .foregroundStyle(Color.textTertiary)
+                    }
                 }
             }
             .padding(.vertical, Spacing.xs)
+        }
+    }
+
+    private var iconSection: some View {
+        Section("Ícone") {
+            Button {
+                showIconPicker = true
+            } label: {
+                HStack(spacing: Spacing.md) {
+                    SubscriptionIconView(
+                        icon: subscription.resolvedIcon,
+                        fallbackColor: subscription.categoryColor,
+                        size: 40
+                    )
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(subscription.resolvedIcon.displayName)
+                            .foregroundStyle(Color.textPrimary)
+                        Text(subscription.iconRaw == nil ? L.t("Automático") : L.t("Personalizado"))
+                            .font(.caption)
+                            .foregroundStyle(Color.textSecondary)
+                    }
+
+                    Spacer(minLength: 0)
+
+                    Image(systemName: "chevron.right")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(Color.textTertiary)
+                }
+            }
+            .buttonStyle(.plain)
         }
     }
 
@@ -87,7 +147,7 @@ struct SubscriptionDetailView: View {
 
             Picker("Frequência", selection: $subscription.frequency) {
                 ForEach(RecurrenceFrequency.allCases) { frequency in
-                    Text(frequency.rawValue).tag(frequency)
+                    Text(frequency.displayName).tag(frequency)
                 }
             }
 
@@ -97,6 +157,12 @@ struct SubscriptionDetailView: View {
                 TextField("0,00", value: $subscription.cost, format: .number)
                     .keyboardType(.decimalPad)
                     .multilineTextAlignment(.trailing)
+            }
+
+            Picker("Moeda", selection: $subscription.currencyCode) {
+                ForEach(CurrencyCode.ordered) { code in
+                    Text(code.displayLabel).tag(code.code)
+                }
             }
         }
     }
@@ -108,9 +174,28 @@ struct SubscriptionDetailView: View {
             }
             LabeledContent("Faltam") {
                 Text(subscription.daysUntilNextBilling == 0
-                     ? "Hoje"
-                     : "\(subscription.daysUntilNextBilling) dias")
+                     ? L.t("Hoje")
+                     : L.t("due.days", subscription.daysUntilNextBilling))
                     .foregroundStyle(subscription.daysUntilNextBilling <= 3 ? Color.danger : Color.textPrimary)
+            }
+        }
+    }
+
+    private var paymentsSection: some View {
+        Section("Pagamentos") {
+            Button {
+                PaymentLedger.markPaid(subscription, in: context)
+                WidgetCenter.shared.reloadAllTimelines()
+                Haptics.success()
+                showPaymentConfirmation = true
+            } label: {
+                Label("Registrar pagamento", systemImage: "checkmark.circle")
+            }
+
+            if let last = subscription.lastPaymentDate {
+                LabeledContent("Último pagamento") {
+                    Text(last.formatted(date: .abbreviated, time: .omitted))
+                }
             }
         }
     }
@@ -121,7 +206,7 @@ struct SubscriptionDetailView: View {
 
             if subscription.enableReminders {
                 Stepper(value: $subscription.daysNoticeBefore, in: 1...7) {
-                    Text("Avisar \(subscription.daysNoticeBefore) dia(s) antes")
+                    Text(L.t("reminder.stepper", subscription.daysNoticeBefore))
                 }
             }
         }

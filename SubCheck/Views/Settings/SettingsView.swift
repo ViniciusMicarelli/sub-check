@@ -12,6 +12,7 @@ struct SettingsView: View {
     @Query private var subscriptions: [Subscription]
 
     @AppStorage("appearance") private var appearance: AppearanceOption = .system
+    @AppStorage(L.languageKey) private var language: AppLanguage = .system
 
     @State private var showEraseConfirmation = false
     @State private var notificationStatus: String?
@@ -21,10 +22,15 @@ struct SettingsView: View {
             Form {
                 notificationsSection
                 appearanceSection
+                languageSection
+                currencySection
                 dataSection
                 aboutSection
             }
             .navigationTitle("Ajustes")
+            .onChange(of: language) { _, newValue in
+                L.store(newValue)
+            }
             .confirmationDialog(
                 "Apagar todos os dados?",
                 isPresented: $showEraseConfirmation,
@@ -33,6 +39,7 @@ struct SettingsView: View {
                 Button("Apagar tudo", role: .destructive) {
                     Haptics.warning()
                     SampleDataSeeder.eraseAll(in: context)
+                    RemoteIconStore.clear()
                 }
                 Button("Cancelar", role: .cancel) {}
             } message: {
@@ -46,7 +53,7 @@ struct SettingsView: View {
             Button {
                 Task {
                     let granted = await NotificationService.shared.requestAuthorization()
-                    notificationStatus = granted ? "Ativadas" : "Negadas"
+                    notificationStatus = granted ? L.t("Ativadas") : L.t("Negadas")
                     if granted { rescheduleAll() }
                 }
             } label: {
@@ -76,6 +83,61 @@ struct SettingsView: View {
         }
     }
 
+    private var languageSection: some View {
+        Section {
+            Picker("Idioma", selection: $language) {
+                ForEach(AppLanguage.allCases) { option in
+                    Text(option.displayName).tag(option)
+                }
+            }
+        } footer: {
+            Text("O widget usa o mesmo idioma do aplicativo.")
+        }
+    }
+
+    private var currencySection: some View {
+        Section {
+            Picker("Moeda base", selection: baseCurrencyBinding) {
+                ForEach(CurrencyCode.ordered) { code in
+                    Text(code.displayLabel).tag(code.code)
+                }
+            }
+
+            Button {
+                Task { await CurrencyService.shared.refresh() }
+            } label: {
+                HStack {
+                    Label("Atualizar cotação", systemImage: "arrow.triangle.2.circlepath")
+                    Spacer()
+                    if CurrencyService.shared.isRefreshing {
+                        ProgressView()
+                    }
+                }
+            }
+            .disabled(CurrencyService.shared.isRefreshing)
+
+            LabeledContent("Status", value: ratesStatus)
+        } header: {
+            Text("Moeda e cotação")
+        } footer: {
+            Text("Os totais são convertidos para a moeda base. As cotações são atualizadas automaticamente e usadas offline quando não há internet.")
+        }
+    }
+
+    private var baseCurrencyBinding: Binding<String> {
+        Binding(
+            get: { CurrencyService.shared.baseCode },
+            set: { CurrencyService.shared.baseCode = $0 }
+        )
+    }
+
+    private var ratesStatus: String {
+        guard let updated = CurrencyService.shared.lastUpdated else {
+            return L.t("Usando valores aproximados offline.")
+        }
+        return L.t("Atualizada em %@", updated.formatted(date: .abbreviated, time: .shortened))
+    }
+
     private var dataSection: some View {
         Section("Dados") {
             Button {
@@ -96,7 +158,7 @@ struct SettingsView: View {
     private var aboutSection: some View {
         Section("Sobre") {
             LabeledContent("Versão", value: appVersion)
-            LabeledContent("Widget", value: "Adicione pela tela inicial")
+            LabeledContent("Widget", value: L.t("Adicione pela tela inicial"))
         }
     }
 

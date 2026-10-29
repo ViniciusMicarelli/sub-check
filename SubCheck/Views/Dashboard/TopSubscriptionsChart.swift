@@ -15,7 +15,7 @@ struct TopSubscriptionsChart: View {
     private var top: [Subscription] {
         subscriptions
             .filter { !$0.isCancelled }
-            .sorted { $0.monthlyCost > $1.monthlyCost }
+            .sorted { $0.monthlyCost(in: .shared) > $1.monthlyCost(in: .shared) }
             .prefix(5)
             .map { $0 }
     }
@@ -33,13 +33,13 @@ struct TopSubscriptionsChart: View {
             } else {
                 Chart(top) { subscription in
                     BarMark(
-                        x: .value("Custo mensal", subscription.monthlyCost),
+                        x: .value("Custo mensal", subscription.monthlyCost(in: .shared)),
                         y: .value("Serviço", subscription.name)
                     )
                     .foregroundStyle(subscription.categoryColor.gradient)
                     .cornerRadius(6)
                     .annotation(position: .trailing, alignment: .leading) {
-                        Text(Money.compact(subscription.monthlyCost))
+                        Text(Money.compact(subscription.monthlyCost(in: .shared)))
                             .font(.caption2)
                             .foregroundStyle(Color.textSecondary)
                     }
@@ -52,6 +52,8 @@ struct TopSubscriptionsChart: View {
                     }
                 }
                 .frame(height: CGFloat(top.count) * 42 + 16)
+                // Anima a entrada das barras e a troca de filtro.
+                .animation(.snappy, value: top.map(\.id))
             }
         }
         .cardSurface()

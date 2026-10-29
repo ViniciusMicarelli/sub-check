@@ -6,6 +6,7 @@ options:
     iOS: "27.0"
   createIntermediateGroups: true
   groupSortPosition: top
+  developmentLanguage: pt-BR
 
 settings:
   base:
@@ -13,6 +14,7 @@ settings:
     MARKETING_VERSION: "1.0"
     CURRENT_PROJECT_VERSION: "1"
     CODE_SIGN_STYLE: Automatic
+    DEVELOPMENT_TEAM: 5X7S9ZSCA8
     ENABLE_USER_SCRIPT_SANDBOXING: "YES"
 
 targets:
@@ -44,12 +46,22 @@ targets:
     platform: iOS
     sources:
       - path: SubCheckWidgets
+      - path: SubCheck/BrandIcons.xcassets
+      # Tabelas de idioma: copiadas como pastas para o bundle do widget.
+      - path: SubCheck/en.lproj
+        buildPhase: resources
+      - path: SubCheck/pt-BR.lproj
+        buildPhase: resources
       # Shared code compiled into both targets.
       - path: SubCheck/models
       - path: SubCheck/Services/SharedModelContainer.swift
+      - path: SubCheck/Services/RemoteIconStore.swift
+      - path: SubCheck/Services/Localization.swift
+      - path: SubCheck/Services/CurrencyService.swift
       - path: SubCheck/DesignSystem/Theme.swift
       - path: SubCheck/DesignSystem/CategoryStyle.swift
       - path: SubCheck/DesignSystem/Formatters.swift
+      - path: SubCheck/DesignSystem/SubscriptionIconView.swift
       - path: SubCheck/Color.swift
     settings:
       base:

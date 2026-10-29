@@ -18,6 +18,7 @@ enum SharedModelContainer {
 
     static let schema = Schema([
         Subscription.self,
+        PaymentRecord.self,
         DeletedSubscription.self,
         User.self,
         PaymentMethod.self

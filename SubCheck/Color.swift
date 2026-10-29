@@ -53,3 +53,39 @@ extension Color {
         endPoint: .bottomTrailing
     )
 }
+
+// MARK: - Brand colors
+
+/// Converte as cores de marca em hexadecimal (`RRGGBB`) usadas pelo catálogo
+/// de ícones e escolhe um contraste legível para o glifo.
+enum BrandColor {
+
+    /// Cor correspondente a `hex` (aceita `RRGGBB` ou `#RRGGBB`).
+    static func fill(_ hex: String) -> Color {
+        let (r, g, b) = components(hex) ?? (0.5, 0.5, 0.5)
+        return Color(red: r, green: g, blue: b)
+    }
+
+    /// Branco ou preto, o que tiver melhor leitura sobre `hex`.
+    static func glyph(_ hex: String) -> Color {
+        luminance(hex) > 0.6 ? .black : .white
+    }
+
+    private static func components(_ hex: String) -> (Double, Double, Double)? {
+        var value = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+        if value.hasPrefix("#") { value.removeFirst() }
+        guard value.count == 6, let int = UInt64(value, radix: 16) else { return nil }
+
+        return (
+            Double((int >> 16) & 0xFF) / 255,
+            Double((int >> 8) & 0xFF) / 255,
+            Double(int & 0xFF) / 255
+        )
+    }
+
+    /// Luminância percebida (0...1).
+    private static func luminance(_ hex: String) -> Double {
+        guard let (r, g, b) = components(hex) else { return 0 }
+        return 0.299 * r + 0.587 * g + 0.114 * b
+    }
+}

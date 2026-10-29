@@ -27,8 +27,8 @@ struct HistoryView: View {
                     ScrollView {
                         EmptyStateView(
                             icon: "clock.arrow.circlepath",
-                            title: "Histórico vazio",
-                            message: "Assinaturas excluídas aparecem aqui para referência."
+                            title: L.t("Histórico vazio"),
+                            message: L.t("Assinaturas excluídas aparecem aqui para referência.")
                         )
                         .cardSurface()
                         .padding(Spacing.lg)

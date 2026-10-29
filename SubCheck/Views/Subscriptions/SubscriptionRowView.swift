@@ -11,14 +11,11 @@ struct SubscriptionRowView: View {
 
     var body: some View {
         HStack(spacing: Spacing.md) {
-            ZStack {
-                Circle()
-                    .fill(subscription.categoryColor.opacity(0.16))
-                    .frame(width: 44, height: 44)
-                Image(systemName: subscription.categoryIcon)
-                    .font(.body)
-                    .foregroundStyle(subscription.categoryColor)
-            }
+            SubscriptionIconView(
+                icon: subscription.resolvedIcon,
+                fallbackColor: subscription.categoryColor,
+                size: 44
+            )
 
             VStack(alignment: .leading, spacing: 3) {
                 Text(subscription.name)
@@ -26,7 +23,7 @@ struct SubscriptionRowView: View {
                     .foregroundStyle(Color.textPrimary)
 
                 HStack(spacing: 6) {
-                    Text(subscription.frequency.rawValue)
+                    Text(subscription.frequency.displayName)
                     Text("•")
                     Text(nextBillingText)
                 }
@@ -40,18 +37,22 @@ struct SubscriptionRowView: View {
                 Text(Money.format(subscription.cost, code: subscription.currencyCode))
                     .font(.body.weight(.semibold))
                     .foregroundStyle(Color.textPrimary)
-                Text("\(Money.format(subscription.monthlyCost))/mês")
+                    .contentTransition(.numericText())
+                Text(L.t("subscription.perMonth", Money.format(subscription.monthlyCost(in: .shared))))
                     .font(.caption2)
                     .foregroundStyle(Color.textSecondary)
+                    .contentTransition(.numericText())
             }
         }
         .padding(.vertical, 4)
         .opacity(subscription.isCancelled ? 0.55 : 1)
+        .animation(.snappy, value: subscription.cost)
+        .animation(.snappy, value: subscription.monthlyCost(in: .shared))
     }
 
     private var nextBillingText: String {
-        if subscription.isCancelled { return "Cancelada" }
-        if subscription.daysUntilNextBilling == 0 { return "Cobra hoje" }
-        return "em \(subscription.daysUntilNextBilling) dias"
+        if subscription.isCancelled { return L.t("Cancelada") }
+        if subscription.daysUntilNextBilling == 0 { return L.t("Cobra hoje") }
+        return L.t("due.inDays", subscription.daysUntilNextBilling)
     }
 }

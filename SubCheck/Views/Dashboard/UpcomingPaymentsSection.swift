@@ -69,14 +69,11 @@ private struct UpcomingPaymentRow: View {
 
     var body: some View {
         HStack(spacing: Spacing.md) {
-            ZStack {
-                Circle()
-                    .fill(subscription.categoryColor.opacity(0.15))
-                    .frame(width: 38, height: 38)
-                Image(systemName: subscription.categoryIcon)
-                    .font(.subheadline)
-                    .foregroundStyle(subscription.categoryColor)
-            }
+            SubscriptionIconView(
+                icon: subscription.resolvedIcon,
+                fallbackColor: subscription.categoryColor,
+                size: 38
+            )
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(subscription.name)
@@ -93,9 +90,11 @@ private struct UpcomingPaymentRow: View {
                 Text(Money.format(subscription.cost, code: subscription.currencyCode))
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(Color.textPrimary)
+                    .contentTransition(.numericText())
                 Text(daysLabel)
                     .font(.caption2.weight(.semibold))
                     .foregroundStyle(urgencyColor)
+                    .contentTransition(.numericText())
             }
         }
         .padding(.vertical, Spacing.sm)
@@ -104,9 +103,9 @@ private struct UpcomingPaymentRow: View {
 
     private var daysLabel: String {
         switch subscription.daysUntilNextBilling {
-        case 0: "Hoje"
-        case 1: "Amanhã"
-        default: "em \(subscription.daysUntilNextBilling) dias"
+        case 0: L.t("Hoje")
+        case 1: L.t("Amanhã")
+        default: L.t("due.inDays", subscription.daysUntilNextBilling)
         }
     }
 }

@@ -18,10 +18,12 @@ struct CategoryTotal: Identifiable {
 struct CategoryDonutChart: View {
 
     let subscriptions: [Subscription]
-    @State private var selected: CategoryType?
+    /// Categoria destacada; quem chama usa isso para filtrar os outros gráficos.
+    @Binding var selection: CategoryType?
 
-    init(subscriptions: [Subscription]) {
+    init(subscriptions: [Subscription], selection: Binding<CategoryType?>) {
         self.subscriptions = subscriptions
+        self._selection = selection
     }
 
     private var breakdown: [CategoryTotal] {
@@ -29,7 +31,7 @@ struct CategoryDonutChart: View {
             .map { category, subs in
                 CategoryTotal(
                     category: category,
-                    total: subs.reduce(0) { $0 + $1.monthlyCost },
+                    total: subs.monthlyTotal(in: .shared),
                     count: subs.count
                 )
             }
@@ -69,7 +71,7 @@ struct CategoryDonutChart: View {
             )
             .cornerRadius(6)
             .foregroundStyle(item.category.color)
-            .opacity(selected == nil || selected == item.category ? 1 : 0.28)
+            .opacity(selection == nil || selection == item.category ? 1 : 0.28)
         }
         .frame(height: 210)
         .chartLegend(.hidden)
@@ -78,7 +80,7 @@ struct CategoryDonutChart: View {
                 if let frame = proxy.plotFrame {
                     let rect = geo[frame]
                     VStack(spacing: 2) {
-                        Text(selected?.displayName ?? "Total mensal")
+                        Text(selection?.displayName ?? L.t("Total mensal"))
                             .font(.caption)
                             .foregroundStyle(Color.textSecondary)
                             .lineLimit(1)
@@ -91,7 +93,7 @@ struct CategoryDonutChart: View {
                 }
             }
         }
-        .animation(.snappy, value: selected)
+        .animation(.snappy, value: selection)
     }
 
     private var legend: some View {
@@ -99,7 +101,7 @@ struct CategoryDonutChart: View {
             ForEach(breakdown) { item in
                 Button {
                     withAnimation(.snappy) {
-                        selected = (selected == item.category) ? nil : item.category
+                        selection = (selection == item.category) ? nil : item.category
                     }
                     Haptics.impact(.light)
                 } label: {
@@ -143,8 +145,8 @@ struct CategoryDonutChart: View {
     }
 
     private var selectedTotal: Double {
-        guard let selected else { return grandTotal }
-        return breakdown.first { $0.category == selected }?.total ?? grandTotal
+        guard let selection else { return grandTotal }
+        return breakdown.first { $0.category == selection }?.total ?? grandTotal
     }
 
     private func percent(for item: CategoryTotal) -> String {

@@ -1,0 +1,231 @@
+/* SubCheck — English */
+
+// MARK: - Categories
+"category.finance"       = "Finance";
+"category.subscriptions" = "Subscriptions";
+"category.transport"     = "Transport";
+"category.health"        = "Health";
+"category.education"     = "Education";
+"category.utilities"     = "Utilities";
+"category.entertainment" = "Entertainment";
+"category.news"          = "News";
+"category.productivity"  = "Productivity";
+"category.miscellaneous" = "Other";
+
+// MARK: - Frequency
+"frequency.monthly"  = "Monthly";
+"frequency.yearly"   = "Yearly";
+"frequency.weekly"   = "Weekly";
+"frequency.perMonth" = "per month";
+"frequency.perYear"  = "per year";
+"frequency.perWeek"  = "per week";
+
+// MARK: - Appearance and language
+"appearance.system" = "System";
+"appearance.light"  = "Light";
+"appearance.dark"   = "Dark";
+"language.system"   = "Device language";
+
+// MARK: - Icon
+"icon.category" = "Category icon";
+
+// MARK: - Values with data
+"dashboard.perYear"         = "%@ per year";
+"dashboard.services"        = "%lld services";
+"subscription.perMonth"     = "%@/mo";
+"subscription.perMonthYear" = "%@/mo · %@/yr";
+"due.inDays"                = "in %lld days";
+"due.days"                  = "%lld days";
+"reminder.stepper"          = "Notify %lld day(s) before";
+"category.empty"            = "Nothing in %@";
+
+// MARK: - Icon picker
+"iconPicker.suggested"   = "Suggested for “%@”";
+"iconPicker.brandsCount" = "Brands (%lld)";
+"iconPicker.noMatch"     = "No brand found for “%@”.";
+
+// MARK: - Widget
+"widget.services"       = "%lld services";
+"widget.servicesYear"   = "%lld services · %@/yr";
+"widget.servicesActive" = "%lld active services · %@ per year";
+"widget.header"         = "SubCheck · %@/mo";
+"widget.nextLine"       = "%@ · %@ · %@";
+"widget.today"          = "today";
+"widget.tomorrow"       = "tomorrow";
+"widget.inDays"         = "%lldd";
+
+// MARK: - Overview
+"Resumo"                       = "Overview";
+"Total mensal"                  = "Monthly total";
+"Assinaturas ativas"            = "Active subscriptions";
+"Custo anual"                   = "Yearly cost";
+"Vencem em 7 dias"              = "Due in 7 days";
+"Média por serviço"             = "Average per service";
+"Nenhuma assinatura"            = "No subscriptions";
+"Toque em + para adicionar sua primeira assinatura e acompanhar seus gastos." = "Tap + to add your first subscription and start tracking your spending.";
+"Adicionar assinatura"          = "Add subscription";
+"Nova assinatura"               = "New subscription";
+"Gastos por categoria"          = "Spending by category";
+"Sem dados ainda"               = "No data yet";
+"Adicione assinaturas para ver a distribuição por categoria." = "Add subscriptions to see the category breakdown.";
+"Maiores gastos mensais"        = "Biggest monthly costs";
+"Sem assinaturas ativas."       = "No active subscriptions.";
+"Próximas cobranças"            = "Upcoming charges";
+"30 dias"                       = "30 days";
+"Nenhuma cobrança nos próximos 30 dias." = "No charges in the next 30 days.";
+"Hoje"                          = "Today";
+"Amanhã"                        = "Tomorrow";
+
+// MARK: - Subscriptions
+"Assinaturas"                   = "Subscriptions";
+"Sem assinaturas"               = "No subscriptions";
+"Adicione serviços para acompanhar cobranças e gastos." = "Add services to track charges and spending.";
+"Ativas"                        = "Active";
+"Canceladas"                    = "Cancelled";
+"Buscar assinatura"             = "Search subscription";
+"Excluir"                       = "Delete";
+"Reativar"                      = "Reactivate";
+"Cancelar"                      = "Cancel";
+"Cancelar assinatura"           = "Cancel subscription";
+"Cancelada"                     = "Cancelled";
+"Cobra hoje"                    = "Charges today";
+"Salvar"                        = "Save";
+
+// MARK: - Subscription detail
+"Ícone"                         = "Icon";
+"Automático"                    = "Automatic";
+"Personalizado"                 = "Custom";
+"Detalhes"                      = "Details";
+"Nome"                          = "Name";
+"Nome do serviço (ex: Netflix)" = "Service name (e.g. Netflix)";
+"Valor"                         = "Amount";
+"Frequência"                    = "Frequency";
+"Início"                        = "Start";
+"Primeira cobrança"             = "First charge";
+"Categoria"                     = "Category";
+"Detectar automaticamente"      = "Detect automatically";
+"Detectado automaticamente"     = "Detected automatically";
+"Lembrete"                      = "Reminder";
+"Notificar antes da cobrança"   = "Notify before the charge";
+"Próxima cobrança"              = "Next charge";
+"Data"                          = "Date";
+"Faltam"                        = "In";
+"Reativar assinatura"           = "Reactivate subscription";
+"Excluir assinatura"            = "Delete subscription";
+"Excluir assinatura?"           = "Delete subscription?";
+"A assinatura será movida para o histórico." = "The subscription will be moved to history.";
+"Moeda"                         = "Currency";
+"Moeda da assinatura"           = "Subscription currency";
+
+// MARK: - Categories
+"Categorias"                    = "Categories";
+"Serviços"                      = "Services";
+"Nenhuma assinatura ativa nesta categoria." = "No active subscriptions in this category.";
+"Total mensal do período"       = "Monthly total for the period";
+
+// MARK: - History
+"Histórico"                     = "History";
+"Histórico vazio"               = "No history yet";
+"Assinaturas excluídas aparecem aqui para referência." = "Deleted subscriptions show up here for reference.";
+"Assinaturas encerradas"        = "Ended subscriptions";
+"Valor encerrado"               = "Ended value";
+"Registros"                     = "Records";
+"Limpar"                        = "Clear";
+"Limpar todo o histórico?"      = "Clear all history?";
+
+// MARK: - Settings
+"Ajustes"                       = "Settings";
+"Notificações"                  = "Notifications";
+"Permitir notificações"         = "Allow notifications";
+"Reagendar lembretes"           = "Reschedule reminders";
+"Status"                        = "Status";
+"Ativadas"                      = "Enabled";
+"Negadas"                       = "Denied";
+"Aparência"                     = "Appearance";
+"Tema"                          = "Theme";
+"Idioma"                        = "Language";
+"Dados"                         = "Data";
+"Carregar dados de exemplo"     = "Load sample data";
+"Apagar todos os dados"         = "Erase all data";
+"Sobre"                         = "About";
+"Versão"                        = "Version";
+"Widget"                        = "Widget";
+"Adicione pela tela inicial"    = "Add it from the Home Screen";
+"Apagar todos os dados?"        = "Erase all data?";
+"Apagar tudo"                   = "Erase everything";
+"Todas as assinaturas e o histórico serão removidos. Esta ação não pode ser desfeita." = "All subscriptions and history will be removed. This cannot be undone.";
+
+// MARK: - Currency and rates
+"Moeda base"                    = "Base currency";
+"Formato dos valores"           = "Value format";
+"Totais e gráficos são convertidos para esta moeda." = "Totals and charts are converted into this currency.";
+"Cotacao"                       = "Exchange rate";
+"Cotação"                       = "Exchange rate";
+"Atualizar cotação"             = "Refresh rates";
+"Buscando cotação..."           = "Fetching rates...";
+"Cotações atualizadas"          = "Rates updated";
+"Cotação indisponível"          = "Rates unavailable";
+"Usando valores aproximados offline." = "Using approximate offline values.";
+"Nunca atualizada"              = "Never updated";
+"Atualizada em %@"              = "Updated %@";
+"Taxa de câmbio"                = "Exchange rate";
+
+// MARK: - Analysis
+"Análise"                       = "Analysis";
+"Ver análise"                   = "View analysis";
+"Evolução dos gastos"           = "Spending over time";
+"Últimos 12 meses"              = "Last 12 months";
+"Comparar períodos"             = "Compare periods";
+"Este mês"                      = "This month";
+"Mês anterior"                  = "Last month";
+"Este ano"                      = "This year";
+"Ano anterior"                  = "Last year";
+"Progressão"                    = "Progress";
+"Variação"                      = "Change";
+"Total no período"              = "Total for the period";
+"Cobranças"                     = "Charges";
+"Média por mês"                 = "Monthly average";
+"Sem histórico ainda"           = "No history yet";
+"As cobranças aparecem aqui conforme forem registradas." = "Charges appear here as they get recorded.";
+"Registrar pagamento"           = "Record payment";
+"Pagamento registrado"          = "Payment recorded";
+"Histórico de pagamentos"       = "Payment history";
+"Filtrar por categoria"         = "Filter by category";
+"Limpar filtro"                 = "Clear filter";
+"Todos"                         = "All";
+"Gastos por categoria ao longo do tempo" = "Spending by category over time";
+"Comparação mês a mês"          = "Month by month";
+"vs. mês anterior"              = "vs. last month";
+"vs. ano anterior"              = "vs. last year";
+"sem base de comparação"        = "no baseline to compare";
+"mostrando %@"                  = "showing %@";
+"Estimado a partir do início e da frequência da assinatura." = "Estimated from the subscription start date and frequency.";
+
+// MARK: - Icon picker
+"Buscar marca"                          = "Search brand";
+"Fechar"                                = "Close";
+"Automático (pelo nome)"                = "Automatic (from the name)";
+"O ícone é escolhido pela marca ou categoria do serviço." = "The icon comes from the brand or the service category.";
+"Logo incluído no app"                  = "Logo bundled with the app";
+"Ícone genérico"                        = "Generic icon";
+"Baixar e usar esta imagem"             = "Download and use this image";
+"Imagem por endereço"                   = "Image from a URL";
+"Cole o link de uma imagem (PNG, JPG ou SVG). Ela fica guardada no aparelho." = "Paste a link to an image (PNG, JPG or SVG). It is saved on your device.";
+"Categoria do serviço"                  = "Service category";
+"Marcas"                                = "Brands";
+
+// MARK: - Count, language and widget
+"service.one"                = "1 service";
+"widget.inline"              = "SubCheck: %@/mo";
+"Nenhuma cobrança próxima"   = "No upcoming charge";
+"Seus gastos mensais e as próximas cobranças." = "Your monthly spending and upcoming charges.";
+"O widget usa o mesmo idioma do aplicativo." = "The widget uses the same language as the app.";
+
+// MARK: - Currency and payments
+"Moeda e cotação"               = "Currency & rates";
+"Pagamentos"                    = "Payments";
+"Último pagamento"              = "Last payment";
+"Convertido para %@"            = "Converted to %@";
+"Equivale a %@"                 = "Equivalent to %@";
+"A próxima cobrança foi movida para o próximo ciclo." = "The next charge was moved to the next cycle.";
+"Os totais são convertidos para a moeda base. As cotações são atualizadas automaticamente e usadas offline quando não há internet." = "Totals are converted into the base currency. Rates are refreshed automatically and used offline when there is no internet.";

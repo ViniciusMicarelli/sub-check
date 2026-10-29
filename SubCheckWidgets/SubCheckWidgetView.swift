@@ -50,7 +50,7 @@ struct SubCheckWidgetView: View {
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(.white.opacity(0.9))
 
-            Text("Total mensal")
+            Text(L.t("Total mensal"))
                 .font(.caption2)
                 .foregroundStyle(.white.opacity(0.85))
 
@@ -62,7 +62,7 @@ struct SubCheckWidgetView: View {
 
             Spacer(minLength: 0)
 
-            Text("\(entry.activeCount) serviços")
+            Text(L.t("widget.services", entry.activeCount))
                 .font(.caption2.weight(.medium))
                 .foregroundStyle(.white.opacity(0.9))
         }
@@ -72,7 +72,7 @@ struct SubCheckWidgetView: View {
     private var mediumView: some View {
         HStack(alignment: .top, spacing: Spacing.md) {
             VStack(alignment: .leading, spacing: Spacing.xs) {
-                Text("Total mensal")
+                Text(L.t("Total mensal"))
                     .font(.caption2)
                     .foregroundStyle(.white.opacity(0.85))
                 Text(Money.format(entry.monthlyTotal))
@@ -80,7 +80,7 @@ struct SubCheckWidgetView: View {
                     .foregroundStyle(.white)
                     .minimumScaleFactor(0.6)
                     .lineLimit(1)
-                Text("\(entry.activeCount) serviços · \(Money.compact(entry.yearlyTotal))/ano")
+                Text(L.t("widget.servicesYear", entry.activeCount, Money.compact(entry.yearlyTotal)))
                     .font(.caption2)
                     .foregroundStyle(.white.opacity(0.9))
             }
@@ -89,20 +89,20 @@ struct SubCheckWidgetView: View {
             Divider().overlay(.white.opacity(0.3))
 
             VStack(alignment: .leading, spacing: Spacing.xs) {
-                Text("Próximas cobranças")
+                Text(L.t("Próximas cobranças"))
                     .font(.caption2.weight(.semibold))
                     .foregroundStyle(.white.opacity(0.85))
 
                 ForEach(entry.upcoming.prefix(3)) { item in
                     HStack(spacing: Spacing.xs) {
-                        Image(systemName: item.icon)
-                            .font(.caption2)
+                        SubscriptionIconView(icon: item.icon, fallbackColor: widgetFallback, size: 18)
                         Text(item.name)
                             .font(.caption2)
                             .lineLimit(1)
                         Spacer(minLength: 0)
-                        Text(daysLabel(item.days))
+                        dueLabel(item)
                             .font(.caption2.weight(.semibold))
+                        payButton(item)
                     }
                     .foregroundStyle(.white.opacity(0.95))
                 }
@@ -114,7 +114,7 @@ struct SubCheckWidgetView: View {
     private var largeView: some View {
         VStack(alignment: .leading, spacing: Spacing.md) {
             VStack(alignment: .leading, spacing: Spacing.xs) {
-                Text("Total mensal")
+                Text(L.t("Total mensal"))
                     .font(.caption)
                     .foregroundStyle(.white.opacity(0.85))
                 Text(Money.format(entry.monthlyTotal))
@@ -122,31 +122,31 @@ struct SubCheckWidgetView: View {
                     .foregroundStyle(.white)
                     .minimumScaleFactor(0.6)
                     .lineLimit(1)
-                Text("\(entry.activeCount) serviços ativos · \(Money.compact(entry.yearlyTotal)) por ano")
+                Text(L.t("widget.servicesActive", entry.activeCount, Money.compact(entry.yearlyTotal)))
                     .font(.caption2)
                     .foregroundStyle(.white.opacity(0.9))
             }
 
             Divider().overlay(.white.opacity(0.3))
 
-            Text("Próximas cobranças")
+            Text(L.t("Próximas cobranças"))
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(.white.opacity(0.9))
 
             ForEach(entry.upcoming) { item in
                 HStack(spacing: Spacing.sm) {
-                    Image(systemName: item.icon)
-                        .font(.caption)
-                        .frame(width: 18)
+                    SubscriptionIconView(icon: item.icon, fallbackColor: widgetFallback, size: 20)
+                        .frame(width: 20)
                     Text(item.name)
                         .font(.caption.weight(.medium))
                         .lineLimit(1)
                     Spacer(minLength: 0)
                     Text(Money.format(item.cost, code: item.currencyCode))
                         .font(.caption.weight(.semibold))
-                    Text(daysLabel(item.days))
+                    dueLabel(item)
                         .font(.caption2)
-                        .frame(width: 54, alignment: .trailing)
+                        .frame(minWidth: 54, alignment: .trailing)
+                    payButton(item)
                 }
                 .foregroundStyle(.white.opacity(0.95))
             }
@@ -160,15 +160,19 @@ struct SubCheckWidgetView: View {
 
     private var accessoryRectangular: some View {
         VStack(alignment: .leading, spacing: 2) {
-            Text("SubCheck · \(Money.format(entry.monthlyTotal))/mês")
+            Text(L.t("widget.header", Money.format(entry.monthlyTotal)))
                 .font(.caption2.weight(.semibold))
                 .lineLimit(1)
             if let next = entry.upcoming.first {
-                Text("\(next.name) · \(daysLabel(next.days)) · \(Money.format(next.cost, code: next.currencyCode))")
-                    .font(.caption2)
-                    .lineLimit(1)
+                HStack(spacing: 4) {
+                    Text(L.t("widget.nextLine", next.name, daysLabel(next.days), Money.format(next.cost, code: next.currencyCode)))
+                        .font(.caption2)
+                        .lineLimit(1)
+                    Spacer(minLength: 0)
+                    payButton(next)
+                }
             } else {
-                Text("Nenhuma cobrança próxima")
+                Text(L.t("Nenhuma cobrança próxima"))
                     .font(.caption2)
             }
         }
@@ -176,7 +180,7 @@ struct SubCheckWidgetView: View {
 
     private var accessoryCircular: some View {
         Gauge(value: min(entry.monthlyTotal, 1000), in: 0...1000) {
-            Text("R$")
+            Text(CurrencyService.shared.baseCurrency.symbol)
         } currentValueLabel: {
             Text("\(entry.activeCount)")
                 .font(.caption2.bold())
@@ -185,16 +189,39 @@ struct SubCheckWidgetView: View {
     }
 
     private var inlineText: String {
-        "SubCheck: \(Money.format(entry.monthlyTotal))/mês"
+        L.t("widget.inline", Money.format(entry.monthlyTotal))
     }
 
     // MARK: - Helpers
 
+    /// Cor de fundo dos ícones sem cor de marca (ficam sobre o gradiente).
+    private var widgetFallback: Color { .white.opacity(0.25) }
+
     private func daysLabel(_ days: Int) -> String {
         switch days {
-        case 0: "hoje"
-        case 1: "amanhã"
-        default: "\(days)d"
+        case 0: L.t("widget.today")
+        case 1: L.t("widget.tomorrow")
+        default: L.t("widget.inDays", days)
         }
+    }
+
+    /// Contagem ao vivo quando a cobrança é hoje; senão, os dias restantes.
+    @ViewBuilder
+    private func dueLabel(_ item: UpcomingItem) -> some View {
+        if item.days == 0 {
+            Text(item.dueDate, style: .timer)
+                .monospacedDigit()
+        } else {
+            Text(daysLabel(item.days))
+        }
+    }
+
+    /// Botão que registra o pagamento direto do widget, sem abrir o app.
+    private func payButton(_ item: UpcomingItem) -> some View {
+        Button(intent: MarkPaidIntent(subscriptionID: item.id)) {
+            Image(systemName: "checkmark.circle.fill")
+                .font(.caption2)
+        }
+        .buttonStyle(.plain)
     }
 }

@@ -13,6 +13,7 @@ struct RootView: View {
 
     @State private var selection: Tab = .dashboard
     @AppStorage("appearance") private var appearance: AppearanceOption = .system
+    @AppStorage(L.languageKey) private var language: AppLanguage = .system
 
     var body: some View {
         TabView(selection: $selection) {
@@ -38,5 +39,8 @@ struct RootView: View {
         }
         .tint(.brand)
         .preferredColorScheme(appearance.colorScheme)
+        // A troca de idioma reavalia as `LocalizedStringKey` sem reiniciar o app.
+        .environment(\.locale, language.locale ?? Locale.current)
+        .id(language)
     }
 }

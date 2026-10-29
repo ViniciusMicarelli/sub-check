@@ -18,7 +18,7 @@ struct CategoriesView: View {
                 let subs = grouped[category] ?? []
                 return CategoryTotal(
                     category: category,
-                    total: subs.reduce(0) { $0 + $1.monthlyCost },
+                    total: subs.monthlyTotal(in: .shared),
                     count: subs.count
                 )
             }
@@ -82,7 +82,7 @@ private struct CategoryCard: View {
                     .foregroundStyle(Color.textPrimary)
                     .lineLimit(1)
 
-                Text("\(stat.count) serviço\(stat.count == 1 ? "" : "s")")
+                Text(stat.count == 1 ? L.t("service.one") : L.t("dashboard.services", stat.count))
                     .font(.caption2)
                     .foregroundStyle(Color.textSecondary)
             }
@@ -112,7 +112,7 @@ struct CategoryDetailView: View {
     }
 
     private var monthlyTotal: Double {
-        items.reduce(0) { $0 + $1.monthlyCost }
+        items.monthlyTotal(in: .shared)
     }
 
     var body: some View {
@@ -120,8 +120,8 @@ struct CategoryDetailView: View {
             if items.isEmpty {
                 EmptyStateView(
                     icon: category.icon,
-                    title: "Nada em \(category.displayName)",
-                    message: "Nenhuma assinatura ativa nesta categoria."
+                    title: L.t("category.empty", category.displayName),
+                    message: L.t("Nenhuma assinatura ativa nesta categoria.")
                 )
             } else {
                 Section {
