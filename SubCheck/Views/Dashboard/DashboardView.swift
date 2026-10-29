@@ -14,10 +14,20 @@ struct DashboardView: View {
     private var subscriptions: [Subscription]
 
     @State private var showAddSheet = false
+    /// Paywall aberto pelo limite de assinaturas ou pela Análise bloqueada.
+    @State private var showPaywall = false
+    @State private var paywallReason: String?
     /// Categoria destacada no gráfico; filtra o resto do painel.
     @State private var selectedCategory: CategoryType?
 
+    private var store = StoreService.shared
+
     private var active: [Subscription] { subscriptions.filter { !$0.isCancelled } }
+
+    /// `true` quando a versão gratuita ainda permite cadastrar.
+    private var canAddMore: Bool {
+        store.isPro || active.count < StoreService.freeLimit
+    }
 
     private var filteredActive: [Subscription] {
         guard let selectedCategory else { return active }
@@ -72,7 +82,7 @@ struct DashboardView: View {
                             title: L.t("Nenhuma assinatura"),
                             message: L.t("Toque em + para adicionar sua primeira assinatura e acompanhar seus gastos."),
                             actionTitle: L.t("Adicionar assinatura")
-                        ) { showAddSheet = true }
+                        ) { startAdding() }
                         .cardSurface()
                     } else {
                         CategoryDonutChart(subscriptions: active, selection: $selectedCategory)
@@ -97,7 +107,7 @@ struct DashboardView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         Haptics.impact(.light)
-                        showAddSheet = true
+                        startAdding()
                     } label: {
                         Label("Nova assinatura", systemImage: "plus")
                     }
@@ -106,7 +116,26 @@ struct DashboardView: View {
             .sheet(isPresented: $showAddSheet) {
                 AddSubscriptionView()
             }
+            .sheet(isPresented: $showPaywall) {
+                ProView(reason: paywallReason)
+            }
         }
+    }
+
+    // MARK: - Limite da versão gratuita
+
+    /// Abre o formulário ou o paywall quando o limite é atingido.
+    private func startAdding() {
+        guard canAddMore else {
+            Haptics.warning()
+            paywallReason = L.t(
+                "Você atingiu o limite de %lld assinaturas ativas.",
+                StoreService.freeLimit
+            )
+            showPaywall = true
+            return
+        }
+        showAddSheet = true
     }
 
     /// Chip mostrado quando uma fatia do gráfico está selecionada.
@@ -136,34 +165,59 @@ struct DashboardView: View {
     }
 
     private var analysisLink: some View {
-        NavigationLink {
-            AnalysisView()
-        } label: {
-            HStack(spacing: Spacing.md) {
-                Image(systemName: "chart.xyaxis.line")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.white)
-                    .frame(width: 34, height: 34)
-                    .background(Color.brandGradient, in: RoundedRectangle(cornerRadius: Radius.sm, style: .continuous))
-
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Análise")
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(Color.textPrimary)
-                    Text("Evolução dos gastos")
-                        .font(.caption)
-                        .foregroundStyle(Color.textSecondary)
+        Group {
+            if store.isPro {
+                NavigationLink {
+                    AnalysisView()
+                } label: {
+                    analysisLabel
                 }
+            } else {
+                Button {
+                    Haptics.impact(.light)
+                    paywallReason = L.t("A Análise completa faz parte do SubCheck Pro.")
+                    showPaywall = true
+                } label: {
+                    analysisLabel
+                }
+            }
+        }
+        .buttonStyle(.plain)
+    }
 
-                Spacer(minLength: 0)
+    private var analysisLabel: some View {
+        HStack(spacing: Spacing.md) {
+            Image(systemName: "chart.xyaxis.line")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.white)
+                .frame(width: 34, height: 34)
+                .background(Color.brandGradient, in: RoundedRectangle(cornerRadius: Radius.sm, style: .continuous))
 
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Análise")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Color.textPrimary)
+                Text("Evolução dos gastos")
+                    .font(.caption)
+                    .foregroundStyle(Color.textSecondary)
+            }
+
+            Spacer(minLength: 0)
+
+            if store.isPro {
                 Image(systemName: "chevron.right")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(Color.textTertiary)
+            } else {
+                Label(L.t("Pro"), systemImage: "lock.fill")
+                    .font(.caption2.weight(.bold))
+                    .foregroundStyle(Color.warning)
+                    .padding(.horizontal, Spacing.sm)
+                    .padding(.vertical, Spacing.xs)
+                    .background(Color.warning.opacity(0.15), in: Capsule())
             }
-            .cardSurface()
         }
-        .buttonStyle(.plain)
+        .cardSurface()
     }
 
     private var heroCard: some View {

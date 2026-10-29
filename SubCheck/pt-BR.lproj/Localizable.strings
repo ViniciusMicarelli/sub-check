@@ -54,6 +54,17 @@
 "widget.today"          = "hoje";
 "widget.tomorrow"       = "amanhã";
 "widget.inDays"         = "%lldd";
+"widget.summary.footer" = "%lld serviços · %@/ano";
+"widget.servicesShort"  = "serviços";
+"widget.dueSoonShort"   = "vencem em 7 dias";
+"widget.tapToPay"       = "Toque no check para registrar o pagamento.";
+"widget.daysShort"      = "dias";
+"widget.accessory.total" = "%@/mês · %lld ativas";
+"widget.accessory.next"  = "%@ · %@";
+"widget.categoryShare"   = "%@ do total mensal";
+"Seu gasto mensal e a distribuição por categoria." = "Seu gasto mensal e a distribuição por categoria.";
+"O que vence em seguida e quanto falta para cada cobrança." = "O que vence em seguida e quanto falta para cada cobrança.";
+"Quanto cada categoria representa do seu gasto mensal." = "Quanto cada categoria representa do seu gasto mensal.";
 
 // MARK: - Resumo
 "Resumo"                       = "Resumo";
@@ -230,3 +241,49 @@
 "Equivale a %@"                 = "Equivale a %@";
 "A próxima cobrança foi movida para o próximo ciclo." = "A próxima cobrança foi movida para o próximo ciclo.";
 "Os totais são convertidos para a moeda base. As cotações são atualizadas automaticamente e usadas offline quando não há internet." = "Os totais são convertidos para a moeda base. As cotações são atualizadas automaticamente e usadas offline quando não há internet.";
+
+// MARK: - SubCheck Pro
+"SubCheck Pro"                  = "SubCheck Pro";
+"Ver opções"                    = "Ver opções";
+"Ativo"                         = "Ativo";
+"Pro"                           = "Pro";
+"Um pagamento único libera tudo para sempre." = "Um pagamento único libera tudo para sempre.";
+"Assinaturas ilimitadas"        = "Assinaturas ilimitadas";
+"Cadastre quantos serviços quiser." = "Cadastre quantos serviços quiser.";
+"Análise completa"              = "Análise completa";
+"Evolução e comparação de meses e anos." = "Evolução e comparação de meses e anos.";
+"Exportar em CSV"               = "Exportar em CSV";
+"Leve seus dados para qualquer planilha." = "Leve seus dados para qualquer planilha.";
+"Bloqueio por Face ID"          = "Bloqueio por Face ID";
+"Suas assinaturas protegidas ao abrir o app." = "Suas assinaturas protegidas ao abrir o app.";
+"Pro ativo neste aparelho"      = "Pro ativo neste aparelho";
+"Desbloquear por %@"            = "Desbloquear por %@";
+"Carregando…"                   = "Carregando…";
+"Restaurar compra"              = "Restaurar compra";
+"Pagamento único. Sem assinatura e sem renovação." = "Pagamento único. Sem assinatura e sem renovação.";
+"Você atingiu o limite de %lld assinaturas ativas." = "Você atingiu o limite de %lld assinaturas ativas.";
+"A Análise completa faz parte do SubCheck Pro." = "A Análise completa faz parte do SubCheck Pro.";
+"Obrigado por apoiar o SubCheck." = "Obrigado por apoiar o SubCheck.";
+"Um pagamento único libera todos os recursos para sempre." = "Um pagamento único libera todos os recursos para sempre.";
+"Segurança"                     = "Segurança";
+"Ao abrir o app, o Face ID ou a senha do aparelho é solicitado." = "Ao abrir o app, o Face ID ou a senha do aparelho é solicitado.";
+"O bloqueio por Face ID faz parte do SubCheck Pro." = "O bloqueio por Face ID faz parte do SubCheck Pro.";
+"A exportação em CSV faz parte do SubCheck Pro." = "A exportação em CSV faz parte do SubCheck Pro.";
+"SubCheck bloqueado"            = "SubCheck bloqueado";
+"Desbloquear"                   = "Desbloquear";
+"Desbloquear suas assinaturas." = "Desbloquear suas assinaturas.";
+"Não foi possível confirmar sua identidade." = "Não foi possível confirmar sua identidade.";
+"Assinatura não encontrada"     = "Assinatura não encontrada";
+"Ela pode ter sido excluída."   = "Ela pode ter sido excluída.";
+
+// MARK: - Loja
+"Não foi possível carregar a loja." = "Não foi possível carregar a loja.";
+"A compra não pôde ser verificada." = "A compra não pôde ser verificada.";
+"A compra está aguardando aprovação." = "A compra está aguardando aprovação.";
+"Não foi possível concluir a compra." = "Não foi possível concluir a compra.";
+"Não foi possível restaurar as compras." = "Não foi possível restaurar as compras.";
+
+// MARK: - Exportação
+"Situação"                      = "Situação";
+"Ativa"                         = "Ativa";
+"Média mensal"                  = "Média mensal";

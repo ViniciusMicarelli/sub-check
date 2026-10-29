@@ -53,6 +53,17 @@
 "widget.today"          = "today";
 "widget.tomorrow"       = "tomorrow";
 "widget.inDays"         = "%lldd";
+"widget.summary.footer" = "%lld services · %@/yr";
+"widget.servicesShort"  = "services";
+"widget.dueSoonShort"   = "due in 7 days";
+"widget.tapToPay"       = "Tap the check to record the payment.";
+"widget.daysShort"      = "days";
+"widget.accessory.total" = "%@/mo · %lld active";
+"widget.accessory.next"  = "%@ · %@";
+"widget.categoryShare"   = "%@ of the monthly total";
+"Seu gasto mensal e a distribuição por categoria." = "Your monthly spending and the category breakdown.";
+"O que vence em seguida e quanto falta para cada cobrança." = "What is due next and how long until each charge.";
+"Quanto cada categoria representa do seu gasto mensal." = "How much each category represents of your monthly spending.";
 
 // MARK: - Overview
 "Resumo"                       = "Overview";
@@ -229,3 +240,49 @@
 "Equivale a %@"                 = "Equivalent to %@";
 "A próxima cobrança foi movida para o próximo ciclo." = "The next charge was moved to the next cycle.";
 "Os totais são convertidos para a moeda base. As cotações são atualizadas automaticamente e usadas offline quando não há internet." = "Totals are converted into the base currency. Rates are refreshed automatically and used offline when there is no internet.";
+
+// MARK: - SubCheck Pro
+"SubCheck Pro"                  = "SubCheck Pro";
+"Ver opções"                    = "See options";
+"Ativo"                         = "Active";
+"Pro"                           = "Pro";
+"Um pagamento único libera tudo para sempre." = "One single payment unlocks everything for good.";
+"Assinaturas ilimitadas"        = "Unlimited subscriptions";
+"Cadastre quantos serviços quiser." = "Add as many services as you want.";
+"Análise completa"              = "Full analysis";
+"Evolução e comparação de meses e anos." = "Trends and month-over-month, year-over-year comparisons.";
+"Exportar em CSV"               = "Export as CSV";
+"Leve seus dados para qualquer planilha." = "Take your data to any spreadsheet.";
+"Bloqueio por Face ID"          = "Face ID lock";
+"Suas assinaturas protegidas ao abrir o app." = "Your subscriptions protected when the app opens.";
+"Pro ativo neste aparelho"      = "Pro active on this device";
+"Desbloquear por %@"            = "Unlock for %@";
+"Carregando…"                   = "Loading...";
+"Restaurar compra"              = "Restore purchase";
+"Pagamento único. Sem assinatura e sem renovação." = "One-time payment. No subscription, no renewal.";
+"Você atingiu o limite de %lld assinaturas ativas." = "You reached the limit of %lld active subscriptions.";
+"A Análise completa faz parte do SubCheck Pro." = "The full analysis is part of SubCheck Pro.";
+"Obrigado por apoiar o SubCheck." = "Thanks for supporting SubCheck.";
+"Um pagamento único libera todos os recursos para sempre." = "One single payment unlocks every feature for good.";
+"Segurança"                     = "Security";
+"Ao abrir o app, o Face ID ou a senha do aparelho é solicitado." = "When the app opens, Face ID or your device passcode is requested.";
+"O bloqueio por Face ID faz parte do SubCheck Pro." = "The Face ID lock is part of SubCheck Pro.";
+"A exportação em CSV faz parte do SubCheck Pro." = "CSV export is part of SubCheck Pro.";
+"SubCheck bloqueado"            = "SubCheck locked";
+"Desbloquear"                   = "Unlock";
+"Desbloquear suas assinaturas." = "Unlock your subscriptions.";
+"Não foi possível confirmar sua identidade." = "We could not confirm your identity.";
+"Assinatura não encontrada"     = "Subscription not found";
+"Ela pode ter sido excluída."   = "It may have been deleted.";
+
+// MARK: - Store
+"Não foi possível carregar a loja." = "The store could not be loaded.";
+"A compra não pôde ser verificada." = "The purchase could not be verified.";
+"A compra está aguardando aprovação." = "The purchase is pending approval.";
+"Não foi possível concluir a compra." = "The purchase could not be completed.";
+"Não foi possível restaurar as compras." = "Purchases could not be restored.";
+
+// MARK: - Export
+"Situação"                      = "Status";
+"Ativa"                         = "Active";
+"Média mensal"                  = "Monthly average";

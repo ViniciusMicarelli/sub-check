@@ -13,6 +13,10 @@ struct SubscriptionsView: View {
 
     @State private var search = ""
     @State private var showAddSheet = false
+    /// Paywall aberto quando o limite da versão gratuita é atingido.
+    @State private var showPaywall = false
+
+    private var store = StoreService.shared
 
     private var filtered: [Subscription] {
         guard !search.isEmpty else { return subscriptions }
@@ -21,6 +25,11 @@ struct SubscriptionsView: View {
 
     private var activeList: [Subscription] { filtered.filter { !$0.isCancelled } }
     private var cancelledList: [Subscription] { filtered.filter(\.isCancelled) }
+
+    /// `true` quando a versão gratuita ainda permite cadastrar.
+    private var canAddMore: Bool {
+        store.isPro || subscriptions.filter { !$0.isCancelled }.count < StoreService.freeLimit
+    }
 
     private var monthlyTotal: Double {
         activeList.monthlyTotal(in: .shared)
@@ -36,7 +45,7 @@ struct SubscriptionsView: View {
                             title: L.t("Sem assinaturas"),
                             message: L.t("Adicione serviços para acompanhar cobranças e gastos."),
                             actionTitle: L.t("Adicionar assinatura")
-                        ) { showAddSheet = true }
+                        ) { startAdding() }
                         .cardSurface()
                         .padding(Spacing.lg)
                     }
@@ -70,7 +79,7 @@ struct SubscriptionsView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         Haptics.impact(.light)
-                        showAddSheet = true
+                        startAdding()
                     } label: {
                         Label("Nova assinatura", systemImage: "plus")
                     }
@@ -79,7 +88,25 @@ struct SubscriptionsView: View {
             .sheet(isPresented: $showAddSheet) {
                 AddSubscriptionView()
             }
+            .sheet(isPresented: $showPaywall) {
+                ProView(
+                    reason: L.t(
+                        "Você atingiu o limite de %lld assinaturas ativas.",
+                        StoreService.freeLimit
+                    )
+                )
+            }
         }
+    }
+
+    /// Abre o formulário ou o paywall quando o limite é atingido.
+    private func startAdding() {
+        guard canAddMore else {
+            Haptics.warning()
+            showPaywall = true
+            return
+        }
+        showAddSheet = true
     }
 
     private func sectionHeader(_ title: String, count: Int) -> some View {

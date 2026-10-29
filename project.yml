@@ -24,19 +24,42 @@ targets:
     platform: iOS
     sources:
       - path: SubCheck
+    # Info.plist gerado pelo XcodeGen: precisa existir para declarar o esquema
+    # de URL `subcheck://` (links dos widgets) e o uso do Face ID.
+    info:
+      path: Config/Info.plist
+      properties:
+        CFBundleDisplayName: SubCheck
+        CFBundleDevelopmentRegion: pt-BR
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LSRequiresIPhoneOS: true
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: true
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        NSFaceIDUsageDescription: "Use o Face ID para proteger suas assinaturas."
+        CFBundleURLTypes:
+          - CFBundleURLName: github.com-ViniciusMicarelli.SubCheck
+            CFBundleURLSchemes:
+              - subcheck
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: github.com-ViniciusMicarelli.SubCheck
         PRODUCT_NAME: SubCheck
         TARGETED_DEVICE_FAMILY: "1,2"
-        GENERATE_INFOPLIST_FILE: "YES"
+        GENERATE_INFOPLIST_FILE: "NO"
         CODE_SIGN_ENTITLEMENTS: Config/SubCheck.entitlements
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
-        INFOPLIST_KEY_CFBundleDisplayName: SubCheck
-        INFOPLIST_KEY_UILaunchScreen_Generation: "YES"
-        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: "YES"
-        INFOPLIST_KEY_UISupportedInterfaceOrientations: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
     dependencies:
       - target: SubCheckWidgets
         embed: true
@@ -58,6 +81,7 @@ targets:
       - path: SubCheck/Services/RemoteIconStore.swift
       - path: SubCheck/Services/Localization.swift
       - path: SubCheck/Services/CurrencyService.swift
+      - path: SubCheck/Services/WidgetLink.swift
       - path: SubCheck/DesignSystem/Theme.swift
       - path: SubCheck/DesignSystem/CategoryStyle.swift
       - path: SubCheck/DesignSystem/Formatters.swift
@@ -80,5 +104,7 @@ schemes:
         SubCheck: all
     run:
       config: Debug
+      # Permite comprar/testar o Pro no simulador sem App Store Connect.
+      storeKitConfiguration: Config/SubCheck.storekit
     archive:
       config: Release

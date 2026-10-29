@@ -1,0 +1,43 @@
+{
+  "identifier" : "A1B2C3D4-5E6F-4A7B-8C9D-0E1F2A3B4C5D",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "39.90",
+      "familyShareable" : false,
+      "internalID" : "1",
+      "localizations" : [
+        {
+          "description" : "Assinaturas ilimitadas, análise completa do histórico, exportação em CSV e bloqueio por Face ID.",
+          "displayName" : "SubCheck Pro",
+          "locale" : "pt_BR"
+        },
+        {
+          "description" : "Unlimited subscriptions, full spend analysis, CSV export and Face ID lock.",
+          "displayName" : "SubCheck Pro",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "github.com-ViniciusMicarelli.SubCheck.pro.lifetime",
+      "referenceName" : "SubCheck Pro",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_failTransactionsEnabled" : false,
+    "_locale" : "pt_BR",
+    "_storefront" : "BRA",
+    "_storeKitErrors" : [
+
+    ]
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}
