@@ -54,6 +54,11 @@ enum PaymentLedger {
     ) -> PaymentRecord {
         let record = subscription.recordPayment(at: date, in: context)
         NotificationService.shared.scheduleNotification(for: subscription)
+
+        // A próxima cobrança mudou: widgets e Live Activity precisam seguir.
+        let all = (try? context.fetch(FetchDescriptor<Subscription>())) ?? []
+        LiveActivityService.shared.syncAll(with: all)
+        BudgetService.evaluate(all)
         return record
     }
 

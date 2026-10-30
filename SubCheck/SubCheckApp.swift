@@ -8,7 +8,6 @@
 
 import SwiftUI
 import SwiftData
-import WidgetKit
 
 @main
 struct SubCheckApp: App {
@@ -24,9 +23,11 @@ struct SubCheckApp: App {
 
                     // Reconstrói o histórico de cobranças a partir do início de cada assinatura.
                     let subscriptions = (try? context.fetch(FetchDescriptor<Subscription>())) ?? []
-                    if PaymentLedger.reconcile(subscriptions, in: context) > 0 {
-                        WidgetCenter.shared.reloadAllTimelines()
-                    }
+                    PaymentLedger.reconcile(subscriptions, in: context)
+
+                    // Widgets e Live Activity sempre alinhados na abertura.
+                    LiveActivityService.shared.syncAll(with: subscriptions)
+                    BudgetService.evaluate(subscriptions)
 
                     await CurrencyService.shared.refreshIfStale()
                 }

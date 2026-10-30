@@ -47,6 +47,8 @@ targets:
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
         NSFaceIDUsageDescription: "Use o Face ID para proteger suas assinaturas."
+        # Habilita a Live Activity (ilha dinâmica + tela de bloqueio).
+        NSSupportsLiveActivities: true
         CFBundleURLTypes:
           - CFBundleURLName: github.com-ViniciusMicarelli.SubCheck
             CFBundleURLSchemes:
@@ -82,6 +84,7 @@ targets:
       - path: SubCheck/Services/Localization.swift
       - path: SubCheck/Services/CurrencyService.swift
       - path: SubCheck/Services/WidgetLink.swift
+      - path: SubCheck/Services/LiveActivityService.swift
       - path: SubCheck/DesignSystem/Theme.swift
       - path: SubCheck/DesignSystem/CategoryStyle.swift
       - path: SubCheck/DesignSystem/Formatters.swift

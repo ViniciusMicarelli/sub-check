@@ -73,7 +73,7 @@ struct RootView: View {
 
     /// Trava na abertura e ao voltar do segundo plano; só vale para o Pro.
     private func lockIfNeeded() {
-        guard appLockEnabled, store.isPro else { return }
+        guard appLockEnabled, store.hasProAccess else { return }
         isLocked = true
     }
 

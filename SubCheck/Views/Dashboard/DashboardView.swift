@@ -19,6 +19,8 @@ struct DashboardView: View {
     @State private var paywallReason: String?
     /// Categoria destacada no gráfico; filtra o resto do painel.
     @State private var selectedCategory: CategoryType?
+    /// Teto mensal definido nas Ajustes (ver `Budget`).
+    @AppStorage(Budget.amountKey) private var monthlyBudget = 0.0
 
     private var store = StoreService.shared
 
@@ -26,7 +28,7 @@ struct DashboardView: View {
 
     /// `true` quando a versão gratuita ainda permite cadastrar.
     private var canAddMore: Bool {
-        store.isPro || active.count < StoreService.freeLimit
+        store.hasProAccess || active.count < StoreService.freeLimit
     }
 
     private var filteredActive: [Subscription] {
@@ -93,6 +95,10 @@ struct DashboardView: View {
 
                         TopSubscriptionsChart(subscriptions: filteredActive)
                         UpcomingPaymentsSection(subscriptions: filteredActive)
+                    }
+
+                    if store.hasProAccess, monthlyBudget > 0 {
+                        BudgetCard(spent: monthlyTotal, budget: monthlyBudget)
                     }
 
                     analysisLink
@@ -166,7 +172,7 @@ struct DashboardView: View {
 
     private var analysisLink: some View {
         Group {
-            if store.isPro {
+            if store.hasProAccess {
                 NavigationLink {
                     AnalysisView()
                 } label: {
@@ -204,7 +210,7 @@ struct DashboardView: View {
 
             Spacer(minLength: 0)
 
-            if store.isPro {
+            if store.hasProAccess {
                 Image(systemName: "chevron.right")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(Color.textTertiary)

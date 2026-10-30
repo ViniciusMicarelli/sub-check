@@ -31,6 +31,7 @@ enum SubscriptionStore {
         context.insert(record)
         context.delete(subscription)
         try? context.save()
+        sync(context)
     }
 
     /// Marks a subscription as cancelled (or reactivates it).
@@ -43,5 +44,14 @@ enum SubscriptionStore {
             NotificationService.shared.scheduleNotification(for: subscription)
         }
         try? context.save()
+        sync(context)
+    }
+
+    /// Devolve widgets e Live Activity ao estado atual das assinaturas e
+    /// reavalia o orçamento mensal.
+    private static func sync(_ context: ModelContext) {
+        let all = (try? context.fetch(FetchDescriptor<Subscription>())) ?? []
+        LiveActivityService.shared.syncAll(with: all)
+        BudgetService.evaluate(all)
     }
 }

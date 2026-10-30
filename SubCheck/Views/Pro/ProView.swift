@@ -22,7 +22,15 @@ struct ProView: View {
             ("infinity", L.t("Assinaturas ilimitadas"),
              L.t("Cadastre quantos serviços quiser."), .brand),
             ("chart.xyaxis.line", L.t("Análise completa"),
-             L.t("Evolução e comparação de meses e anos."), .info),
+             L.t("Evolução, mapa de calor e previsão de 12 meses."), .info),
+            ("live.activity", L.t("Ilha Dinâmica ao vivo"),
+             L.t("Contagem regressiva e próximas cobranças na tela."), .danger),
+            ("chart.pie", L.t("Orçamento com alertas"),
+             L.t("Defina um teto mensal e seja avisado ao ultrapassar."), .warning),
+            ("scissors", L.t("Simulador de cancelamento"),
+             L.t("Veja quanto você economiza cortando serviços."), .brand),
+            ("doc.richtext", L.t("Relatório em PDF"),
+             L.t("Um resumo pronto para compartilhar."), .success),
             ("square.and.arrow.up", L.t("Exportar em CSV"),
              L.t("Leve seus dados para qualquer planilha."), .success),
             ("faceid", L.t("Bloqueio por Face ID"),
@@ -123,17 +131,21 @@ struct ProView: View {
     @ViewBuilder
     private var purchaseBlock: some View {
         if store.isPro {
-            Label(L.t("Pro ativo neste aparelho"), systemImage: "checkmark.seal.fill")
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(Color.success)
-                .frame(maxWidth: .infinity)
-                .padding(Spacing.lg)
-                .background(
-                    Color.success.opacity(0.12),
-                    in: RoundedRectangle(cornerRadius: Radius.md, style: .continuous)
-                )
+            statusBanner(
+                text: L.t("Pro ativo neste aparelho"),
+                icon: "checkmark.seal.fill",
+                tint: .success
+            )
         } else {
             VStack(spacing: Spacing.md) {
+                if store.isTrialActive {
+                    statusBanner(
+                        text: L.t("Teste gratuito: %lld dia(s) restante(s).", store.trialDaysRemaining),
+                        icon: "hourglass",
+                        tint: .warning
+                    )
+                }
+
                 Button {
                     Task {
                         if await store.purchase() { dismiss() }
@@ -179,6 +191,19 @@ struct ProView: View {
                     .multilineTextAlignment(.center)
             }
         }
+    }
+
+    /// Faixa de estado (Pro ativo ou teste em curso).
+    private func statusBanner(text: String, icon: String, tint: Color) -> some View {
+        Label(text, systemImage: icon)
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(tint)
+            .frame(maxWidth: .infinity)
+            .padding(Spacing.lg)
+            .background(
+                tint.opacity(0.12),
+                in: RoundedRectangle(cornerRadius: Radius.md, style: .continuous)
+            )
     }
 
     /// "Desbloquear por R$ 39,90" enquanto o preço da loja não chegou.

@@ -5,7 +5,6 @@
 
 import SwiftUI
 import SwiftData
-import WidgetKit
 
 struct SubscriptionDetailView: View {
 
@@ -185,7 +184,6 @@ struct SubscriptionDetailView: View {
         Section("Pagamentos") {
             Button {
                 PaymentLedger.markPaid(subscription, in: context)
-                WidgetCenter.shared.reloadAllTimelines()
                 Haptics.success()
                 showPaymentConfirmation = true
             } label: {

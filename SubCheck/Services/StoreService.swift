@@ -20,12 +20,19 @@ final class StoreService {
     /// Assinaturas ativas permitidas na versão gratuita.
     static let freeLimit = 5
 
+    /// Dias de teste liberados a partir da primeira abertura do app. O teste
+    /// é local: não existe oferta introdutória em compra única na App Store.
+    static let trialDays = 7
+
     static let shared = StoreService()
 
     private static let unlockedKey = "proUnlocked"
+    private static let trialStartKey = "proTrialStart"
 
     private(set) var product: Product?
     private(set) var isPro: Bool
+    /// Primeira abertura do app, que marca o começo do teste.
+    private(set) var trialStartDate: Date
     private(set) var isLoading = false
     private(set) var isPurchasing = false
     /// Mensagem para exibir no paywall quando algo falha.
@@ -35,8 +42,45 @@ final class StoreService {
 
     private init() {
         isPro = UserDefaults.standard.bool(forKey: Self.unlockedKey)
+        trialStartDate = Self.startTrialIfNeeded()
         updatesTask = observeTransactions()
         Task { await refresh() }
+    }
+
+    // MARK: - Teste
+
+    /// Libera os recursos Pro: compra registrada ou teste ainda em curso.
+    /// Todos os portões do app devem usar isto, nunca `isPro` direto.
+    var hasProAccess: Bool { isPro || isTrialActive }
+
+    var trialEndDate: Date {
+        Calendar.current.date(
+            byAdding: .day,
+            value: Self.trialDays,
+            to: trialStartDate
+        ) ?? trialStartDate
+    }
+
+    var isTrialActive: Bool { !isPro && Date() < trialEndDate }
+
+    /// Dias inteiros que ainda restam do teste. Zero quando expirou ou
+    /// quando a compra já foi feita.
+    var trialDaysRemaining: Int {
+        guard isTrialActive else { return 0 }
+        let seconds = trialEndDate.timeIntervalSinceNow
+        return max(1, Int(ceil(seconds / 86_400)))
+    }
+
+    /// Grava a data da primeira abertura. Fica no aparelho, então reinstalar
+    /// o app reinicia a contagem do teste.
+    private static func startTrialIfNeeded() -> Date {
+        let defaults = UserDefaults.standard
+        if let stored = defaults.object(forKey: trialStartKey) as? Date {
+            return stored
+        }
+        let now = Date()
+        defaults.set(now, forKey: trialStartKey)
+        return now
     }
 
     // MARK: - Preço

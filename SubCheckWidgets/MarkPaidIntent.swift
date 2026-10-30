@@ -8,7 +8,6 @@
 
 import AppIntents
 import SwiftData
-import WidgetKit
 import Foundation
 
 struct MarkPaidIntent: AppIntent {
@@ -27,6 +26,10 @@ struct MarkPaidIntent: AppIntent {
         self.subscriptionID = subscriptionID.uuidString
     }
 
+    init(subscriptionID: String) {
+        self.subscriptionID = subscriptionID
+    }
+
     @MainActor
     func perform() async throws -> some IntentResult {
         guard let id = UUID(uuidString: subscriptionID) else { return .result() }
@@ -39,7 +42,11 @@ struct MarkPaidIntent: AppIntent {
         guard let subscription = subscriptions.first else { return .result() }
 
         subscription.recordPayment(at: Date(), in: context)
-        WidgetCenter.shared.reloadAllTimelines()
+
+        // Widgets e Live Activity precisam da nova próxima cobrança.
+        let all = (try? context.fetch(FetchDescriptor<Subscription>())) ?? []
+        LiveActivityService.shared.syncAll(with: all)
+
         return .result()
     }
 }

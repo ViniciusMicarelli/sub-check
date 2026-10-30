@@ -28,7 +28,7 @@ struct SubscriptionsView: View {
 
     /// `true` quando a versão gratuita ainda permite cadastrar.
     private var canAddMore: Bool {
-        store.isPro || subscriptions.filter { !$0.isCancelled }.count < StoreService.freeLimit
+        store.hasProAccess || subscriptions.filter { !$0.isCancelled }.count < StoreService.freeLimit
     }
 
     private var monthlyTotal: Double {

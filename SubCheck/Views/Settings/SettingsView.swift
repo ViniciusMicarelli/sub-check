@@ -14,6 +14,10 @@ struct SettingsView: View {
     @AppStorage("appearance") private var appearance: AppearanceOption = .system
     @AppStorage(L.languageKey) private var language: AppLanguage = .system
     @AppStorage("appLockEnabled") private var appLockEnabled = false
+    /// Mesma chave lida por `LiveActivityService`.
+    @AppStorage(LiveActivityService.enabledKey) private var liveActivityEnabled = true
+    /// Teto mensal; zero desliga o orçamento (ver `Budget`).
+    @AppStorage(Budget.amountKey) private var monthlyBudget = 0.0
 
     @State private var showEraseConfirmation = false
     @State private var showPaywall = false
@@ -21,6 +25,8 @@ struct SettingsView: View {
     /// Arquivo do CSV pronto para compartilhar; `nil` sem Pro. Refeito
     /// quando o conjunto de assinaturas muda.
     @State private var exportURL: URL?
+    /// Relatório em PDF, pelo mesmo motivo.
+    @State private var reportURL: URL?
 
     private var store = StoreService.shared
 
@@ -28,7 +34,10 @@ struct SettingsView: View {
         NavigationStack {
             Form {
                 proSection
+                budgetSection
+                toolsSection
                 notificationsSection
+                liveActivitySection
                 appearanceSection
                 languageSection
                 currencySection
@@ -41,9 +50,13 @@ struct SettingsView: View {
                 ProView()
             }
             .task(id: exportSignature) { refreshExport() }
-            .onChange(of: store.isPro) { _, _ in refreshExport() }
+            .onChange(of: store.hasProAccess) { _, _ in refreshExport() }
             .onChange(of: language) { _, newValue in
                 L.store(newValue)
+            }
+            .onChange(of: monthlyBudget) { _, _ in
+                BudgetService.evaluate(subscriptions)
+                refreshExport()
             }
             .confirmationDialog(
                 "Apagar todos os dados?",
@@ -78,12 +91,17 @@ struct SettingsView: View {
                 }
             }
         } footer: {
-            Text(
-                store.isPro
-                    ? L.t("Obrigado por apoiar o SubCheck.")
-                    : L.t("Um pagamento único libera todos os recursos para sempre.")
-            )
+            Text(proFooter)
         }
+    }
+
+    /// Explica o estado atual: compra feita, teste em curso ou bloqueado.
+    private var proFooter: String {
+        if store.isPro { return L.t("Obrigado por apoiar o SubCheck.") }
+        if store.isTrialActive {
+            return L.t("Teste gratuito: %lld dia(s) restante(s).", store.trialDaysRemaining)
+        }
+        return L.t("Um pagamento único libera todos os recursos para sempre.")
     }
 
     // MARK: - Segurança
@@ -97,7 +115,7 @@ struct SettingsView: View {
             Text("Segurança")
         } footer: {
             Text(
-                store.isPro
+                store.hasProAccess
                     ? L.t("Ao abrir o app, o Face ID ou a senha do aparelho é solicitado.")
                     : L.t("O bloqueio por Face ID faz parte do SubCheck Pro.")
             )
@@ -113,8 +131,140 @@ struct SettingsView: View {
                     appLockEnabled = false
                     return
                 }
-                if store.isPro {
+                if store.hasProAccess {
                     appLockEnabled = true
+                } else {
+                    Haptics.impact(.light)
+                    showPaywall = true
+                }
+            }
+        )
+    }
+
+    // MARK: - Orçamento
+
+    /// Gasto mensal atual das assinaturas ativas.
+    private var spentMonthly: Double {
+        subscriptions.filter { !$0.isCancelled }.monthlyTotal(in: .shared)
+    }
+
+    private var budgetSection: some View {
+        Section {
+            if store.hasProAccess {
+                LabeledContent("Orçamento mensal") {
+                    TextField("0,00", value: $monthlyBudget, format: .number)
+                        .keyboardType(.decimalPad)
+                        .multilineTextAlignment(.trailing)
+                }
+
+                if monthlyBudget > 0 {
+                    LabeledContent("Gasto atual", value: Money.format(spentMonthly))
+
+                    Button(role: .destructive) {
+                        monthlyBudget = 0
+                    } label: {
+                        Label("Remover orçamento", systemImage: "trash")
+                    }
+                }
+            } else {
+                Button {
+                    Haptics.impact(.light)
+                    showPaywall = true
+                } label: {
+                    HStack {
+                        Label("Orçamento mensal", systemImage: "target")
+                        Spacer()
+                        Label(L.t("Pro"), systemImage: "lock.fill")
+                            .font(.caption2.weight(.bold))
+                            .foregroundStyle(Color.warning)
+                    }
+                }
+            }
+        } header: {
+            Text("Orçamento")
+        } footer: {
+            Text(
+                store.hasProAccess
+                    ? L.t("Defina um teto mensal. Avisamos quando o gasto passar dele.")
+                    : L.t("O orçamento com alertas faz parte do SubCheck Pro.")
+            )
+        }
+    }
+
+    // MARK: - Ferramentas
+
+    private var toolsSection: some View {
+        Section {
+            NavigationLink {
+                CancellationSimulatorView()
+            } label: {
+                Label("Simulador de cancelamento", systemImage: "scissors")
+            }
+
+            reportRow
+        } header: {
+            Text("Ferramentas")
+        } footer: {
+            if !store.hasProAccess {
+                Text("As ferramentas fazem parte do SubCheck Pro.")
+            }
+        }
+    }
+
+    /// Compartilha o PDF quando o Pro está ativo; sem ele, abre o paywall.
+    @ViewBuilder
+    private var reportRow: some View {
+        if let reportURL {
+            ShareLink(item: reportURL) {
+                Label("Relatório em PDF", systemImage: "doc.richtext")
+            }
+        } else {
+            Button {
+                Haptics.impact(.light)
+                showPaywall = true
+            } label: {
+                HStack {
+                    Label("Relatório em PDF", systemImage: "doc.richtext")
+                    Spacer()
+                    Label(L.t("Pro"), systemImage: "lock.fill")
+                        .font(.caption2.weight(.bold))
+                        .foregroundStyle(Color.warning)
+                }
+            }
+        }
+    }
+
+    // MARK: - Ilha Dinâmica
+
+    private var liveActivitySection: some View {
+        Section {
+            Toggle(isOn: liveActivityBinding) {
+                Label("Ilha Dinâmica", systemImage: "live.activity")
+            }
+        } header: {
+            Text("Ilha Dinâmica")
+        } footer: {
+            Text(
+                store.hasProAccess
+                    ? L.t("Contagem regressiva e próximas cobranças na tela de bloqueio.")
+                    : L.t("A Ilha Dinâmica faz parte do SubCheck Pro.")
+            )
+        }
+    }
+
+    /// Só liga com Pro ativo; ao desligar, encerra a atividade em andamento.
+    private var liveActivityBinding: Binding<Bool> {
+        Binding(
+            get: { liveActivityEnabled },
+            set: { newValue in
+                guard newValue else {
+                    liveActivityEnabled = false
+                    LiveActivityService.shared.stop()
+                    return
+                }
+                if store.hasProAccess {
+                    liveActivityEnabled = true
+                    LiveActivityService.shared.syncAll(with: subscriptions)
                 } else {
                     Haptics.impact(.light)
                     showPaywall = true
@@ -232,7 +382,7 @@ struct SettingsView: View {
         } header: {
             Text("Dados")
         } footer: {
-            if !store.isPro {
+            if !store.hasProAccess {
                 Text("A exportação em CSV faz parte do SubCheck Pro.")
             }
         }
@@ -274,9 +424,20 @@ struct SettingsView: View {
         }
     }
 
-    /// Gera (ou descarta) o CSV conforme a permissão Pro.
+    /// Gera (ou descarta) os arquivos conforme a permissão Pro.
     private func refreshExport() {
-        exportURL = store.isPro ? ExportService.subscriptionsCSV(subscriptions) : nil
+        guard store.hasProAccess else {
+            exportURL = nil
+            reportURL = nil
+            return
+        }
+        exportURL = ExportService.subscriptionsCSV(subscriptions)
+        reportURL = makeReport()
+    }
+
+    /// Arquivo do relatório em PDF pronto para compartilhar; `nil` sem Pro.
+    private func makeReport() -> URL? {
+        ReportService.monthlyReport(subscriptions)
     }
 
     /// Muda quando algo relevante das assinaturas muda, refazendo o CSV.

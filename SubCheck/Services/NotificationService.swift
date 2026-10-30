@@ -60,6 +60,30 @@ final class NotificationService {
         center.removePendingNotificationRequests(withIdentifiers: [Self.identifier(for: subscription)])
     }
 
+    // MARK: - Orçamento
+
+    /// Identificador único do aviso de orçamento estourado.
+    private static let budgetIdentifier = "budget-overflow"
+
+    /// Avisa que o gasto mensal passou do teto definido. Substitui o aviso
+    /// anterior, para não acumular notificações repetidas.
+    func scheduleBudgetAlert(spent: Double, budget: Double) {
+        cancelBudgetAlert()
+        guard budget > 0, spent > budget else { return }
+
+        let content = UNMutableNotificationContent()
+        content.title = L.t("Orçamento estourado")
+        content.body = L.t("Você gastou %@ e seu orçamento é %@.", Money.format(spent), Money.format(budget))
+        content.sound = .default
+
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3, repeats: false)
+        center.add(UNNotificationRequest(identifier: Self.budgetIdentifier, content: content, trigger: trigger))
+    }
+
+    func cancelBudgetAlert() {
+        center.removePendingNotificationRequests(withIdentifiers: [Self.budgetIdentifier])
+    }
+
     private static func identifier(for subscription: Subscription) -> String {
         "subscription-\(subscription.id.uuidString)"
     }

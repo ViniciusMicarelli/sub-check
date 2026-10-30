@@ -16,6 +16,9 @@ struct AnalysisView: View {
     @Query(sort: \PaymentRecord.paidAt, order: .reverse)
     private var records: [PaymentRecord]
 
+    @Query(sort: \Subscription.cost, order: .reverse)
+    private var subscriptions: [Subscription]
+
     /// Categoria usada para filtrar todas as séries. `nil` = todas.
     @State private var selectedCategory: CategoryType?
     /// Mês apontado no gráfico de evolução.
@@ -83,6 +86,15 @@ struct AnalysisView: View {
 
     private var progression: [ProgressRow] { ProgressRow.series(from: timeline) }
 
+    /// Cobranças projetadas para os próximos 12 meses.
+    private var forecast: [SpendPoint] { SpendHistory.forecast(subscriptions, months: 12) }
+
+    /// Custo diário médio por assinatura ativa.
+    private var costPerDay: [CostPerDay] { SpendHistory.costPerDay(subscriptions) }
+
+    /// Total cobrado por dia, para a grade do mapa de calor.
+    private var dailyTotals: [DayTotal] { SpendHistory.dailyTotals(filtered) }
+
     private var hasEstimated: Bool { records.contains(where: \.isEstimated) }
 
     // MARK: - Tela
@@ -101,6 +113,9 @@ struct AnalysisView: View {
                     filterBar
                     comparisonSection
                     timelineCard
+                    forecastCard
+                    heatmapCard
+                    costPerDayCard
                     progressionCard
                     categoryCard
 
@@ -304,6 +319,20 @@ struct AnalysisView: View {
             Color.elevatedBackground,
             in: RoundedRectangle(cornerRadius: Radius.sm, style: .continuous)
         )
+    }
+
+    // MARK: - Gráficos extras
+
+    private var forecastCard: some View {
+        ForecastCard(points: forecast)
+    }
+
+    private var heatmapCard: some View {
+        PaymentHeatmapCard(totals: dailyTotals)
+    }
+
+    private var costPerDayCard: some View {
+        CostPerDayCard(rows: costPerDay)
     }
 
     // MARK: - Progressão

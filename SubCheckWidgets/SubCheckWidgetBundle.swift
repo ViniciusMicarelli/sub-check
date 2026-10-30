@@ -12,5 +12,6 @@ struct SubCheckWidgetBundle: WidgetBundle {
         SubCheckSummaryWidget()
         SubCheckUpcomingWidget()
         SubCheckCategoriesWidget()
+        SubCheckLiveActivity()
     }
 }

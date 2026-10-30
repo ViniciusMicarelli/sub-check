@@ -287,3 +287,59 @@
 "Situação"                      = "Situação";
 "Ativa"                         = "Ativa";
 "Média mensal"                  = "Média mensal";
+
+// MARK: - Análise (gráficos extras)
+"Mapa de calor das cobranças"   = "Mapa de calor das cobranças";
+"Custo por dia"                 = "Custo por dia";
+"dia"                           = "dia";
+"mês"                           = "mês";
+"por ano"                       = "por ano";
+"por mês"                       = "por mês";
+"Previsão de 12 meses"          = "Previsão de 12 meses";
+"Previsto no mês"               = "Previsto no mês";
+"Acumulado"                     = "Acumulado";
+"Menos"                         = "Menos";
+"Mais"                          = "Mais";
+
+// MARK: - Ilha Dinâmica
+"Ilha Dinâmica"                 = "Ilha Dinâmica";
+"Contagem regressiva e próximas cobranças na tela de bloqueio." = "Contagem regressiva e próximas cobranças na tela de bloqueio.";
+"A Ilha Dinâmica faz parte do SubCheck Pro." = "A Ilha Dinâmica faz parte do SubCheck Pro.";
+"Ilha Dinâmica ao vivo"         = "Ilha Dinâmica ao vivo";
+"Contagem regressiva e próximas cobranças na tela." = "Contagem regressiva e próximas cobranças na tela.";
+
+// MARK: - Teste
+"Teste gratuito: %lld dia(s) restante(s)." = "Teste gratuito: %lld dia(s) restante(s).";
+
+// MARK: - Orçamento
+"Orçamento"                     = "Orçamento";
+"Orçamento mensal"              = "Orçamento mensal";
+"Remover orçamento"             = "Remover orçamento";
+"Gasto atual"                   = "Gasto atual";
+"Restam %@"                     = "Restam %@";
+"Passou %@"                     = "Passou %@";
+"Defina um teto mensal. Avisamos quando o gasto passar dele." = "Defina um teto mensal. Avisamos quando o gasto passar dele.";
+"O orçamento com alertas faz parte do SubCheck Pro." = "O orçamento com alertas faz parte do SubCheck Pro.";
+"Orçamento com alertas"         = "Orçamento com alertas";
+"Defina um teto mensal e seja avisado ao ultrapassar." = "Defina um teto mensal e seja avisado ao ultrapassar.";
+"Orçamento estourado"           = "Orçamento estourado";
+"Você gastou %@ e seu orçamento é %@." = "Você gastou %@ e seu orçamento é %@.";
+
+// MARK: - Simulador de cancelamento
+"Simulador de cancelamento"     = "Simulador de cancelamento";
+"Você economizaria"             = "Você economizaria";
+"Depois de cancelar"            = "Depois de cancelar";
+"O que você cancelaria"         = "O que você cancelaria";
+"Sem assinaturas ativas"        = "Sem assinaturas ativas";
+"Adicione serviços para simular o que você economizaria." = "Adicione serviços para simular o que você economizaria.";
+"Veja quanto você economiza cortando serviços." = "Veja quanto você economiza cortando serviços.";
+"Descubra quanto sobra no seu bolso ao cortar serviços. Faz parte do SubCheck Pro." = "Descubra quanto sobra no seu bolso ao cortar serviços. Faz parte do SubCheck Pro.";
+"Ver o SubCheck Pro"            = "Ver o SubCheck Pro";
+
+// MARK: - Relatório em PDF
+"Ferramentas"                   = "Ferramentas";
+"Relatório em PDF"              = "Relatório em PDF";
+"Um resumo pronto para compartilhar." = "Um resumo pronto para compartilhar.";
+"As ferramentas fazem parte do SubCheck Pro." = "As ferramentas fazem parte do SubCheck Pro.";
+"Relatório SubCheck"            = "Relatório SubCheck";
+"Evolução, mapa de calor e previsão de 12 meses." = "Evolução, mapa de calor e previsão de 12 meses.";

@@ -286,3 +286,59 @@
 "Situação"                      = "Status";
 "Ativa"                         = "Active";
 "Média mensal"                  = "Monthly average";
+
+// MARK: - Analysis (extra charts)
+"Mapa de calor das cobranças"   = "Charge heatmap";
+"Custo por dia"                 = "Cost per day";
+"dia"                           = "day";
+"mês"                           = "month";
+"por ano"                       = "per year";
+"por mês"                       = "per month";
+"Previsão de 12 meses"          = "12-month forecast";
+"Previsto no mês"               = "Expected this month";
+"Acumulado"                     = "Cumulative";
+"Menos"                         = "Less";
+"Mais"                          = "More";
+
+// MARK: - Live Activity
+"Ilha Dinâmica"                 = "Dynamic Island";
+"Contagem regressiva e próximas cobranças na tela de bloqueio." = "Countdown and next charges on the Lock Screen.";
+"A Ilha Dinâmica faz parte do SubCheck Pro." = "The Dynamic Island is part of SubCheck Pro.";
+"Ilha Dinâmica ao vivo"         = "Live Dynamic Island";
+"Contagem regressiva e próximas cobranças na tela." = "Countdown and next charges on screen.";
+
+// MARK: - Trial
+"Teste gratuito: %lld dia(s) restante(s)." = "Free trial: %lld day(s) left.";
+
+// MARK: - Budget
+"Orçamento"                     = "Budget";
+"Orçamento mensal"              = "Monthly budget";
+"Remover orçamento"             = "Remove budget";
+"Gasto atual"                   = "Current spending";
+"Restam %@"                     = "%@ left";
+"Passou %@"                     = "%@ over";
+"Defina um teto mensal. Avisamos quando o gasto passar dele." = "Set a monthly cap. We alert you when spending goes over it.";
+"O orçamento com alertas faz parte do SubCheck Pro." = "Budget with alerts is part of SubCheck Pro.";
+"Orçamento com alertas"         = "Budget with alerts";
+"Defina um teto mensal e seja avisado ao ultrapassar." = "Set a monthly cap and get alerted when you go over it.";
+"Orçamento estourado"           = "Budget exceeded";
+"Você gastou %@ e seu orçamento é %@." = "You spent %@ and your budget is %@.";
+
+// MARK: - Cancellation simulator
+"Simulador de cancelamento"     = "Cancellation simulator";
+"Você economizaria"             = "You would save";
+"Depois de cancelar"            = "After cancelling";
+"O que você cancelaria"         = "What you would cancel";
+"Sem assinaturas ativas"        = "No active subscriptions";
+"Adicione serviços para simular o que você economizaria." = "Add services to simulate what you would save.";
+"Veja quanto você economiza cortando serviços." = "See how much you save by cutting services.";
+"Descubra quanto sobra no seu bolso ao cortar serviços. Faz parte do SubCheck Pro." = "Find out how much stays in your pocket by cutting services. It is part of SubCheck Pro.";
+"Ver o SubCheck Pro"            = "See SubCheck Pro";
+
+// MARK: - PDF report
+"Ferramentas"                   = "Tools";
+"Relatório em PDF"              = "PDF report";
+"Um resumo pronto para compartilhar." = "A summary ready to share.";
+"As ferramentas fazem parte do SubCheck Pro." = "The tools are part of SubCheck Pro.";
+"Relatório SubCheck"            = "SubCheck Report";
+"Evolução, mapa de calor e previsão de 12 meses." = "Trends, heatmap and 12-month forecast.";
