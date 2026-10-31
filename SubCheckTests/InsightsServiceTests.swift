@@ -69,3 +69,33 @@ final class SubscriptionBillingTests: XCTestCase {
         XCTAssertEqual(s.yearlyCost, 120, accuracy: 0.001)
     }
 }
+
+final class TrialAndPriceTests: XCTestCase {
+
+    func testTrialDaysLeftCountsCalendarDays() {
+        let end = Calendar.current.date(byAdding: .day, value: 3, to: Date())!
+        let s = Subscription(name: "T", cost: 10, trialEndsAt: end)
+        XCTAssertEqual(s.trialDaysLeft, 3)
+    }
+
+    func testExpiredOrCancelledTrialHasNoDaysLeft() {
+        let past = Calendar.current.date(byAdding: .day, value: -2, to: Date())!
+        XCTAssertNil(Subscription(name: "T", cost: 10, trialEndsAt: past).trialDaysLeft)
+
+        let future = Calendar.current.date(byAdding: .day, value: 2, to: Date())!
+        XCTAssertNil(Subscription(name: "T", cost: 10, isCancelled: true, trialEndsAt: future).trialDaysLeft)
+    }
+
+    func testPriceChangeRecordedFromBaseline() {
+        let s = Subscription(name: "P", cost: 20)
+        s.recordPriceChange(from: 10)
+        XCTAssertEqual(s.previousCost, 10)
+        XCTAssertEqual(s.priceChange ?? 0, 1.0, accuracy: 0.001)
+    }
+
+    func testNoPriceChangeWhenUnchanged() {
+        let s = Subscription(name: "P", cost: 10)
+        s.recordPriceChange(from: 10)
+        XCTAssertNil(s.priceChange)
+    }
+}

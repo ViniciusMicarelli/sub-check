@@ -16,16 +16,25 @@ struct SubscriptionDetailView: View {
     @State private var showDeleteConfirmation = false
     @State private var showIconPicker = false
     @State private var showPaymentConfirmation = false
+    /// Valor ao abrir a tela, para registrar o reajuste ao sair.
+    @State private var baselineCost: Double?
 
     var body: some View {
         Form {
             headerSection
             iconSection
             detailsSection
+            trialSection
             billingSection
             paymentsSection
             reminderSection
             actionsSection
+        }
+        .onAppear { baselineCost = subscription.cost }
+        .onDisappear {
+            guard !subscription.isDeleted, subscription.modelContext != nil else { return }
+            if let baselineCost { subscription.recordPriceChange(from: baselineCost) }
+            NotificationService.shared.scheduleNotification(for: subscription)
         }
         .navigationTitle(subscription.name)
         .navigationBarTitleDisplayMode(.inline)
@@ -161,6 +170,32 @@ struct SubscriptionDetailView: View {
             Picker("Moeda", selection: $subscription.currencyCode) {
                 ForEach(CurrencyCode.ordered) { code in
                     Text(code.displayLabel).tag(code.code)
+                }
+            }
+
+            if let change = subscription.priceChange, let previous = subscription.previousCost {
+                LabeledContent("Último reajuste") {
+                    Text("\(Money.percent(change)) · \(Money.format(previous, code: subscription.currencyCode))")
+                        .foregroundStyle(change > 0 ? Color.danger : Color.success)
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var trialSection: some View {
+        if let end = subscription.trialEndsAt {
+            Section("Teste gratuito") {
+                DatePicker(
+                    "Teste termina em",
+                    selection: Binding(get: { end }, set: { subscription.trialEndsAt = $0 }),
+                    displayedComponents: .date
+                )
+                Button {
+                    subscription.trialEndsAt = nil
+                    Haptics.success()
+                } label: {
+                    Label("Virou assinatura paga", systemImage: "checkmark.circle")
                 }
             }
         }

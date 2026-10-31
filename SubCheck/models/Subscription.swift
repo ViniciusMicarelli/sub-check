@@ -18,6 +18,11 @@ final class Subscription {
     /// Data da última cobrança registrada. `nil` = nada pago ainda, o ciclo
     /// começa em `startDate`. Ver `PaymentLedger`.
     var lastPaymentDate: Date?
+    /// Fim do período de teste gratuito. `nil` = não é um teste.
+    var trialEndsAt: Date? = nil
+    /// Valor antes do último reajuste e quando ele mudou (mesma moeda).
+    var previousCost: Double? = nil
+    var costChangedAt: Date? = nil
 
     init(
         id: UUID = UUID(),
@@ -31,7 +36,8 @@ final class Subscription {
         daysNoticeBefore: Int = 2,
         isCancelled: Bool = false,
         iconRaw: String? = nil,
-        lastPaymentDate: Date? = nil
+        lastPaymentDate: Date? = nil,
+        trialEndsAt: Date? = nil
     ) {
         self.id = id
         self.name = name
@@ -45,6 +51,7 @@ final class Subscription {
         self.isCancelled = isCancelled
         self.iconRaw = iconRaw
         self.lastPaymentDate = lastPaymentDate
+        self.trialEndsAt = trialEndsAt
     }
 }
 
@@ -107,6 +114,33 @@ extension Subscription {
     /// Cobrança nos próximos N dias.
     func isDue(within days: Int) -> Bool {
         !isCancelled && daysUntilNextBilling <= days
+    }
+
+    // MARK: - Teste gratuito
+
+    /// Dias até o teste acabar; `nil` quando não há teste em curso.
+    var trialDaysLeft: Int? {
+        guard !isCancelled, let end = trialEndsAt else { return nil }
+        let calendar = Calendar.current
+        let days = calendar.dateComponents(
+            [.day], from: calendar.startOfDay(for: Date()), to: calendar.startOfDay(for: end)
+        ).day ?? 0
+        return days >= 0 ? days : nil
+    }
+
+    // MARK: - Reajuste
+
+    /// Variação do valor no último reajuste (0,18 = +18%); `nil` sem reajuste.
+    var priceChange: Double? {
+        guard let previousCost, previousCost > 0, cost != previousCost else { return nil }
+        return cost / previousCost - 1
+    }
+
+    /// Guarda o valor anterior quando o preço mudou desde `baseline`.
+    func recordPriceChange(from baseline: Double) {
+        guard baseline > 0, baseline != cost else { return }
+        previousCost = baseline
+        costChangedAt = Date()
     }
 
     // MARK: - Histórico

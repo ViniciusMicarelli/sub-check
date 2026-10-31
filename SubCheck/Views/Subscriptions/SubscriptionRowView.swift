@@ -18,9 +18,19 @@ struct SubscriptionRowView: View {
             )
 
             VStack(alignment: .leading, spacing: 3) {
-                Text(subscription.name)
-                    .font(.body.weight(.semibold))
-                    .foregroundStyle(Color.textPrimary)
+                HStack(spacing: Spacing.xs) {
+                    Text(subscription.name)
+                        .font(.body.weight(.semibold))
+                        .foregroundStyle(Color.textPrimary)
+                    if let left = subscription.trialDaysLeft {
+                        Text(L.t("Teste · %lld d", left))
+                            .font(.caption2.weight(.bold))
+                            .foregroundStyle(left <= 3 ? Color.danger : Color.warning)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background((left <= 3 ? Color.danger : Color.warning).opacity(0.15), in: Capsule())
+                    }
+                }
 
                 HStack(spacing: 6) {
                     Text(subscription.frequency.displayName)

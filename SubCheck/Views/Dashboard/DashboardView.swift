@@ -138,6 +138,7 @@ struct DashboardView: View {
                         }
 
                         TopSubscriptionsChart(subscriptions: filteredActive)
+                        TrialsCard(subscriptions: active)
                         UpcomingPaymentsSection(subscriptions: filteredActive)
 
                         InsightsCard(insights: insights, hasPro: store.hasProAccess) {

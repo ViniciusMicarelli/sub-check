@@ -374,3 +374,18 @@
 "Análise e previsão"            = "Análise e previsão";
 "Orçamento e simulador"         = "Orçamento e simulador";
 "PDF, CSV e Face ID"            = "PDF, CSV e Face ID";
+
+// MARK: - Testes gratuitos e reajustes
+"Testes gratuitos"              = "Testes gratuitos";
+"Teste gratuito"                = "Teste gratuito";
+"É um teste gratuito"           = "É um teste gratuito";
+"Teste termina em"              = "Teste termina em";
+"A primeira cobrança acontece quando o teste termina. Você recebe um aviso na véspera." = "A primeira cobrança acontece quando o teste termina. Você recebe um aviso na véspera.";
+"Virou assinatura paga"         = "Virou assinatura paga";
+"Teste gratuito acabando"       = "Teste gratuito acabando";
+"O teste de %@ termina amanhã e depois cobra %@. Cancele agora se não quiser continuar." = "O teste de %@ termina amanhã e depois cobra %@. Cancele agora se não quiser continuar.";
+"Teste · %lld d"                = "Teste · %lld d";
+"Depois cobra %@"               = "Depois cobra %@";
+"Último reajuste"               = "Último reajuste";
+"%@ ficou %@ mais caro"         = "%@ ficou %@ mais caro";
+"Era %@, agora %@. Vale renegociar ou trocar." = "Era %@, agora %@. Vale renegociar ou trocar.";

@@ -26,8 +26,8 @@ Free must be useful and honest (5 subscriptions, dashboard, widgets, reminders, 
 - Pro (lifetime): unlimited subs, all insights, analysis + 12-month forecast, budget alerts, cancellation simulator, Live Activity, PDF/CSV, Face ID.
 
 ### Next Pro candidates (ordered by value / effort)
-1. **Free-trial tracker** — flag trials ending in ≤3 days and notify (highest "saved me money" moment).
-2. **Price-change log** — record cost edits per sub, show "Netflix +18% since 2025" (needs a `PriceChange` model).
+1. ~~Free-trial tracker~~ **Done** (free tier): trial toggle on add, eve-of-end notification, dashboard card, row badge.
+2. ~~Price-change log~~ **Done (last change only)**: detail screen records the previous price; Pro insight flags hikes ≥5%. Full history would need a `PriceChange` model.
 3. **Shared subscriptions** — split cost by N people, show "your share".
 4. **iCloud sync** (SwiftData + CloudKit) — strongest reason to pay once; needs optional/defaulted model fields.
 5. **Cancel guides** — per-brand deep link to the cancel page (extend `BrandIconCatalog`).

@@ -373,3 +373,18 @@
 "Análise e previsão"            = "Analysis and forecast";
 "Orçamento e simulador"         = "Budget and simulator";
 "PDF, CSV e Face ID"            = "PDF, CSV and Face ID";
+
+// MARK: - Free trials and price changes
+"Testes gratuitos"              = "Free trials";
+"Teste gratuito"                = "Free trial";
+"É um teste gratuito"           = "This is a free trial";
+"Teste termina em"              = "Trial ends on";
+"A primeira cobrança acontece quando o teste termina. Você recebe um aviso na véspera." = "The first charge happens when the trial ends. You get a heads-up the day before.";
+"Virou assinatura paga"         = "Converted to paid";
+"Teste gratuito acabando"       = "Free trial ending";
+"O teste de %@ termina amanhã e depois cobra %@. Cancele agora se não quiser continuar." = "The %@ trial ends tomorrow and will then charge %@. Cancel now if you don't want to continue.";
+"Teste · %lld d"                = "Trial · %lld d";
+"Depois cobra %@"               = "Then charges %@";
+"Último reajuste"               = "Last price change";
+"%@ ficou %@ mais caro"         = "%@ got %@ pricier";
+"Era %@, agora %@. Vale renegociar ou trocar." = "Was %@, now %@. Worth renegotiating or switching.";

@@ -37,6 +37,20 @@ enum InsightsService {
 
         var result: [Insight] = []
 
+        // Reajustes de preço
+        for hiked in active where (hiked.priceChange ?? 0) >= 0.05 {
+            guard let change = hiked.priceChange, let previous = hiked.previousCost else { continue }
+            result.append(Insight(
+                id: "hike-\(hiked.id.uuidString)",
+                icon: "arrow.up.right.circle.fill",
+                tone: .warning,
+                title: L.t("%@ ficou %@ mais caro", hiked.name, Money.percentPlain(change)),
+                detail: L.t("Era %@, agora %@. Vale renegociar ou trocar.",
+                            Money.format(previous, code: hiked.currencyCode),
+                            Money.format(hiked.cost, code: hiked.currencyCode))
+            ))
+        }
+
         // Cobranças da semana
         let week = upcomingTotal(active, days: 7, service: service)
         if week > 0 {

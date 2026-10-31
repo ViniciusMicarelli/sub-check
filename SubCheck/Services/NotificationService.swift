@@ -28,6 +28,7 @@ final class NotificationService {
 
     /// Schedules (or reschedules) the reminder for a subscription.
     func scheduleNotification(for subscription: Subscription) {
+        scheduleTrialAlert(for: subscription)
         guard subscription.enableReminders, !subscription.isCancelled else {
             cancelNotification(for: subscription)
             return
@@ -57,7 +58,40 @@ final class NotificationService {
     }
 
     func cancelNotification(for subscription: Subscription) {
-        center.removePendingNotificationRequests(withIdentifiers: [Self.identifier(for: subscription)])
+        center.removePendingNotificationRequests(withIdentifiers: [
+            Self.identifier(for: subscription),
+            Self.trialIdentifier(for: subscription)
+        ])
+    }
+
+    // MARK: - Teste gratuito
+
+    /// Avisa na véspera do fim do teste, antes de a cobrança começar.
+    func scheduleTrialAlert(for subscription: Subscription) {
+        let identifier = Self.trialIdentifier(for: subscription)
+        center.removePendingNotificationRequests(withIdentifiers: [identifier])
+
+        guard !subscription.isCancelled, let end = subscription.trialEndsAt else { return }
+        let eve = Calendar.current.date(byAdding: .day, value: -1, to: end) ?? end
+        var components = Calendar.current.dateComponents([.year, .month, .day], from: eve)
+        components.hour = 9
+        guard let fireDate = Calendar.current.date(from: components), fireDate > Date() else { return }
+
+        let content = UNMutableNotificationContent()
+        content.title = L.t("Teste gratuito acabando")
+        content.body = L.t(
+            "O teste de %@ termina amanhã e depois cobra %@. Cancele agora se não quiser continuar.",
+            subscription.name,
+            Money.format(subscription.cost, code: subscription.currencyCode)
+        )
+        content.sound = .default
+
+        let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+        center.add(UNNotificationRequest(identifier: identifier, content: content, trigger: trigger))
+    }
+
+    private static func trialIdentifier(for subscription: Subscription) -> String {
+        "trial-\(subscription.id.uuidString)"
     }
 
     // MARK: - Orçamento

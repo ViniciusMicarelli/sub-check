@@ -18,6 +18,9 @@ struct AddSubscriptionView: View {
     @State private var startDate = Date()
     @State private var enableReminders = true
     @State private var daysNoticeBefore = 2
+    /// Teste gratuito: a primeira cobrança passa a ser o fim do teste.
+    @State private var isTrial = false
+    @State private var trialEnd = Calendar.current.date(byAdding: .day, value: 7, to: Date()) ?? Date()
     /// Moeda da cobrança; começa na moeda base do app.
     @State private var currencyCode = CurrencyService.shared.baseCode
 
@@ -57,6 +60,7 @@ struct AddSubscriptionView: View {
             Form {
                 detailsSection
                 iconSection
+                trialSection
                 categorySection
                 reminderSection
             }
@@ -127,6 +131,20 @@ struct AddSubscriptionView: View {
             }
 
             DatePicker("Primeira cobrança", selection: $startDate, displayedComponents: .date)
+        }
+    }
+
+    private var trialSection: some View {
+        Section {
+            Toggle("É um teste gratuito", isOn: $isTrial.animation(.snappy))
+
+            if isTrial {
+                DatePicker("Teste termina em", selection: $trialEnd, in: Date()..., displayedComponents: .date)
+            }
+        } footer: {
+            if isTrial {
+                Text("A primeira cobrança acontece quando o teste termina. Você recebe um aviso na véspera.")
+            }
         }
     }
 
@@ -217,8 +235,10 @@ struct AddSubscriptionView: View {
             category: category.rawValue,
             enableReminders: enableReminders,
             daysNoticeBefore: daysNoticeBefore,
-            iconRaw: icon?.rawValue
+            iconRaw: icon?.rawValue,
+            trialEndsAt: isTrial ? trialEnd : nil
         )
+        if isTrial { subscription.startDate = trialEnd }
 
         context.insert(subscription)
         try? context.save()
