@@ -408,3 +408,13 @@
 "%lld anos"                     = "%lld anos";
 "Com reajuste de %@ ao ano"     = "Com reajuste de %@ ao ano";
 "Paga"                          = "Paga";
+
+// MARK: - Meta de economia
+"Meta de economia"              = "Meta de economia";
+"%@ de %@ por mês"              = "%@ de %@ por mês";
+"Meta batida. Parabéns!"        = "Meta batida. Parabéns!";
+"Cancele o que não usa para chegar lá." = "Cancele o que não usa para chegar lá.";
+"Defina quanto quer economizar por mês e acompanhe aqui." = "Defina quanto quer economizar por mês e acompanhe aqui.";
+"%@ por mês"                    = "%@ por mês";
+"Sem meta"                      = "Sem meta";
+"Pronto"                        = "Pronto";

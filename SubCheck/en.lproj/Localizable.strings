@@ -407,3 +407,13 @@
 "%lld anos"                     = "%lld years";
 "Com reajuste de %@ ao ano"     = "With %@ yearly price increases";
 "Paga"                          = "Paid";
+
+// MARK: - Savings goal
+"Meta de economia"              = "Savings goal";
+"%@ de %@ por mês"              = "%@ of %@ per month";
+"Meta batida. Parabéns!"        = "Goal reached. Congrats!";
+"Cancele o que não usa para chegar lá." = "Cancel what you don't use to get there.";
+"Defina quanto quer economizar por mês e acompanhe aqui." = "Set how much you want to save per month and track it here.";
+"%@ por mês"                    = "%@ per month";
+"Sem meta"                      = "No goal";
+"Pronto"                        = "Done";

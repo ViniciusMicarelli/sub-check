@@ -53,6 +53,11 @@ struct DashboardView: View {
         subscriptions.filter(\.isCancelled).reduce(0) { $0 + $1.yearlyCost(in: .shared) }
     }
 
+    /// Quanto os cancelamentos tiram do gasto mensal.
+    private var cancelledMonthlySavings: Double {
+        subscriptions.filter(\.isCancelled).monthlyTotal(in: .shared)
+    }
+
     private var nextCharge: Subscription? {
         active.min { $0.nextBillingDate < $1.nextBillingDate }
     }
@@ -153,6 +158,9 @@ struct DashboardView: View {
                             showPaywall = true
                         }
                     }
+
+                    SavingsGoalCard(saved: cancelledMonthlySavings, monthly: monthlyTotal)
+                        .revealOnScroll()
 
                     if store.hasProAccess, monthlyBudget > 0 {
                         BudgetCard(spent: monthlyTotal, budget: monthlyBudget)
