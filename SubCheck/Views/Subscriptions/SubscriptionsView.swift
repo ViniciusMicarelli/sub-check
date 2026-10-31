@@ -8,6 +8,9 @@ import SwiftData
 
 struct SubscriptionsView: View {
 
+    /// Sobe a cada pagamento marcado por gesto e dispara o selo de sucesso.
+    @State private var paidCount = 0
+
     @Environment(\.modelContext) private var context
     @Query(sort: \Subscription.name) private var subscriptions: [Subscription]
 
@@ -69,6 +72,7 @@ struct SubscriptionsView: View {
                         }
                     }
                     .listStyle(.insetGrouped)
+                    .successBurst(trigger: paidCount)
                     .animation(.snappy, value: monthlyTotal)
                     .animation(.snappy, value: activeList.map(\.id))
                 }
@@ -128,6 +132,20 @@ struct SubscriptionsView: View {
             SubscriptionDetailView(subscription: subscription)
         } label: {
             SubscriptionRowView(subscription: subscription)
+        }
+        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+            if !subscription.isCancelled {
+                Button {
+                    Haptics.success()
+                    withAnimation(Motion.snappy) {
+                        PaymentLedger.markPaid(subscription, in: context)
+                    }
+                    paidCount += 1
+                } label: {
+                    Label("Paga", systemImage: "checkmark.circle.fill")
+                }
+                .tint(.success)
+            }
         }
         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
             Button(role: .destructive) {

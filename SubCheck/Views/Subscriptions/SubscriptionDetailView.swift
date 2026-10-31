@@ -15,7 +15,8 @@ struct SubscriptionDetailView: View {
 
     @State private var showDeleteConfirmation = false
     @State private var showIconPicker = false
-    @State private var showPaymentConfirmation = false
+    /// Sobe a cada pagamento registrado e dispara o selo de sucesso.
+    @State private var paidCount = 0
     /// Valor ao abrir a tela, para registrar o reajuste ao sair.
     @State private var baselineCost: Double?
 
@@ -60,11 +61,7 @@ struct SubscriptionDetailView: View {
             NotificationService.shared.scheduleNotification(for: subscription)
             try? context.save()
         }
-        .alert("Pagamento registrado", isPresented: $showPaymentConfirmation) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text("A próxima cobrança foi movida para o próximo ciclo.")
-        }
+        .successBurst(trigger: paidCount)
         .confirmationDialog(
             "Excluir assinatura?",
             isPresented: $showDeleteConfirmation,
@@ -220,7 +217,7 @@ struct SubscriptionDetailView: View {
             Button {
                 PaymentLedger.markPaid(subscription, in: context)
                 Haptics.success()
-                showPaymentConfirmation = true
+                paidCount += 1
             } label: {
                 Label("Registrar pagamento", systemImage: "checkmark.circle")
             }

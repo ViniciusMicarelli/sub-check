@@ -81,3 +81,68 @@ extension View {
         modifier(RevealOnScroll())
     }
 }
+
+// MARK: - Celebração
+
+/// Selo de check que salta e solta faíscas, para confirmar uma ação (pagamento
+/// registrado). Dispara a cada mudança de `trigger` e some sozinho.
+private struct SuccessBurst: ViewModifier {
+
+    let trigger: Int
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var progress: CGFloat = 0
+    @State private var visible = false
+
+    private let sparks = 12
+
+    func body(content: Content) -> some View {
+        content
+            .overlay {
+                if visible {
+                    ZStack {
+                        ForEach(0..<sparks, id: \.self) { index in
+                            let angle = Double(index) / Double(sparks) * 2 * .pi
+                            Circle()
+                                .fill(index.isMultiple(of: 2) ? Color.success : Color.brandSecondary)
+                                .frame(width: 8, height: 8)
+                                .offset(
+                                    x: cos(angle) * 90 * progress,
+                                    y: sin(angle) * 90 * progress
+                                )
+                                .scaleEffect(1 - progress * 0.6)
+                                .opacity(Double(1 - progress))
+                        }
+
+                        Image(systemName: "checkmark")
+                            .font(.system(size: 34, weight: .bold))
+                            .foregroundStyle(.white)
+                            .frame(width: 84, height: 84)
+                            .background(Color.successGradient, in: Circle())
+                            .scaleEffect(progress < 0.15 ? 0.4 : 1)
+                            .opacity(Double(1 - max(0, progress - 0.7) / 0.3))
+                    }
+                    .allowsHitTesting(false)
+                    .transition(.identity)
+                }
+            }
+            .onChange(of: trigger) { _, _ in play() }
+    }
+
+    private func play() {
+        guard !reduceMotion else { return }
+        progress = 0
+        visible = true
+        withAnimation(.easeOut(duration: 0.8)) { progress = 1 }
+        Task {
+            try? await Task.sleep(for: .milliseconds(850))
+            visible = false
+        }
+    }
+}
+
+extension View {
+    /// Mostra o selo de sucesso sempre que `trigger` muda.
+    func successBurst(trigger: Int) -> some View {
+        modifier(SuccessBurst(trigger: trigger))
+    }
+}
