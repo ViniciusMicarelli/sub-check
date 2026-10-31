@@ -343,3 +343,34 @@
 "As ferramentas fazem parte do SubCheck Pro." = "As ferramentas fazem parte do SubCheck Pro.";
 "Relatório SubCheck"            = "Relatório SubCheck";
 "Evolução, mapa de calor e previsão de 12 meses." = "Evolução, mapa de calor e previsão de 12 meses.";
+
+// MARK: - Insights e novos KPIs
+"Insights"                      = "Insights";
+"Os insights completos fazem parte do SubCheck Pro." = "Os insights completos fazem parte do SubCheck Pro.";
+"Ver mais %lld insights com o Pro" = "Ver mais %lld insights com o Pro";
+"Próximos 7 dias: %@"           = "Próximos 7 dias: %@";
+"Deixe saldo disponível para as cobranças da semana." = "Deixe saldo disponível para as cobranças da semana.";
+"%@ é %@ do seu gasto"          = "%@ é %@ do seu gasto";
+"Vale conferir se ele ainda compensa o uso." = "Vale conferir se ele ainda compensa o uso.";
+"%lld serviços em %@: %@/mês"   = "%lld serviços em %@: %@/mês";
+"Considere manter só o que você mais usa." = "Considere manter só o que você mais usa.";
+"Cobranças semanais somam %@/ano" = "Cobranças semanais somam %@/ano";
+"Planos semanais costumam ser os mais caros no ano." = "Planos semanais costumam ser os mais caros no ano.";
+"Planos anuais podem poupar até %@" = "Planos anuais podem poupar até %@";
+"Estimativa de 15%% sobre %lld planos mensais. Confira com cada serviço." = "Estimativa de 15%% sobre %lld planos mensais. Confira com cada serviço.";
+"Você evita %@/ano com cancelamentos" = "Você evita %@/ano com cancelamentos";
+"%lld serviço(s) cancelado(s). Bom trabalho." = "%lld serviço(s) cancelado(s). Bom trabalho.";
+"Suas assinaturas custam %@ por dia" = "Suas assinaturas custam %@ por dia";
+"Mesmo sem abrir nenhuma delas." = "Mesmo sem abrir nenhuma delas.";
+"A pagar em 30 dias"            = "A pagar em 30 dias";
+"Maior assinatura"              = "Maior assinatura";
+"Economia anual"                = "Economia anual";
+"com cancelamentos"             = "com cancelamentos";
+"Próxima: %@ em %lld dia(s)"    = "Próxima: %@ em %lld dia(s)";
+"Insights inteligentes"         = "Insights inteligentes";
+"Dicas automáticas para cortar gastos e economizar." = "Dicas automáticas para cortar gastos e economizar.";
+"Grátis"                        = "Grátis";
+"Resumo e widgets"              = "Resumo e widgets";
+"Análise e previsão"            = "Análise e previsão";
+"Orçamento e simulador"         = "Orçamento e simulador";
+"PDF, CSV e Face ID"            = "PDF, CSV e Face ID";

@@ -1,0 +1,48 @@
+# SubCheck — Roadmap & Brand
+
+> `PLAN.md` / `TIMELINE.md` are stale (they describe an Android/Room app with 7 tabs). This file reflects the real iOS code as of 2026-10-31.
+
+## Where the app is
+
+SwiftUI + SwiftData, iOS 27, XcodeGen. Shipped: dashboard KPIs, subscriptions CRUD, categories, history, analysis charts (timeline, forecast, heatmap, cost/day), 3 widgets + Live Activity, localization (pt-BR/en), multi-currency, reminders, one-time Pro purchase (StoreKit 2) with 7-day local trial.
+
+## Gaps found
+
+| Area | Gap | Status |
+|---|---|---|
+| Identity | AppIcon and AccentColor catalogs were empty | **Done** — icon (light/dark/tinted), accent color, `BrandMark` |
+| KPIs | Only 4 tiles | **Done** — +4 (30-day outflow, cost/day, biggest sub, yearly savings) + next-charge pill in hero |
+| Value of Pro | Paywall was a feature list only | **Done** — Insights (Pro), Free-vs-Pro table, teaser of 1 insight for free users |
+| Tests | No unit tests at all | **Done (first pass)** — `SubCheckTests` covers insights + billing math; `PaymentLedger` still untested |
+| Trial | Stored in UserDefaults; reinstall resets it | **Done** — Keychain + UserDefaults, oldest date wins |
+| Paywall | No restore-on-launch banner, no price anchoring | Todo |
+| Docs | PLAN/TIMELINE obsolete | Todo — delete or archive |
+
+## Free vs Pro strategy
+
+Free must be useful and honest (5 subscriptions, dashboard, widgets, reminders, history) so the app earns the word-of-mouth. Pro sells **savings**, not features: every Pro item should answer "how do I pay less?"
+
+- Free: 5 active subs, 8 KPIs, widgets, reminders, 1 insight.
+- Pro (lifetime): unlimited subs, all insights, analysis + 12-month forecast, budget alerts, cancellation simulator, Live Activity, PDF/CSV, Face ID.
+
+### Next Pro candidates (ordered by value / effort)
+1. **Free-trial tracker** — flag trials ending in ≤3 days and notify (highest "saved me money" moment).
+2. **Price-change log** — record cost edits per sub, show "Netflix +18% since 2025" (needs a `PriceChange` model).
+3. **Shared subscriptions** — split cost by N people, show "your share".
+4. **iCloud sync** (SwiftData + CloudKit) — strongest reason to pay once; needs optional/defaulted model fields.
+5. **Cancel guides** — per-brand deep link to the cancel page (extend `BrandIconCatalog`).
+6. **Extra widgets / custom app icons** (Pro cosmetics: the 3 icon variants make a good unlockable set).
+7. **Family plan + tip-jar tier** if lifetime conversion is low (consider $/yr alternative later).
+
+## Visual identity
+
+- **Concept:** a billing *cycle* (ring + arrowhead) around a *check* — "recurring charges, under control".
+- **Palette:** brand indigo `#5457DB` → violet `#9C4AF0` gradient (`Color.brandGradient`); status green/amber/red/blue stay semantic. Dark: lighter lavender accent `#8A87FF`.
+- **Icon:** `AppIcon.png` (gradient), `AppIcon-Dark.png` (deep indigo, lavender glyph), `AppIcon-Tinted.png` (grayscale for system tint). Regenerate with the CoreGraphics script (kept outside the repo; the glyph geometry is mirrored in `BrandMark.swift`).
+- **In-app mark:** `BrandMark(size:filled:)` — used on the paywall; use it for empty states and onboarding next.
+- **Type & shape:** SF Rounded for hero numbers, continuous corners (`Radius`), soft shadows only on hero/floating elements.
+- **Voice:** direct and a little wry — "Mesmo sem abrir nenhuma delas."
+
+## Not verified
+
+No full Xcode on this machine: new code was syntax-checked (`swiftc -parse`) but **not compiled or run**. Build in Xcode and eyeball the dashboard, paywall and icon before shipping.

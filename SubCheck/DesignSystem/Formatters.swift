@@ -51,4 +51,9 @@ enum Money {
         )
         return formatted
     }
+
+    /// Percentual sem sinal ("42%").
+    static func percentPlain(_ fraction: Double, locale: Locale = L.current) -> String {
+        fraction.formatted(.percent.locale(locale).precision(.fractionLength(0)))
+    }
 }

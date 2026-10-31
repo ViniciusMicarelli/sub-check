@@ -342,3 +342,34 @@
 "As ferramentas fazem parte do SubCheck Pro." = "The tools are part of SubCheck Pro.";
 "Relatório SubCheck"            = "SubCheck Report";
 "Evolução, mapa de calor e previsão de 12 meses." = "Trends, heatmap and 12-month forecast.";
+
+// MARK: - Insights and new KPIs
+"Insights"                      = "Insights";
+"Os insights completos fazem parte do SubCheck Pro." = "Full insights are part of SubCheck Pro.";
+"Ver mais %lld insights com o Pro" = "See %lld more insights with Pro";
+"Próximos 7 dias: %@"           = "Next 7 days: %@";
+"Deixe saldo disponível para as cobranças da semana." = "Keep funds available for this week's charges.";
+"%@ é %@ do seu gasto"          = "%@ is %@ of your spending";
+"Vale conferir se ele ainda compensa o uso." = "Check if it is still worth how much you use it.";
+"%lld serviços em %@: %@/mês"   = "%lld services in %@: %@/mo";
+"Considere manter só o que você mais usa." = "Consider keeping only what you use most.";
+"Cobranças semanais somam %@/ano" = "Weekly charges add up to %@/yr";
+"Planos semanais costumam ser os mais caros no ano." = "Weekly plans tend to be the priciest over a year.";
+"Planos anuais podem poupar até %@" = "Annual plans could save up to %@";
+"Estimativa de 15%% sobre %lld planos mensais. Confira com cada serviço." = "15%% estimate across %lld monthly plans. Check with each service.";
+"Você evita %@/ano com cancelamentos" = "You avoid %@/yr by cancelling";
+"%lld serviço(s) cancelado(s). Bom trabalho." = "%lld service(s) cancelled. Nice work.";
+"Suas assinaturas custam %@ por dia" = "Your subscriptions cost %@ per day";
+"Mesmo sem abrir nenhuma delas." = "Even without opening any of them.";
+"A pagar em 30 dias"            = "Due in 30 days";
+"Maior assinatura"              = "Biggest subscription";
+"Economia anual"                = "Yearly savings";
+"com cancelamentos"             = "from cancellations";
+"Próxima: %@ em %lld dia(s)"    = "Next: %@ in %lld day(s)";
+"Insights inteligentes"         = "Smart insights";
+"Dicas automáticas para cortar gastos e economizar." = "Automatic tips to cut costs and save.";
+"Grátis"                        = "Free";
+"Resumo e widgets"              = "Summary and widgets";
+"Análise e previsão"            = "Analysis and forecast";
+"Orçamento e simulador"         = "Budget and simulator";
+"PDF, CSV e Face ID"            = "PDF, CSV and Face ID";

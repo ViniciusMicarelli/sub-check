@@ -71,16 +71,19 @@ final class StoreService {
         return max(1, Int(ceil(seconds / 86_400)))
     }
 
-    /// Grava a data da primeira abertura. Fica no aparelho, então reinstalar
-    /// o app reinicia a contagem do teste.
+    /// Grava a data da primeira abertura no Keychain (sobrevive à
+    /// reinstalação) e espelha no UserDefaults. Vale a data mais antiga.
     private static func startTrialIfNeeded() -> Date {
         let defaults = UserDefaults.standard
-        if let stored = defaults.object(forKey: trialStartKey) as? Date {
-            return stored
-        }
-        let now = Date()
-        defaults.set(now, forKey: trialStartKey)
-        return now
+        let stored = [
+            KeychainStore.date(for: trialStartKey),
+            defaults.object(forKey: trialStartKey) as? Date
+        ].compactMap { $0 }.min()
+
+        let start = stored ?? Date()
+        defaults.set(start, forKey: trialStartKey)
+        KeychainStore.set(start, for: trialStartKey)
+        return start
     }
 
     // MARK: - Preço

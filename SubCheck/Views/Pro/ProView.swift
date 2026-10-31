@@ -21,6 +21,8 @@ struct ProView: View {
         [
             ("infinity", L.t("Assinaturas ilimitadas"),
              L.t("Cadastre quantos serviços quiser."), .brand),
+            ("lightbulb.fill", L.t("Insights inteligentes"),
+             L.t("Dicas automáticas para cortar gastos e economizar."), .warning),
             ("chart.xyaxis.line", L.t("Análise completa"),
              L.t("Evolução, mapa de calor e previsão de 12 meses."), .info),
             ("live.activity", L.t("Ilha Dinâmica ao vivo"),
@@ -44,6 +46,7 @@ struct ProView: View {
                 VStack(spacing: Spacing.xl) {
                     header
                     benefitsList
+                    comparison
                     purchaseBlock
                 }
                 .padding(Spacing.xl)
@@ -62,15 +65,7 @@ struct ProView: View {
 
     private var header: some View {
         VStack(spacing: Spacing.lg) {
-            Image(systemName: "sparkles")
-                .font(.system(size: 30, weight: .bold))
-                .foregroundStyle(.white)
-                .frame(width: 72, height: 72)
-                .background(
-                    Color.brandGradient,
-                    in: RoundedRectangle(cornerRadius: Radius.lg, style: .continuous)
-                )
-                .softShadow()
+            BrandMark(size: 84)
 
             VStack(spacing: Spacing.xs) {
                 Text("SubCheck Pro")
@@ -121,6 +116,54 @@ struct ProView: View {
                 if index < benefits.count - 1 {
                     Divider().padding(.leading, 40)
                 }
+            }
+        }
+        .cardSurface()
+    }
+
+    // MARK: - Grátis x Pro
+
+    private var comparisonRows: [(title: String, free: String, pro: String)] {
+        [
+            (L.t("Assinaturas ativas"), "\(StoreService.freeLimit)", "∞"),
+            (L.t("Resumo e widgets"), "✓", "✓"),
+            (L.t("Insights"), "1", L.t("Todos")),
+            (L.t("Análise e previsão"), "—", "✓"),
+            (L.t("Orçamento e simulador"), "—", "✓"),
+            (L.t("Ilha Dinâmica"), "—", "✓"),
+            (L.t("PDF, CSV e Face ID"), "—", "✓")
+        ]
+    }
+
+    private var comparison: some View {
+        VStack(spacing: 0) {
+            HStack {
+                Spacer()
+                Text(L.t("Grátis")).frame(width: 64)
+                Text("Pro").frame(width: 64).foregroundStyle(Color.brand)
+            }
+            .font(.caption.weight(.bold))
+            .foregroundStyle(Color.textSecondary)
+            .padding(.bottom, Spacing.sm)
+
+            ForEach(Array(comparisonRows.enumerated()), id: \.offset) { index, row in
+                HStack {
+                    Text(row.title)
+                        .font(.subheadline)
+                        .foregroundStyle(Color.textPrimary)
+                    Spacer()
+                    Text(row.free)
+                        .frame(width: 64)
+                        .foregroundStyle(Color.textSecondary)
+                    Text(row.pro)
+                        .frame(width: 64)
+                        .fontWeight(.bold)
+                        .foregroundStyle(Color.success)
+                }
+                .font(.subheadline)
+                .padding(.vertical, Spacing.sm)
+
+                if index < comparisonRows.count - 1 { Divider() }
             }
         }
         .cardSurface()

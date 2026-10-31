@@ -40,6 +40,24 @@ struct DashboardView: View {
     private var yearlyTotal: Double { monthlyTotal * 12 }
     private var averageCost: Double { active.isEmpty ? 0 : monthlyTotal / Double(active.count) }
     private var dueSoonCount: Int { active.filter { $0.daysUntilNextBilling <= 7 }.count }
+    private var dailyCost: Double { monthlyTotal / 30.44 }
+    private var next30Total: Double { InsightsService.upcomingTotal(active, days: 30) }
+
+    /// Assinatura que mais pesa no mês, já convertida para a moeda base.
+    private var priciest: Subscription? {
+        active.max { $0.monthlyCost(in: .shared) < $1.monthlyCost(in: .shared) }
+    }
+
+    /// Quanto os cancelamentos já tiram do gasto anual.
+    private var cancelledYearlySavings: Double {
+        subscriptions.filter(\.isCancelled).reduce(0) { $0 + $1.yearlyCost(in: .shared) }
+    }
+
+    private var nextCharge: Subscription? {
+        active.min { $0.nextBillingDate < $1.nextBillingDate }
+    }
+
+    private var insights: [Insight] { InsightsService.insights(for: subscriptions) }
 
     var body: some View {
         NavigationStack {
@@ -76,6 +94,32 @@ struct DashboardView: View {
                             icon: "chart.bar.fill",
                             tint: .textSecondary
                         )
+                        MetricCard(
+                            title: L.t("A pagar em 30 dias"),
+                            value: Money.compact(next30Total),
+                            icon: "creditcard.fill",
+                            tint: .brandSecondary
+                        )
+                        MetricCard(
+                            title: L.t("Custo por dia"),
+                            value: Money.format(dailyCost),
+                            icon: "sun.max.fill",
+                            tint: .warning
+                        )
+                        MetricCard(
+                            title: L.t("Maior assinatura"),
+                            value: priciest?.name ?? "—",
+                            icon: "crown.fill",
+                            tint: .danger,
+                            subtitle: priciest.map { L.t("subscription.perMonth", Money.format($0.monthlyCost(in: .shared))) }
+                        )
+                        MetricCard(
+                            title: L.t("Economia anual"),
+                            value: Money.compact(cancelledYearlySavings),
+                            icon: "leaf.fill",
+                            tint: .success,
+                            subtitle: cancelledYearlySavings > 0 ? L.t("com cancelamentos") : nil
+                        )
                     }
 
                     if active.isEmpty {
@@ -95,6 +139,11 @@ struct DashboardView: View {
 
                         TopSubscriptionsChart(subscriptions: filteredActive)
                         UpcomingPaymentsSection(subscriptions: filteredActive)
+
+                        InsightsCard(insights: insights, hasPro: store.hasProAccess) {
+                            paywallReason = L.t("Os insights completos fazem parte do SubCheck Pro.")
+                            showPaywall = true
+                        }
                     }
 
                     if store.hasProAccess, monthlyBudget > 0 {
@@ -247,6 +296,19 @@ struct DashboardView: View {
             .contentTransition(.numericText())
             .animation(.snappy, value: active.count)
             .padding(.top, Spacing.xs)
+
+            if let nextCharge {
+                Label(
+                    L.t("Próxima: %@ em %lld dia(s)", nextCharge.name, nextCharge.daysUntilNextBilling),
+                    systemImage: "arrow.triangle.2.circlepath"
+                )
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.white)
+                .padding(.horizontal, Spacing.md)
+                .padding(.vertical, Spacing.xs)
+                .background(.white.opacity(0.18), in: Capsule())
+                .padding(.top, Spacing.xs)
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(Spacing.xl)

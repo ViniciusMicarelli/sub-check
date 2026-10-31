@@ -100,6 +100,18 @@ targets:
         CODE_SIGN_ENTITLEMENTS: Config/SubCheckWidgets.entitlements
         SKIP_INSTALL: "YES"
 
+  SubCheckTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: SubCheckTests
+    dependencies:
+      - target: SubCheck
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: github.com-ViniciusMicarelli.SubCheck.tests
+        GENERATE_INFOPLIST_FILE: "YES"
+
 schemes:
   SubCheck:
     build:
@@ -109,5 +121,8 @@ schemes:
       config: Debug
       # Permite comprar/testar o Pro no simulador sem App Store Connect.
       storeKitConfiguration: Config/SubCheck.storekit
+    test:
+      targets:
+        - SubCheckTests
     archive:
       config: Release
