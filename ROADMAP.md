@@ -30,7 +30,8 @@ Free must be useful and honest (5 subscriptions, dashboard, widgets, reminders, 
 2. ~~Price-change log~~ **Done (last change only)**: detail screen records the previous price; Pro insight flags hikes ≥5%. Full history would need a `PriceChange` model.
 3. **Shared subscriptions** — split cost by N people, show "your share".
 4. **iCloud sync** (SwiftData + CloudKit) — strongest reason to pay once; needs optional/defaulted model fields.
-5. **Cancel guides** — per-brand deep link to the cancel page (extend `BrandIconCatalog`).
+5. ~~Cancel guides~~ **Done**: `CancelGuide` opens the brand's management page (Netflix, Spotify, YouTube, App Store, Google Play…) or a search fallback. Add more brands as verified.
+   Also done: first-launch onboarding (`OnboardingView`).
 6. **Extra widgets / custom app icons** (Pro cosmetics: the 3 icon variants make a good unlockable set).
 7. **Family plan + tip-jar tier** if lifetime conversion is low (consider $/yr alternative later).
 

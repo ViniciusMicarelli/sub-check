@@ -16,6 +16,7 @@ struct RootView: View {
     @AppStorage("appearance") private var appearance: AppearanceOption = .system
     @AppStorage(L.languageKey) private var language: AppLanguage = .system
     @AppStorage("appLockEnabled") private var appLockEnabled = false
+    @AppStorage(OnboardingView.doneKey) private var onboardingDone = false
 
     /// Destrava a tela de bloqueio depois do Face ID.
     @State private var isLocked = false
@@ -48,6 +49,12 @@ struct RootView: View {
                 .tag(Tab.settings)
         }
         .tint(.brand)
+        .fullScreenCover(isPresented: Binding(
+            get: { !onboardingDone },
+            set: { _ in }
+        )) {
+            OnboardingView()
+        }
         .preferredColorScheme(appearance.colorScheme)
         // A troca de idioma reavalia as `LocalizedStringKey` sem reiniciar o app.
         .environment(\.locale, language.locale ?? Locale.current)

@@ -388,3 +388,16 @@
 "Último reajuste"               = "Last price change";
 "%@ ficou %@ mais caro"         = "%@ got %@ pricier";
 "Era %@, agora %@. Vale renegociar ou trocar." = "Was %@, now %@. Worth renegotiating or switching.";
+
+// MARK: - Onboarding and cancel guide
+"Bem-vindo ao SubCheck"         = "Welcome to SubCheck";
+"Veja todas as suas assinaturas num só lugar e descubra para onde vai o seu dinheiro." = "See all your subscriptions in one place and find out where your money goes.";
+"Nada de cobrança surpresa"     = "No surprise charges";
+"Avisamos antes de cada cobrança e na véspera do fim de um teste gratuito." = "We warn you before every charge and the day before a free trial ends.";
+"Economize de verdade"          = "Actually save money";
+"Insights, previsão de 12 meses e simulador de cancelamento mostram onde cortar." = "Insights, a 12-month forecast and the cancellation simulator show where to cut.";
+"Continuar"                     = "Continue";
+"Começar"                       = "Get started";
+"Abrir página de cancelamento"  = "Open cancellation page";
+"Buscar como cancelar"          = "Search how to cancel";
+"como cancelar assinatura %@"   = "how to cancel %@ subscription";

@@ -32,6 +32,7 @@
 		44E5EC1186B4981D672601DF /* StoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39DA69F859E9EF0738F38B8 /* StoreService.swift */; };
 		4C96C3E0F898F178CEF538DF /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CF31D13E41A029C7658DEC /* Currency.swift */; };
 		4FA803465C727EFC974ABCEA /* CategoryStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4775FE8C99C8C04863178B1 /* CategoryStyle.swift */; };
+		511417101DF16ADAD9F76DA7 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA6070CEADF73027A7AAA92 /* OnboardingView.swift */; };
 		51E7A159B3F052BAE4399137 /* AnalysisCharts.swift in Sources */ = {isa = PBXBuildFile; fileRef = E69A91B19EFA59D6D81AF77E /* AnalysisCharts.swift */; };
 		58AC1DCAEE74E9F546804480 /* AppLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E11F9E3338CD0EAD3F6BDC9 /* AppLanguage.swift */; };
 		61B0BB5C5FBCD366A184418E /* BrandIcons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1C42B7A93E868F1585B5839F /* BrandIcons.xcassets */; };
@@ -74,6 +75,7 @@
 		BB1B0E2E2517119732B2AE8C /* SpendHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5202F8C8EB5A6965E0C443F /* SpendHistory.swift */; };
 		BCBB43BA65B4933AE3081C30 /* PaymentRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B524D918F64CF02A77AA75 /* PaymentRecord.swift */; };
 		BE086855D86D8841F853EC58 /* PaymentLedger.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE28588DE4177F31EFCC114 /* PaymentLedger.swift */; };
+		C33DF54B8A2B82C5C9E765CF /* CancelGuide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F949F68E2A3EB1301A153E /* CancelGuide.swift */; };
 		C92A0E7E830AA5BCC45E4223 /* BrandIconCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C6BD34A2635D9AB3D7E320 /* BrandIconCatalog.swift */; };
 		C9FB508279B7CFB901D3EAFF /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B842B7E61B8D70B590FEDCD /* SharedModelContainer.swift */; };
 		CB744ABD6BB32BF489CC0C1A /* TopSubscriptionsChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F74C9FC28F31591511B1CB /* TopSubscriptionsChart.swift */; };
@@ -147,6 +149,7 @@
 		1BDC6374ED890DC180F791EB /* SubscriptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionsView.swift; sourceTree = "<group>"; };
 		1C42B7A93E868F1585B5839F /* BrandIcons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = BrandIcons.xcassets; sourceTree = "<group>"; };
 		1DAD7694C99E5E2A3EEF3ADA /* SubCheck.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SubCheck.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FA6070CEADF73027A7AAA92 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		2197FC784FE231FBCCEA9BF3 /* CategoryDonutChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryDonutChart.swift; sourceTree = "<group>"; };
 		29A244B4D88EB23D6D745C8C /* SubCheckActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubCheckActivityAttributes.swift; sourceTree = "<group>"; };
 		2B11B4AD576203430F57AC22 /* ExportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportService.swift; sourceTree = "<group>"; };
@@ -169,6 +172,7 @@
 		6D4BCD420E8DB9DD4BBD8613 /* BrandMark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandMark.swift; sourceTree = "<group>"; };
 		6EEA705A5295899330A279C3 /* ReportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportService.swift; sourceTree = "<group>"; };
 		6F7A6AD4D3A9E9E0FD09DAD8 /* SubscriptionIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionIconView.swift; sourceTree = "<group>"; };
+		73F949F68E2A3EB1301A153E /* CancelGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelGuide.swift; sourceTree = "<group>"; };
 		768F1A1C5BF40D87F1C7C25E /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		7D146464C2D6159BE3560CD4 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		84E3668B63FE3517FE63D23D /* InsightsServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsServiceTests.swift; sourceTree = "<group>"; };
@@ -308,6 +312,7 @@
 			isa = PBXGroup;
 			children = (
 				A70C5796341CD009A7FB5DB0 /* BudgetService.swift */,
+				73F949F68E2A3EB1301A153E /* CancelGuide.swift */,
 				9296C281ABBB608E0A0685AC /* CurrencyService.swift */,
 				2B11B4AD576203430F57AC22 /* ExportService.swift */,
 				3E04958F9BCDBF2DF5672CB9 /* Haptics.swift */,
@@ -330,6 +335,14 @@
 			path = Services;
 			sourceTree = "<group>";
 		};
+		7F8A94E4D1D5E83D1DCF1B6A /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				1FA6070CEADF73027A7AAA92 /* OnboardingView.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
 		865972EFD90382AEA0DD2801 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -338,6 +351,7 @@
 				8FA539CE1D3CF88B4D786847 /* Components */,
 				1963CB761C234B803E9DE1EE /* Dashboard */,
 				25EF945E4776E73F564AC68E /* History */,
+				7F8A94E4D1D5E83D1DCF1B6A /* Onboarding */,
 				B78527C53FB042D92A505AC7 /* Pro */,
 				C926F9EC724B68DCECC7D9B2 /* Settings */,
 				B0DF8E300ED1CE9D18147F13 /* Subscriptions */,
@@ -581,6 +595,7 @@
 				6337592B475F8DD1AF5B8BF0 /* BrandMark.swift in Sources */,
 				B97713DFC612157CFCA95F9A /* BudgetCard.swift in Sources */,
 				EAA095A6737CB2B8E584F126 /* BudgetService.swift in Sources */,
+				C33DF54B8A2B82C5C9E765CF /* CancelGuide.swift in Sources */,
 				D619B20079CA0570DD932361 /* CancellationSimulatorView.swift in Sources */,
 				D40B8796F9980E0994C9B1B7 /* CategoriesView.swift in Sources */,
 				78AE75FAB862046F890EDEFF /* CategoryDonutChart.swift in Sources */,
@@ -604,6 +619,7 @@
 				F2A3E0094520F00C373FF2C8 /* Localization.swift in Sources */,
 				F96D57D658E1C6400FDD0136 /* MetricCard.swift in Sources */,
 				2A2DB8AE3DF1EB574B0C852A /* NotificationService.swift in Sources */,
+				511417101DF16ADAD9F76DA7 /* OnboardingView.swift in Sources */,
 				BE086855D86D8841F853EC58 /* PaymentLedger.swift in Sources */,
 				BCBB43BA65B4933AE3081C30 /* PaymentRecord.swift in Sources */,
 				6CDEAB2A60DE810F3A0B46EA /* ProView.swift in Sources */,

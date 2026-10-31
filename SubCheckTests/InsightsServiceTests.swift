@@ -99,3 +99,18 @@ final class TrialAndPriceTests: XCTestCase {
         XCTAssertNil(s.priceChange)
     }
 }
+
+final class CancelGuideTests: XCTestCase {
+
+    func testKnownBrandGetsDirectLink() {
+        let s = Subscription(name: "Netflix", cost: 40)
+        XCTAssertTrue(CancelGuide.isDirect(s))
+        XCTAssertEqual(CancelGuide.url(for: s)?.host, "www.netflix.com")
+    }
+
+    func testUnknownServiceFallsBackToSearch() {
+        let s = Subscription(name: "Academia do Bairro", cost: 90)
+        XCTAssertFalse(CancelGuide.isDirect(s))
+        XCTAssertEqual(CancelGuide.url(for: s)?.host, "www.google.com")
+    }
+}

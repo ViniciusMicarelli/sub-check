@@ -389,3 +389,16 @@
 "Último reajuste"               = "Último reajuste";
 "%@ ficou %@ mais caro"         = "%@ ficou %@ mais caro";
 "Era %@, agora %@. Vale renegociar ou trocar." = "Era %@, agora %@. Vale renegociar ou trocar.";
+
+// MARK: - Onboarding e guia de cancelamento
+"Bem-vindo ao SubCheck"         = "Bem-vindo ao SubCheck";
+"Veja todas as suas assinaturas num só lugar e descubra para onde vai o seu dinheiro." = "Veja todas as suas assinaturas num só lugar e descubra para onde vai o seu dinheiro.";
+"Nada de cobrança surpresa"     = "Nada de cobrança surpresa";
+"Avisamos antes de cada cobrança e na véspera do fim de um teste gratuito." = "Avisamos antes de cada cobrança e na véspera do fim de um teste gratuito.";
+"Economize de verdade"          = "Economize de verdade";
+"Insights, previsão de 12 meses e simulador de cancelamento mostram onde cortar." = "Insights, previsão de 12 meses e simulador de cancelamento mostram onde cortar.";
+"Continuar"                     = "Continuar";
+"Começar"                       = "Começar";
+"Abrir página de cancelamento"  = "Abrir página de cancelamento";
+"Buscar como cancelar"          = "Buscar como cancelar";
+"como cancelar assinatura %@"   = "como cancelar assinatura %@";

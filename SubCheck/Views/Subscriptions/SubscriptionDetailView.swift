@@ -247,6 +247,17 @@ struct SubscriptionDetailView: View {
 
     private var actionsSection: some View {
         Section {
+            if !subscription.isCancelled, let url = CancelGuide.url(for: subscription) {
+                Link(destination: url) {
+                    Label(
+                        CancelGuide.isDirect(subscription)
+                            ? L.t("Abrir página de cancelamento")
+                            : L.t("Buscar como cancelar"),
+                        systemImage: "arrow.up.right.square"
+                    )
+                }
+            }
+
             Button {
                 Haptics.impact()
                 SubscriptionStore.toggleCancelled(subscription, in: context)
