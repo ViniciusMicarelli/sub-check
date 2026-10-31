@@ -21,6 +21,7 @@ struct MetricCard: View {
                 Image(systemName: icon)
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(tint)
+                    .symbolEffect(.bounce, value: value)
                     .frame(width: 30, height: 30)
                     .background(tint.opacity(0.15), in: RoundedRectangle(cornerRadius: Radius.sm, style: .continuous))
                 Spacer(minLength: 0)

@@ -402,3 +402,8 @@
 "Abrir página de cancelamento"  = "Abrir página de cancelamento";
 "Buscar como cancelar"          = "Buscar como cancelar";
 "como cancelar assinatura %@"   = "como cancelar assinatura %@";
+
+// MARK: - Projeção interativa
+"Quanto isso vira?"             = "Quanto isso vira?";
+"%lld anos"                     = "%lld anos";
+"Com reajuste de %@ ao ano"     = "Com reajuste de %@ ao ano";

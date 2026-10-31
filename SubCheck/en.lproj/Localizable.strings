@@ -401,3 +401,8 @@
 "Abrir página de cancelamento"  = "Open cancellation page";
 "Buscar como cancelar"          = "Search how to cancel";
 "como cancelar assinatura %@"   = "how to cancel %@ subscription";
+
+// MARK: - Interactive projection
+"Quanto isso vira?"             = "What does this add up to?";
+"%lld anos"                     = "%lld years";
+"Com reajuste de %@ ao ano"     = "With %@ yearly price increases";

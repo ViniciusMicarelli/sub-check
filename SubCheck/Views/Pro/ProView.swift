@@ -112,6 +112,7 @@ struct ProView: View {
                         .foregroundStyle(Color.success)
                 }
                 .padding(.vertical, Spacing.md)
+                .staggeredAppear(index)
 
                 if index < benefits.count - 1 {
                     Divider().padding(.leading, 40)
@@ -209,7 +210,7 @@ struct ProView: View {
                         in: RoundedRectangle(cornerRadius: Radius.md, style: .continuous)
                     )
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(PressableStyle())
                 .disabled(store.isPurchasing || store.product == nil)
                 .opacity(store.product == nil ? 0.6 : 1)
 

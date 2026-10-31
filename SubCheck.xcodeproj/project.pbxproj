@@ -71,6 +71,7 @@
 		AF17DB2CB1E55DE171D972C6 /* SubCheckActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A244B4D88EB23D6D745C8C /* SubCheckActivityAttributes.swift */; };
 		B6201154A86B6547F0CE8B0B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D146464C2D6159BE3560CD4 /* SettingsView.swift */; };
 		B6261C9CBE482CB754C9E7DD /* SubscriptionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00636F320602E7E72779E3FD /* SubscriptionDetailView.swift */; };
+		B86CA93CF61AF2A376FE8CAA /* Motion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DD6AB44EFBCD9E2CC2125C2 /* Motion.swift */; };
 		B97713DFC612157CFCA95F9A /* BudgetCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD8699EC4EAD0B0A76E752D9 /* BudgetCard.swift */; };
 		BB1B0E2E2517119732B2AE8C /* SpendHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5202F8C8EB5A6965E0C443F /* SpendHistory.swift */; };
 		BCBB43BA65B4933AE3081C30 /* PaymentRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B524D918F64CF02A77AA75 /* PaymentRecord.swift */; };
@@ -98,6 +99,7 @@
 		F1D691AEA9A2410AFB0055D3 /* DeletedSubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = A44405F71E5CC52525268D4E /* DeletedSubscription.swift */; };
 		F2A3E0094520F00C373FF2C8 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8BAB2C958FADF2A5004C92A /* Localization.swift */; };
 		F4C651D2FEA4D780616C11AB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DF094A31BEA646C6074ABC67 /* Assets.xcassets */; };
+		F4E58BE10D4A45933FA0CC18 /* CostProjectionCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F479B0901F13F72A50DD14 /* CostProjectionCard.swift */; };
 		F646F60B8090FB691756E249 /* AddSubscriptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0194DE8835A7B9A1C3A51F96 /* AddSubscriptionView.swift */; };
 		F6EA0545DE24E5983FED3371 /* AppLockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D34E0B88A45A6992D5DC9B2 /* AppLockView.swift */; };
 		F868AA63B461AD3BB43562B5 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = E62957C75B822D3D81AE53D3 /* Theme.swift */; };
@@ -164,6 +166,7 @@
 		42BB7B2E92A614D305692793 /* ProView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProView.swift; sourceTree = "<group>"; };
 		57664FB8C48AFDCC457B60BC /* InsightsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsService.swift; sourceTree = "<group>"; };
 		5B4544C900E13FA73D7B4540 /* IconPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPickerView.swift; sourceTree = "<group>"; };
+		5DD6AB44EFBCD9E2CC2125C2 /* Motion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Motion.swift; sourceTree = "<group>"; };
 		5FFB621FC0915EE1A39C469B /* InsightsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsCard.swift; sourceTree = "<group>"; };
 		617B1C21B1D34ECDC5AA0B7C /* Subscription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subscription.swift; sourceTree = "<group>"; };
 		62D510CB3EF9475B098E2678 /* SubscriptionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionStore.swift; sourceTree = "<group>"; };
@@ -175,6 +178,7 @@
 		73F949F68E2A3EB1301A153E /* CancelGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelGuide.swift; sourceTree = "<group>"; };
 		768F1A1C5BF40D87F1C7C25E /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		7D146464C2D6159BE3560CD4 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		80F479B0901F13F72A50DD14 /* CostProjectionCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostProjectionCard.swift; sourceTree = "<group>"; };
 		84E3668B63FE3517FE63D23D /* InsightsServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsServiceTests.swift; sourceTree = "<group>"; };
 		87CC14167BB1C59F52B2D41C /* SubscriptionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionRowView.swift; sourceTree = "<group>"; };
 		8979B67F0F39E74C44A26E21 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
@@ -245,6 +249,7 @@
 			children = (
 				BD8699EC4EAD0B0A76E752D9 /* BudgetCard.swift */,
 				2197FC784FE231FBCCEA9BF3 /* CategoryDonutChart.swift */,
+				80F479B0901F13F72A50DD14 /* CostProjectionCard.swift */,
 				768F1A1C5BF40D87F1C7C25E /* DashboardView.swift */,
 				5FFB621FC0915EE1A39C469B /* InsightsCard.swift */,
 				40F74C9FC28F31591511B1CB /* TopSubscriptionsChart.swift */,
@@ -292,6 +297,7 @@
 			children = (
 				E4775FE8C99C8C04863178B1 /* CategoryStyle.swift */,
 				FE1EF94BD2C8E2A5568A9633 /* Formatters.swift */,
+				5DD6AB44EFBCD9E2CC2125C2 /* Motion.swift */,
 				6F7A6AD4D3A9E9E0FD09DAD8 /* SubscriptionIconView.swift */,
 				E62957C75B822D3D81AE53D3 /* Theme.swift */,
 			);
@@ -602,6 +608,7 @@
 				CC20494F25D4319D37C7F006 /* CategoryStyle.swift in Sources */,
 				818723531EC5C746DF9F4D4C /* CategoryType.swift in Sources */,
 				2A4A5EEE44077B95B1C53A08 /* Color.swift in Sources */,
+				F4E58BE10D4A45933FA0CC18 /* CostProjectionCard.swift in Sources */,
 				4C96C3E0F898F178CEF538DF /* Currency.swift in Sources */,
 				9AB9D94969B52EB69FA67D2A /* CurrencyService.swift in Sources */,
 				92A80CF37242E09ADA1C5B04 /* DashboardView.swift in Sources */,
@@ -618,6 +625,7 @@
 				031C9A86A9A579119CFF9E22 /* LiveActivityService.swift in Sources */,
 				F2A3E0094520F00C373FF2C8 /* Localization.swift in Sources */,
 				F96D57D658E1C6400FDD0136 /* MetricCard.swift in Sources */,
+				B86CA93CF61AF2A376FE8CAA /* Motion.swift in Sources */,
 				2A2DB8AE3DF1EB574B0C852A /* NotificationService.swift in Sources */,
 				511417101DF16ADAD9F76DA7 /* OnboardingView.swift in Sources */,
 				BE086855D86D8841F853EC58 /* PaymentLedger.swift in Sources */,

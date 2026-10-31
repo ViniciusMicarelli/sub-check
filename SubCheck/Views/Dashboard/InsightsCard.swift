@@ -39,8 +39,10 @@ struct InsightsCard: View {
                     }
                 }
 
-                ForEach(visible) { insight in
+                ForEach(Array(visible.enumerated()), id: \.element.id) { index, insight in
                     row(insight)
+                        .staggeredAppear(index)
+                        .transition(.opacity.combined(with: .move(edge: .top)))
                 }
 
                 if hiddenCount > 0 {
@@ -58,7 +60,7 @@ struct InsightsCard: View {
                                 in: RoundedRectangle(cornerRadius: Radius.sm, style: .continuous)
                             )
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(PressableStyle())
                 }
             }
             .cardSurface()

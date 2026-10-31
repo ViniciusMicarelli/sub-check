@@ -44,6 +44,10 @@ Free must be useful and honest (5 subscriptions, dashboard, widgets, reminders, 
 - **Type & shape:** SF Rounded for hero numbers, continuous corners (`Radius`), soft shadows only on hero/floating elements.
 - **Voice:** direct and a little wry — "Mesmo sem abrir nenhuma delas."
 
+## Motion language
+
+`DesignSystem/Motion.swift`: short damped springs (`Motion.snappy`/`bouncy`), `PressableStyle` (press-down feedback), `staggeredAppear(_:)` (cascade entrance), `revealOnScroll()` (cards fade/scale as they scroll in), all gated by Reduce Motion. Interactive piece: `CostProjectionCard` (slider + tappable bars + yearly-increase toggle, with haptics). Patterns follow Apple HIG; Spotify's desktop client was deliberately not decompiled (ToS, and it is a web UI that would not map to SwiftUI).
+
 ## Not verified
 
 No full Xcode on this machine: new code was syntax-checked (`swiftc -parse`) but **not compiled or run**. Build in Xcode and eyeball the dashboard, paywall and icon before shipping.

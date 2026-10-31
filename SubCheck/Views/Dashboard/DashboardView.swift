@@ -64,6 +64,7 @@ struct DashboardView: View {
             ScrollView {
                 VStack(spacing: Spacing.lg) {
                     heroCard
+                        .staggeredAppear(0)
 
                     LazyVGrid(
                         columns: [GridItem(.flexible(), spacing: Spacing.md),
@@ -121,6 +122,7 @@ struct DashboardView: View {
                             subtitle: cancelledYearlySavings > 0 ? L.t("com cancelamentos") : nil
                         )
                     }
+                    .staggeredAppear(1)
 
                     if active.isEmpty {
                         EmptyStateView(
@@ -132,12 +134,17 @@ struct DashboardView: View {
                         .cardSurface()
                     } else {
                         CategoryDonutChart(subscriptions: active, selection: $selectedCategory)
+                            .revealOnScroll()
 
                         if selectedCategory != nil {
                             activeFilterChip
                         }
 
                         TopSubscriptionsChart(subscriptions: filteredActive)
+                            .revealOnScroll()
+                        CostProjectionCard(monthly: monthlyTotal)
+                            .revealOnScroll()
+
                         TrialsCard(subscriptions: active)
                         UpcomingPaymentsSection(subscriptions: filteredActive)
 
@@ -152,6 +159,7 @@ struct DashboardView: View {
                     }
 
                     analysisLink
+                        .revealOnScroll()
                 }
                 .padding(Spacing.lg)
                 .animation(.snappy, value: selectedCategory)
@@ -238,7 +246,7 @@ struct DashboardView: View {
                 }
             }
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PressableStyle())
     }
 
     private var analysisLabel: some View {
