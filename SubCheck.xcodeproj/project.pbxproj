@@ -49,6 +49,7 @@
 		736224F43A0E2E1D122D4689 /* DeletedSubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = A44405F71E5CC52525268D4E /* DeletedSubscription.swift */; };
 		739B44FB5EB680D98C6FFF46 /* SubscriptionCategorizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99C11C62B77D80447093AD06 /* SubscriptionCategorizer.swift */; };
 		78AE75FAB862046F890EDEFF /* CategoryDonutChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2197FC784FE231FBCCEA9BF3 /* CategoryDonutChart.swift */; };
+		7E4DACB3BE8AA4428970BFE3 /* SubCheckIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EB7CA8DC05E52E45CD59170 /* SubCheckIntents.swift */; };
 		7EF9EE34C8B796413CAB993E /* SubscriptionIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7A6AD4D3A9E9E0FD09DAD8 /* SubscriptionIconView.swift */; };
 		818723531EC5C746DF9F4D4C /* CategoryType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F9A4E6E2FAEAEF2B7307F7F /* CategoryType.swift */; };
 		8619118A761A509DB5CD5CE6 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = E62957C75B822D3D81AE53D3 /* Theme.swift */; };
@@ -96,6 +97,7 @@
 		DE67F0AF42EC5DEDEEF869AE /* Subscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617B1C21B1D34ECDC5AA0B7C /* Subscription.swift */; };
 		DF351DDA9277ECCD899C11DF /* AnalysisView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C742862C0A5C6969F59E08 /* AnalysisView.swift */; };
 		E04511061198F9C141AED9F4 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A57F87853A3BCB4ECBEC350 /* User.swift */; };
+		E1C2B066E8D7A138AA7B2907 /* AppShortcuts.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7C72411808C1347602E7EF8D /* AppShortcuts.strings */; };
 		E245672C47D8318223F8A10A /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8979B67F0F39E74C44A26E21 /* HistoryView.swift */; };
 		EAA095A6737CB2B8E584F126 /* BudgetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70C5796341CD009A7FB5DB0 /* BudgetService.swift */; };
 		EFF812DB41BFF4BE564ACEF5 /* SampleDataSeeder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 960E873556925623B687CEF5 /* SampleDataSeeder.swift */; };
@@ -161,6 +163,7 @@
 		29A244B4D88EB23D6D745C8C /* SubCheckActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubCheckActivityAttributes.swift; sourceTree = "<group>"; };
 		2B11B4AD576203430F57AC22 /* ExportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportService.swift; sourceTree = "<group>"; };
 		2D5F28403C3946B5AB73852A /* RemoteIconStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteIconStore.swift; sourceTree = "<group>"; };
+		2EB7CA8DC05E52E45CD59170 /* SubCheckIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubCheckIntents.swift; sourceTree = "<group>"; };
 		2F9A4E6E2FAEAEF2B7307F7F /* CategoryType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryType.swift; sourceTree = "<group>"; };
 		38FD071276D90E72BF2D5676 /* SubscriptionIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionIcon.swift; sourceTree = "<group>"; };
 		39B524D918F64CF02A77AA75 /* PaymentRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentRecord.swift; sourceTree = "<group>"; };
@@ -173,9 +176,11 @@
 		57664FB8C48AFDCC457B60BC /* InsightsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsService.swift; sourceTree = "<group>"; };
 		5B4544C900E13FA73D7B4540 /* IconPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPickerView.swift; sourceTree = "<group>"; };
 		5DD6AB44EFBCD9E2CC2125C2 /* Motion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Motion.swift; sourceTree = "<group>"; };
+		5E70EFAB7C9C86E957DC341D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/AppShortcuts.strings; sourceTree = "<group>"; };
 		5FFB621FC0915EE1A39C469B /* InsightsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsCard.swift; sourceTree = "<group>"; };
 		617B1C21B1D34ECDC5AA0B7C /* Subscription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subscription.swift; sourceTree = "<group>"; };
 		62D510CB3EF9475B098E2678 /* SubscriptionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionStore.swift; sourceTree = "<group>"; };
+		638064FEB57E44F573308160 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/AppShortcuts.strings"; sourceTree = "<group>"; };
 		68B4FFBDB7BA5C6B2EB3D7F4 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		6A57F87853A3BCB4ECBEC350 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		6D4BCD420E8DB9DD4BBD8613 /* BrandMark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandMark.swift; sourceTree = "<group>"; };
@@ -436,11 +441,21 @@
 			path = Pro;
 			sourceTree = "<group>";
 		};
+		BFFD3EFAFD84F7AF9C5DF42F /* Intents */ = {
+			isa = PBXGroup;
+			children = (
+				2EB7CA8DC05E52E45CD59170 /* SubCheckIntents.swift */,
+			);
+			path = Intents;
+			sourceTree = "<group>";
+		};
 		C124E9133AA8244D4C58AFC2 /* SubCheck */ = {
 			isa = PBXGroup;
 			children = (
 				334CD6D662A1E9496069F92A /* AddSubscription */,
+				7C72411808C1347602E7EF8D /* AppShortcuts.strings */,
 				430EE35CE7DD238D569D8948 /* DesignSystem */,
+				BFFD3EFAFD84F7AF9C5DF42F /* Intents */,
 				DFE74583532BBAAD3BD86B04 /* Localizable.strings */,
 				AA113E7C5131D130DA46983A /* models */,
 				50154F7659053A6F4A811608 /* Services */,
@@ -584,6 +599,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1C2B066E8D7A138AA7B2907 /* AppShortcuts.strings in Resources */,
 				F4C651D2FEA4D780616C11AB /* Assets.xcassets in Resources */,
 				A5E35AD4F4A44BA14C1C3D31 /* BrandIcons.xcassets in Resources */,
 				3FCBCBB91C6A8C0E12D504F9 /* Localizable.strings in Resources */,
@@ -658,6 +674,7 @@
 				44E5EC1186B4981D672601DF /* StoreService.swift in Sources */,
 				38756D3177ECCEF2ACFAB29B /* SubCheckActivityAttributes.swift in Sources */,
 				6B5ACF5DB82B255DC3492EF7 /* SubCheckApp.swift in Sources */,
+				7E4DACB3BE8AA4428970BFE3 /* SubCheckIntents.swift in Sources */,
 				1FED348D969FD90515E7955E /* Subscription.swift in Sources */,
 				739B44FB5EB680D98C6FFF46 /* SubscriptionCategorizer.swift in Sources */,
 				B6261C9CBE482CB754C9E7DD /* SubscriptionDetailView.swift in Sources */,
@@ -725,6 +742,15 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		7C72411808C1347602E7EF8D /* AppShortcuts.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5E70EFAB7C9C86E957DC341D /* en */,
+				638064FEB57E44F573308160 /* pt-BR */,
+			);
+			name = AppShortcuts.strings;
+			sourceTree = "<group>";
+		};
 		DFE74583532BBAAD3BD86B04 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (

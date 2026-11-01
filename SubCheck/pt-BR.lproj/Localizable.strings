@@ -455,3 +455,24 @@
 "Política de privacidade"      = "Política de privacidade";
 "Termos de uso"                 = "Termos de uso";
 "Suporte"                       = "Suporte";
+
+// MARK: - Atalhos e Siri
+"Diz qual assinatura será cobrada em seguida e quando." = "Diz qual assinatura será cobrada em seguida e quando.";
+"Você não tem assinaturas ativas." = "Você não tem assinaturas ativas.";
+"hoje" = "hoje";
+"em %lld dia(s)" = "em %lld dia(s)";
+"%@ será cobrada %@: %@." = "%@ será cobrada %@: %@.";
+"Informa quanto suas assinaturas custam por mês e por ano." = "Informa quanto suas assinaturas custam por mês e por ano.";
+"Você gasta %@ por mês (%@ por ano) em %lld assinatura(s)." = "Você gasta %@ por mês (%@ por ano) em %lld assinatura(s).";
+"Cobranças dos próximos dias" = "Cobranças dos próximos dias";
+"Soma o que será cobrado nos próximos dias." = "Soma o que será cobrado nos próximos dias.";
+"Dias" = "Dias";
+"Nos próximos %lld dias serão cobrados %@." = "Nos próximos %lld dias serão cobrados %@.";
+"Nenhuma cobrança nos próximos %lld dias." = "Nenhuma cobrança nos próximos %lld dias.";
+"Mensal" = "Mensal";
+"Anual" = "Anual";
+"Semanal" = "Semanal";
+"Cadastra uma nova assinatura no SubCheck." = "Cadastra uma nova assinatura no SubCheck.";
+"Você atingiu o limite de %lld assinaturas ativas. O SubCheck Pro libera ilimitadas." = "Você atingiu o limite de %lld assinaturas ativas. O SubCheck Pro libera ilimitadas.";
+"Informe um valor maior que zero." = "Informe um valor maior que zero.";
+"%@ adicionada." = "%@ adicionada.";

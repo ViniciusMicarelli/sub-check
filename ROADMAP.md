@@ -48,6 +48,10 @@ Free must be useful and honest (5 subscriptions, dashboard, widgets, reminders, 
 
 `DesignSystem/Motion.swift`: short damped springs (`Motion.snappy`/`bouncy`), `PressableStyle` (press-down feedback), `staggeredAppear(_:)` (cascade entrance), `revealOnScroll()` (cards fade/scale as they scroll in), all gated by Reduce Motion. Interactive piece: `CostProjectionCard` (slider + tappable bars + yearly-increase toggle, with haptics). Patterns follow Apple HIG; Spotify's desktop client was deliberately not decompiled (ToS, and it is a web UI that would not map to SwiftUI).
 
+## Automations (Shortcuts / Siri)
+
+`Intents/SubCheckIntents.swift`: *Próxima cobrança*, *Total mensal*, *Cobranças dos próximos dias* (param: days), *Adicionar assinatura* (name, amount, frequency; respects the 5-sub free limit). Phrases for Siri in `AppShortcuts.strings` (pt-BR/en). Use them in the Shortcuts app > Automation (time of day, arrive/leave a place, Focus, charging…). Ideas next: *Registrar pagamento* (needs an `AppEntity` for subscriptions), *Cancelar assinatura*, a Focus-filter, and a Control Center toggle.
+
 See `PUBLISHING.md` for iCloud setup, seeing the Dynamic Island and the App Store checklist.
 
 ## Not verified

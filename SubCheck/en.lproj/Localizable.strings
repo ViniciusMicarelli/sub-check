@@ -454,3 +454,24 @@
 "Política de privacidade"      = "Privacy policy";
 "Termos de uso"                 = "Terms of use";
 "Suporte"                       = "Support";
+
+// MARK: - Shortcuts and Siri
+"Diz qual assinatura será cobrada em seguida e quando." = "Tells you which subscription is charged next and when.";
+"Você não tem assinaturas ativas." = "You have no active subscriptions.";
+"hoje" = "today";
+"em %lld dia(s)" = "in %lld day(s)";
+"%@ será cobrada %@: %@." = "%@ will be charged %@: %@.";
+"Informa quanto suas assinaturas custam por mês e por ano." = "Tells you how much your subscriptions cost per month and per year.";
+"Você gasta %@ por mês (%@ por ano) em %lld assinatura(s)." = "You spend %@ per month (%@ per year) on %lld subscription(s).";
+"Cobranças dos próximos dias" = "Upcoming charges";
+"Soma o que será cobrado nos próximos dias." = "Adds up what will be charged in the coming days.";
+"Dias" = "Days";
+"Nos próximos %lld dias serão cobrados %@." = "In the next %lld days you will be charged %@.";
+"Nenhuma cobrança nos próximos %lld dias." = "No charges in the next %lld days.";
+"Mensal" = "Monthly";
+"Anual" = "Yearly";
+"Semanal" = "Weekly";
+"Cadastra uma nova assinatura no SubCheck." = "Adds a new subscription to SubCheck.";
+"Você atingiu o limite de %lld assinaturas ativas. O SubCheck Pro libera ilimitadas." = "You reached the limit of %lld active subscriptions. SubCheck Pro unlocks unlimited.";
+"Informe um valor maior que zero." = "Enter an amount greater than zero.";
+"%@ adicionada." = "%@ added.";
