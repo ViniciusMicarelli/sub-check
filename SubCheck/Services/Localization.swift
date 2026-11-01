@@ -41,9 +41,20 @@ enum L {
         selected.locale ?? Locale.current
     }
 
+    /// Pacote `.lproj` do idioma escolhido. `String(localized:locale:)` só
+    /// formata; quem escolhe a tradução é o pacote, então sem isto o seletor
+    /// de idioma não alcançaria as strings montadas em código. Com "Sistema"
+    /// (ou sem a pasta do idioma) cai no pacote principal.
+    private static var bundle: Bundle {
+        guard let code = selected.appleLanguageCode,
+              let path = Bundle.main.path(forResource: code, ofType: "lproj"),
+              let localized = Bundle(path: path) else { return .main }
+        return localized
+    }
+
     /// Traduz uma chave para o idioma selecionado.
     static func t(_ key: String) -> String {
-        String(localized: String.LocalizationValue(key), bundle: .main, locale: current)
+        bundle.localizedString(forKey: key, value: key, table: nil)
     }
 
     /// Traduz uma chave com argumentos (usa placeholders `%lld` / `%@`).

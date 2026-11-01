@@ -29,7 +29,7 @@ Free must be useful and honest (5 subscriptions, dashboard, widgets, reminders, 
 1. ~~Free-trial tracker~~ **Done** (free tier): trial toggle on add, eve-of-end notification, dashboard card, row badge.
 2. ~~Price-change log~~ **Done (last change only)**: detail screen records the previous price; Pro insight flags hikes ≥5%. Full history would need a `PriceChange` model.
 3. **Shared subscriptions** — split cost by N people, show "your share".
-4. **iCloud sync** (SwiftData + CloudKit) — strongest reason to pay once; needs optional/defaulted model fields.
+4. ~~iCloud sync~~ **Built, unverified** (Pro toggle in Settings; see `PUBLISHING.md` for the required Xcode/CloudKit steps).
 5. ~~Cancel guides~~ **Done**: `CancelGuide` opens the brand's management page (Netflix, Spotify, YouTube, App Store, Google Play…) or a search fallback. Add more brands as verified.
    Also done: first-launch onboarding (`OnboardingView`).
 6. **Extra widgets / custom app icons** (Pro cosmetics: the 3 icon variants make a good unlockable set).
@@ -47,6 +47,8 @@ Free must be useful and honest (5 subscriptions, dashboard, widgets, reminders, 
 ## Motion language
 
 `DesignSystem/Motion.swift`: short damped springs (`Motion.snappy`/`bouncy`), `PressableStyle` (press-down feedback), `staggeredAppear(_:)` (cascade entrance), `revealOnScroll()` (cards fade/scale as they scroll in), all gated by Reduce Motion. Interactive piece: `CostProjectionCard` (slider + tappable bars + yearly-increase toggle, with haptics). Patterns follow Apple HIG; Spotify's desktop client was deliberately not decompiled (ToS, and it is a web UI that would not map to SwiftUI).
+
+See `PUBLISHING.md` for iCloud setup, seeing the Dynamic Island and the App Store checklist.
 
 ## Not verified
 

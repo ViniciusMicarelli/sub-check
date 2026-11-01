@@ -49,6 +49,11 @@ targets:
         NSFaceIDUsageDescription: "Use o Face ID para proteger suas assinaturas."
         # Habilita a Live Activity (ilha dinâmica + tela de bloqueio).
         NSSupportsLiveActivities: true
+        # CloudKit avisa o app de mudanças vindas de outros aparelhos.
+        UIBackgroundModes:
+          - remote-notification
+        # Sem criptografia própria: dispensa o questionário de exportação.
+        ITSAppUsesNonExemptEncryption: false
         CFBundleURLTypes:
           - CFBundleURLName: github.com-ViniciusMicarelli.SubCheck
             CFBundleURLSchemes:

@@ -23,7 +23,14 @@ struct SubCheckApp: App {
 
                     // Reconstrói o histórico de cobranças a partir do início de cada assinatura.
                     let subscriptions = (try? context.fetch(FetchDescriptor<Subscription>())) ?? []
+                    PaymentLedger.removeDuplicates(in: context)
                     PaymentLedger.reconcile(subscriptions, in: context)
+
+                    // Assinaturas vindas de outro aparelho (iCloud) ainda não
+                    // têm lembrete neste; reagendar é idempotente.
+                    for subscription in subscriptions where !subscription.isCancelled {
+                        NotificationService.shared.scheduleNotification(for: subscription)
+                    }
 
                     // Widgets e Live Activity sempre alinhados na abertura.
                     LiveActivityService.shared.syncAll(with: subscriptions)

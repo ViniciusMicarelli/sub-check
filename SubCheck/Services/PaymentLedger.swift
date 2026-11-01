@@ -44,6 +44,32 @@ enum PaymentLedger {
         return inserted
     }
 
+    /// Remove cobranças repetidas (mesma assinatura e mesmo dia). Com iCloud,
+    /// dois aparelhos podem reconstruir o mesmo histórico antes de sincronizar.
+    /// Mantém o registro confirmado pelo usuário em vez do estimado.
+    @discardableResult
+    static func removeDuplicates(in context: ModelContext) -> Int {
+        let records = (try? context.fetch(FetchDescriptor<PaymentRecord>())) ?? []
+        let calendar = Calendar.current
+
+        var kept: [String: PaymentRecord] = [:]
+        var removed = 0
+        for record in records {
+            let day = calendar.startOfDay(for: record.paidAt).timeIntervalSince1970
+            let key = "\(record.subscriptionID.uuidString)-\(day)"
+            if let existing = kept[key] {
+                let loser = existing.isEstimated && !record.isEstimated ? existing : record
+                if loser === existing { kept[key] = record }
+                context.delete(loser)
+                removed += 1
+            } else {
+                kept[key] = record
+            }
+        }
+        if removed > 0 { try? context.save() }
+        return removed
+    }
+
     /// Marca a próxima cobrança como paga e empurra o ciclo para frente,
     /// preservando o dia original do vencimento.
     @discardableResult

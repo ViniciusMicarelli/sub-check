@@ -34,10 +34,19 @@ enum SampleDataSeeder {
         Sample(name: "1Password", cost: 179.00, frequency: .yearly, category: .utilities, startMonthsAgo: 5)
     ]
 
+    /// Dados de exemplo só existem em builds de desenvolvimento, e uma única
+    /// vez. Em produção o app abre vazio (e, com iCloud, esperando a nuvem),
+    /// e nunca repõe exemplos depois que o usuário apaga tudo.
     static func seedIfNeeded(in context: ModelContext) {
+        #if DEBUG
+        let key = "sampleDataSeeded"
+        guard !UserDefaults.standard.bool(forKey: key) else { return }
+        UserDefaults.standard.set(true, forKey: key)
+
         let count = (try? context.fetchCount(FetchDescriptor<Subscription>())) ?? 0
         guard count == 0 else { return }
         seed(in: context)
+        #endif
     }
 
     static func seed(in context: ModelContext) {

@@ -46,8 +46,12 @@ final class NotificationService {
         guard fireDate > Date() else { return }
 
         let content = UNMutableNotificationContent()
-        content.title = "Cobrança próxima"
-        content.body = "\(subscription.name) será cobrado em \(subscription.daysNoticeBefore) dia(s)."
+        content.title = L.t("Cobrança próxima")
+        content.body = L.t(
+            "%@ será cobrado em %lld dia(s).",
+            subscription.name,
+            subscription.daysNoticeBefore
+        )
         content.sound = .default
 
         var components = Calendar.current.dateComponents([.year, .month, .day], from: fireDate)

@@ -417,3 +417,40 @@
 "%@ por mês"                    = "%@ per month";
 "Sem meta"                      = "No goal";
 "Pronto"                        = "Done";
+
+// MARK: - Strings built in code
+"Cobrança próxima"              = "Upcoming charge";
+"%@ será cobrado em %lld dia(s)." = "%@ will be charged in %lld day(s).";
+"de %@"                         = "of %@";
+"Por dia"                       = "Per day";
+"Serviço"                       = "Service";
+"Mês"                           = "Month";
+"Previsto"                      = "Forecast";
+"Série"                         = "Series";
+"Total"                         = "Total";
+"Custo mensal"                  = "Monthly cost";
+"Assinatura"                    = "Subscription";
+"Marca a próxima cobrança desta assinatura como paga." = "Marks this subscription's next charge as paid.";
+"Removida pelo usuário"         = "Removed by user";
+"%@ por ano"                   = "%@ per year";
+"0,00"                          = "0.00";
+
+// MARK: - Dynamic Island test
+"Testar Ilha Dinâmica"          = "Test Dynamic Island";
+"Ativa. Volte para a tela de início agora para ver a ilha (iPhone com Ilha Dinâmica) ou bloqueie a tela." = "Active. Go back to the Home Screen now to see the island (iPhone with Dynamic Island) or lock the screen.";
+"Atividades ao Vivo estão desligadas. Ative em Ajustes do iOS > SubCheck." = "Live Activities are turned off. Enable them in iOS Settings > SubCheck.";
+"Adicione uma assinatura ativa para ver a ilha." = "Add an active subscription to see the island.";
+"Não foi possível iniciar: %@"  = "Could not start: %@";
+
+// MARK: - iCloud
+"Sincronizar com iCloud"        = "Sync with iCloud";
+"iCloud"                        = "iCloud";
+"Entre no iCloud em Ajustes do iOS para sincronizar." = "Sign in to iCloud in iOS Settings to sync.";
+"Feche e abra o SubCheck de novo para aplicar." = "Close and reopen SubCheck to apply.";
+"Assinaturas e histórico ficam iguais em todos os seus aparelhos." = "Subscriptions and history stay the same on all your devices.";
+"A sincronização com iCloud faz parte do SubCheck Pro." = "iCloud sync is part of SubCheck Pro.";
+"Sincronização com iCloud"      = "iCloud sync";
+"Mantenha seus dados iguais em todos os aparelhos." = "Keep your data the same on every device.";
+"Política de privacidade"      = "Privacy policy";
+"Termos de uso"                 = "Terms of use";
+"Suporte"                       = "Support";

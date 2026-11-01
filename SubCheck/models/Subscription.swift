@@ -3,16 +3,17 @@ import SwiftData
 
 @Model
 final class Subscription {
-    var id: UUID
-    var name: String
-    var cost: Double
-    var currencyCode: String
-    var startDate: Date
-    var frequency: RecurrenceFrequency
-    var category: String
-    var enableReminders: Bool
-    var daysNoticeBefore: Int
-    var isCancelled: Bool
+    // CloudKit exige valor padrão em toda propriedade (iCloud em Ajustes).
+    var id: UUID = UUID()
+    var name: String = ""
+    var cost: Double = 0
+    var currencyCode: String = "BRL"
+    var startDate: Date = Date()
+    var frequency: RecurrenceFrequency = RecurrenceFrequency.monthly
+    var category: String = CategoryType.miscellaneous.rawValue
+    var enableReminders: Bool = true
+    var daysNoticeBefore: Int = 2
+    var isCancelled: Bool = false
     /// Ícone escolhido pelo usuário (ver `SubscriptionIcon`). `nil` = automático.
     var iconRaw: String?
     /// Data da última cobrança registrada. `nil` = nada pago ainda, o ciclo

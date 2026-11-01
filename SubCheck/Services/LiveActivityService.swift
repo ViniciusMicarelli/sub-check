@@ -51,16 +51,26 @@ final class LiveActivityService {
         start(with: subscriptions, service: service)
     }
 
+    /// Resultado de uma tentativa de iniciar a atividade, para as Ajustes
+    /// poderem explicar por que a ilha não apareceu.
+    enum StartResult: Equatable {
+        case started, updated, disabledBySystem, noSubscriptions
+        case failed(String)
+    }
+
     /// Começa a acompanhar a próxima cobrança. Se já existe uma atividade,
-    /// apenas atualiza o conteúdo.
-    func start(with subscriptions: [Subscription], service: CurrencyService = .shared) {
-        guard areActivitiesEnabled,
-              let state = Self.state(from: subscriptions, service: service) else { return }
+    /// apenas atualiza o conteúdo. Só funciona com o app em primeiro plano.
+    @discardableResult
+    func start(with subscriptions: [Subscription], service: CurrencyService = .shared) -> StartResult {
+        guard areActivitiesEnabled else { return .disabledBySystem }
+        guard let state = Self.state(from: subscriptions, service: service) else {
+            return .noSubscriptions
+        }
 
         if let running {
             let content = ActivityContent(state: state, staleDate: nil)
             Task { await running.update(content) }
-            return
+            return .updated
         }
 
         do {
@@ -68,8 +78,10 @@ final class LiveActivityService {
                 attributes: SubCheckActivityAttributes(startedAt: Date()),
                 content: ActivityContent(state: state, staleDate: nil)
             )
+            return .started
         } catch {
             // Sem permissão ou limite de atividades atingido: o app segue normal.
+            return .failed(error.localizedDescription)
         }
     }
 

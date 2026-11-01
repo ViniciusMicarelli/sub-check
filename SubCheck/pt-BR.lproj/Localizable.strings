@@ -418,3 +418,40 @@
 "%@ por mês"                    = "%@ por mês";
 "Sem meta"                      = "Sem meta";
 "Pronto"                        = "Pronto";
+
+// MARK: - Textos montados em código
+"Cobrança próxima"              = "Cobrança próxima";
+"%@ será cobrado em %lld dia(s)." = "%@ será cobrado em %lld dia(s).";
+"de %@"                         = "de %@";
+"Por dia"                       = "Por dia";
+"Serviço"                       = "Serviço";
+"Mês"                           = "Mês";
+"Previsto"                      = "Previsto";
+"Série"                         = "Série";
+"Total"                         = "Total";
+"Custo mensal"                  = "Custo mensal";
+"Assinatura"                    = "Assinatura";
+"Marca a próxima cobrança desta assinatura como paga." = "Marca a próxima cobrança desta assinatura como paga.";
+"Removida pelo usuário"         = "Removida pelo usuário";
+"%@ por ano"                   = "%@ por ano";
+"0,00"                          = "0,00";
+
+// MARK: - Teste da Ilha Dinâmica
+"Testar Ilha Dinâmica"          = "Testar Ilha Dinâmica";
+"Ativa. Volte para a tela de início agora para ver a ilha (iPhone com Ilha Dinâmica) ou bloqueie a tela." = "Ativa. Volte para a tela de início agora para ver a ilha (iPhone com Ilha Dinâmica) ou bloqueie a tela.";
+"Atividades ao Vivo estão desligadas. Ative em Ajustes do iOS > SubCheck." = "Atividades ao Vivo estão desligadas. Ative em Ajustes do iOS > SubCheck.";
+"Adicione uma assinatura ativa para ver a ilha." = "Adicione uma assinatura ativa para ver a ilha.";
+"Não foi possível iniciar: %@"  = "Não foi possível iniciar: %@";
+
+// MARK: - iCloud
+"Sincronizar com iCloud"        = "Sincronizar com iCloud";
+"iCloud"                        = "iCloud";
+"Entre no iCloud em Ajustes do iOS para sincronizar." = "Entre no iCloud em Ajustes do iOS para sincronizar.";
+"Feche e abra o SubCheck de novo para aplicar." = "Feche e abra o SubCheck de novo para aplicar.";
+"Assinaturas e histórico ficam iguais em todos os seus aparelhos." = "Assinaturas e histórico ficam iguais em todos os seus aparelhos.";
+"A sincronização com iCloud faz parte do SubCheck Pro." = "A sincronização com iCloud faz parte do SubCheck Pro.";
+"Sincronização com iCloud"      = "Sincronização com iCloud";
+"Mantenha seus dados iguais em todos os aparelhos." = "Mantenha seus dados iguais em todos os aparelhos.";
+"Política de privacidade"      = "Política de privacidade";
+"Termos de uso"                 = "Termos de uso";
+"Suporte"                       = "Suporte";

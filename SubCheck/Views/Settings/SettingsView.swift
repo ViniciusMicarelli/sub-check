@@ -16,6 +16,11 @@ struct SettingsView: View {
     @AppStorage("appLockEnabled") private var appLockEnabled = false
     /// Mesma chave lida por `LiveActivityService`.
     @AppStorage(LiveActivityService.enabledKey) private var liveActivityEnabled = true
+    /// Sincronização com iCloud; vale a partir do próximo lançamento.
+    @AppStorage(SharedModelContainer.iCloudSyncKey) private var iCloudSync = false
+    @State private var iCloudNeedsRestart = false
+    /// Resultado do último teste da Ilha Dinâmica.
+    @State private var liveActivityTestMessage: String?
     /// Teto mensal; zero desliga o orçamento (ver `Budget`).
     @AppStorage(Budget.amountKey) private var monthlyBudget = 0.0
 
@@ -38,6 +43,7 @@ struct SettingsView: View {
                 toolsSection
                 notificationsSection
                 liveActivitySection
+                iCloudSection
                 appearanceSection
                 languageSection
                 currencySection
@@ -53,6 +59,8 @@ struct SettingsView: View {
             .onChange(of: store.hasProAccess) { _, _ in refreshExport() }
             .onChange(of: language) { _, newValue in
                 L.store(newValue)
+                // Lembretes já agendados guardam o texto no idioma antigo.
+                rescheduleAll()
             }
             .onChange(of: monthlyBudget) { _, _ in
                 BudgetService.evaluate(subscriptions)
@@ -234,12 +242,75 @@ struct SettingsView: View {
         }
     }
 
+    // MARK: - iCloud
+
+    /// `true` quando há uma conta do iCloud entrada neste aparelho.
+    private var hasICloudAccount: Bool { FileManager.default.ubiquityIdentityToken != nil }
+
+    private var iCloudSection: some View {
+        Section {
+            Toggle(isOn: iCloudBinding) {
+                Label("Sincronizar com iCloud", systemImage: "icloud")
+            }
+
+            if iCloudSync && !hasICloudAccount {
+                Label("Entre no iCloud em Ajustes do iOS para sincronizar.", systemImage: "exclamationmark.triangle.fill")
+                    .font(.footnote)
+                    .foregroundStyle(Color.warning)
+            }
+
+            if iCloudNeedsRestart {
+                Label("Feche e abra o SubCheck de novo para aplicar.", systemImage: "arrow.clockwise")
+                    .font(.footnote)
+                    .foregroundStyle(Color.brand)
+                    .transition(.opacity)
+            }
+        } header: {
+            Text("iCloud")
+        } footer: {
+            Text(
+                store.hasProAccess
+                    ? L.t("Assinaturas e histórico ficam iguais em todos os seus aparelhos.")
+                    : L.t("A sincronização com iCloud faz parte do SubCheck Pro.")
+            )
+        }
+    }
+
+    /// Só liga com Pro; a troca pede reinício porque o banco é aberto uma vez.
+    private var iCloudBinding: Binding<Bool> {
+        Binding(
+            get: { iCloudSync },
+            set: { newValue in
+                guard !newValue || store.hasProAccess else {
+                    Haptics.impact(.light)
+                    showPaywall = true
+                    return
+                }
+                iCloudSync = newValue
+                withAnimation(Motion.snappy) { iCloudNeedsRestart = true }
+            }
+        )
+    }
+
     // MARK: - Ilha Dinâmica
 
     private var liveActivitySection: some View {
         Section {
             Toggle(isOn: liveActivityBinding) {
                 Label("Ilha Dinâmica", systemImage: "live.activity")
+            }
+
+            Button {
+                testLiveActivity()
+            } label: {
+                Label("Testar Ilha Dinâmica", systemImage: "play.circle")
+            }
+
+            if let liveActivityTestMessage {
+                Text(liveActivityTestMessage)
+                    .font(.footnote)
+                    .foregroundStyle(Color.textSecondary)
+                    .transition(.opacity)
             }
         } header: {
             Text("Ilha Dinâmica")
@@ -250,6 +321,33 @@ struct SettingsView: View {
                     : L.t("A Ilha Dinâmica faz parte do SubCheck Pro.")
             )
         }
+    }
+
+    /// Inicia a atividade na hora e explica o resultado. A ilha só aparece
+    /// com o app em segundo plano, então a mensagem diz o que fazer em seguida.
+    private func testLiveActivity() {
+        guard store.hasProAccess else {
+            Haptics.impact(.light)
+            showPaywall = true
+            return
+        }
+        let result = LiveActivityService.shared.start(with: subscriptions)
+        let message: String
+        switch result {
+        case .started, .updated:
+            Haptics.success()
+            message = L.t("Ativa. Volte para a tela de início agora para ver a ilha (iPhone com Ilha Dinâmica) ou bloqueie a tela.")
+        case .disabledBySystem:
+            Haptics.warning()
+            message = L.t("Atividades ao Vivo estão desligadas. Ative em Ajustes do iOS > SubCheck.")
+        case .noSubscriptions:
+            Haptics.warning()
+            message = L.t("Adicione uma assinatura ativa para ver a ilha.")
+        case .failed(let reason):
+            Haptics.warning()
+            message = L.t("Não foi possível iniciar: %@", reason)
+        }
+        withAnimation(Motion.snappy) { liveActivityTestMessage = message }
     }
 
     /// Só liga com Pro ativo; ao desligar, encerra a atividade em andamento.
@@ -415,6 +513,16 @@ struct SettingsView: View {
         Section("Sobre") {
             LabeledContent("Versão", value: appVersion)
             LabeledContent("Widget", value: L.t("Adicione pela tela inicial"))
+
+            if let url = AppLinks.privacyPolicy {
+                Link("Política de privacidade", destination: url)
+            }
+            if let url = AppLinks.termsOfUse {
+                Link("Termos de uso", destination: url)
+            }
+            if let url = AppLinks.support {
+                Link("Suporte", destination: url)
+            }
         }
     }
 

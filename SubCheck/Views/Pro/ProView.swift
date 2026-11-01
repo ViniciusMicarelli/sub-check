@@ -35,6 +35,8 @@ struct ProView: View {
              L.t("Um resumo pronto para compartilhar."), .success),
             ("square.and.arrow.up", L.t("Exportar em CSV"),
              L.t("Leve seus dados para qualquer planilha."), .success),
+            ("icloud", L.t("Sincronização com iCloud"),
+             L.t("Mantenha seus dados iguais em todos os aparelhos."), .info),
             ("faceid", L.t("Bloqueio por Face ID"),
              L.t("Suas assinaturas protegidas ao abrir o app."), .warning)
         ]
@@ -132,7 +134,8 @@ struct ProView: View {
             (L.t("Análise e previsão"), "—", "✓"),
             (L.t("Orçamento e simulador"), "—", "✓"),
             (L.t("Ilha Dinâmica"), "—", "✓"),
-            (L.t("PDF, CSV e Face ID"), "—", "✓")
+            (L.t("PDF, CSV e Face ID"), "—", "✓"),
+            (L.t("iCloud"), "—", "✓")
         ]
     }
 

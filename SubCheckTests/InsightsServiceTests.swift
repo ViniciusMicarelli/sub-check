@@ -114,3 +114,28 @@ final class CancelGuideTests: XCTestCase {
         XCTAssertEqual(CancelGuide.url(for: s)?.host, "www.google.com")
     }
 }
+
+final class LanguageTests: XCTestCase {
+
+    override func tearDown() {
+        L.store(.system)
+        super.tearDown()
+    }
+
+    func testCodeStringsFollowSelectedLanguage() {
+        L.store(.en)
+        XCTAssertEqual(L.t("Cobrança próxima"), "Upcoming charge")
+        L.store(.ptBR)
+        XCTAssertEqual(L.t("Cobrança próxima"), "Cobrança próxima")
+    }
+
+    func testEveryKeyExistsInBothLanguages() throws {
+        func keys(_ code: String) throws -> Set<String> {
+            let path = try XCTUnwrap(Bundle.main.path(forResource: "Localizable", ofType: "strings",
+                                                      inDirectory: nil, forLocalization: code))
+            let dict = try XCTUnwrap(NSDictionary(contentsOfFile: path) as? [String: String])
+            return Set(dict.keys)
+        }
+        XCTAssertEqual(try keys("en"), try keys("pt-BR"))
+    }
+}

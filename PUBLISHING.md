@@ -1,0 +1,61 @@
+# SubCheck — iCloud, Dynamic Island and App Store guide
+
+Written 2026-11-01. Code in this repo was syntax-checked only (no full Xcode on the dev machine), so every step below that touches Xcode is also a verification step.
+
+## 1. Seeing the Dynamic Island
+
+The Live Activity (`SubCheckLiveActivity.swift`) is shown by the **system**, not inside the app:
+
+1. Use an **iPhone 14 Pro or newer** (physical, or Simulator "iPhone 15 Pro"+). Other iPhones show the same activity on the **Lock Screen** only.
+2. iOS Settings > SubCheck > **Live Activities: on** (Simulator: Settings app > SubCheck).
+3. In SubCheck: **Ajustes > Ilha Dinâmica > Testar Ilha Dinâmica** (needs Pro or the 7-day trial and at least one active subscription). The message under the button says what happened or why it failed (permission off, no subscriptions, system error).
+4. **Leave the app** (swipe home, or lock the phone). While SubCheck is in the foreground the island stays empty — that is normal iOS behaviour.
+5. Long-press the island to expand it. Tapping opens the app on that subscription.
+
+The activity is also (re)started automatically on every launch and whenever subscriptions change. iOS ends an activity after 8 hours (12 on the Lock Screen); opening the app starts a fresh one.
+
+## 2. iCloud sync
+
+What was built: optional **Settings > Sincronizar com iCloud** (Pro). It switches the SwiftData store to CloudKit (`iCloud.github.com-ViniciusMicarelli.SubCheck`, private database). Takes effect on next launch. The widget extension opens the same file **without** CloudKit; its changes reach iCloud when the app next runs.
+
+Model changes made for CloudKit: every stored property now has a default value; `User` and `PaymentMethod` (unused, and `PaymentMethod` stored a CVV) were removed from the schema because CloudKit rejects `@Attribute(.unique)`. Sample data is now seeded in DEBUG builds only, once, so a second device never uploads fake subscriptions. `PaymentLedger.removeDuplicates` cleans up repeated history rows created by two devices before they synced.
+
+You must do (cannot be done from code):
+1. **Paid Apple Developer Program account** (US$99/yr). Free "Personal Team" signing cannot use iCloud/CloudKit, push or in-app purchases to production — the build will fail to sign with the new entitlements until the team is a paid one.
+2. Xcode > SubCheck target > **Signing & Capabilities**: confirm *iCloud (CloudKit)* with container `iCloud.github.com-ViniciusMicarelli.SubCheck`, *Push Notifications*, *Background Modes > Remote notifications*, *App Groups*. Xcode creates the container in your account on first build.
+3. Run on **two real devices** (or one device + one simulator signed in to iCloud), turn the toggle on in both, relaunch, add a subscription on one and watch it arrive on the other.
+4. **Before App Store release:** open the [CloudKit Dashboard](https://icloud.developer.apple.com), select the container, and **Deploy Schema Changes to Production**. Without this, sync works in development builds and silently does nothing for App Store users. Re-deploy whenever a model gains a field.
+5. `aps-environment` in `Config/SubCheck.entitlements` is `development`; Xcode swaps it to `production` when archiving for distribution.
+
+Known limits: no conflict UI (last writer wins per record); the widget does not sync live; notifications are rescheduled on launch for subscriptions that arrived from another device.
+
+## 3. App Store checklist
+
+**Decide first (cannot change later):**
+- **Bundle ID.** Current: `github.com-ViniciusMicarelli.SubCheck` (valid, but unusual). The ID is permanent once the app record exists in App Store Connect. Consider a reverse-DNS ID you control (e.g. `com.<yourdomain>.subcheck`). If you change it, update together: `project.yml` (app + widgets IDs), both `.entitlements` (App Group, iCloud container), `SharedModelContainer` (`appGroupID`, `cloudKitContainerID`), `StoreService.proProductID`, and `Config/SubCheck.storekit`; then `xcodegen generate`.
+- **Deployment target** is iOS 27.0 in `project.yml`, which excludes everyone on older iOS. The code uses iOS 17-era APIs; lowering to 17.0 (then testing) widens your audience considerably.
+
+**Accounts and records**
+1. Enroll in the Apple Developer Program. Create the **App ID** with capabilities: App Groups, iCloud/CloudKit, Push, In-App Purchase.
+2. App Store Connect > New App: name, primary language pt-BR, bundle ID, SKU. Check the name "SubCheck" is available.
+3. **In-App Purchase**: create a *Non-Consumable* with product ID `github.com-ViniciusMicarelli.SubCheck.pro.lifetime` (or your new prefix), price, localized name/description (pt-BR + en), and a review screenshot of the paywall. Attach it to the first app version.
+4. Agreements, Tax and Banking: complete the *Paid Apps* agreement or IAP will not work in review.
+
+**Metadata**
+- Privacy Policy URL and Support URL (required). Put them in `SubCheck/Services/AppLinks.swift`; the About section shows them once set.
+- App Privacy ("nutrition label"): the app has no analytics or tracking → *Data Not Collected*. It calls `api.frankfurter.app` for exchange rates (no user data) and fetches icon URLs the user types. iCloud data lives in the user's own private database. Keep `PrivacyInfo.xcprivacy` (added, UserDefaults reason codes) in both targets; re-check if you add SDKs.
+- Export compliance: `ITSAppUsesNonExemptEncryption = NO` is set in Info.plist (only standard HTTPS/Keychain).
+- Age rating questionnaire, category (Finance or Productivity), keywords, description, promotional text, what's new — in pt-BR and en.
+- **Screenshots**: 6.9" iPhone (required) and 6.5"/iPad if iPad is supported (`TARGETED_DEVICE_FAMILY: "1,2"` — either test iPad layouts or set it to `1`). Show the dashboard, insights, widgets, Dynamic Island, paywall.
+- Review notes: explain the 7-day local trial and how to reach the Pro paywall; no login needed.
+
+**Build and submit**
+1. Set `MARKETING_VERSION` (e.g. 1.0) and bump `CURRENT_PROJECT_VERSION` for every upload (in `project.yml`, then `xcodegen generate`).
+2. Xcode > Product > **Archive** (Release) > Distribute App > App Store Connect > Upload.
+3. **TestFlight first**: internal testers, then a small external group. Test purchase with a Sandbox tester, restore purchase on a second device, iCloud sync, widgets, Live Activity from a TestFlight build (not Xcode-run).
+4. Submit for review. Typical rejection causes for this kind of app: missing privacy policy URL, IAP not attached to the version, paywall not showing the price or a restore button (both present), broken links (the cancel-guide URLs were written from memory — click every one), crashes on a clean install (verify with the app deleted first).
+
+**Before the first release, also**
+- Remove or review `.kilo/`, `AGENTS.md`, `PLAN.md`, `TIMELINE.md` (stale planning files, untracked).
+- The trial start date lives in the Keychain; a reinstall keeps it by design.
+- Verify the app on a clean install: it now opens with an empty list (no sample data) and the onboarding.

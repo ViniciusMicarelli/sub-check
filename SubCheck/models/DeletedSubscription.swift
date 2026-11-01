@@ -3,13 +3,14 @@ import SwiftData
 
 @Model
 final class DeletedSubscription {
-    var id: UUID
-    var name: String
-    var cost: Double
-    var currencyCode: String
-    var startDate: Date
-    var deletedDate: Date
-    var deleteReason: String
+    // CloudKit exige valor padrão em toda propriedade (iCloud em Ajustes).
+    var id: UUID = UUID()
+    var name: String = ""
+    var cost: Double = 0
+    var currencyCode: String = "BRL"
+    var startDate: Date = Date()
+    var deletedDate: Date = Date()
+    var deleteReason: String = "Removida pelo usuário"
     
     init(
         id: UUID = UUID(),
@@ -18,7 +19,7 @@ final class DeletedSubscription {
         currencyCode: String = "BRL",
         startDate: Date = Date(),
         deletedDate: Date = Date(),
-        deleteReason: String = "User deleted"
+        deleteReason: String = "Removida pelo usuário"
     ) {
         self.id = id
         self.name = name

@@ -11,18 +11,19 @@ import SwiftData
 
 @Model
 final class PaymentRecord {
-    var id: UUID
+    // CloudKit exige valor padrão em toda propriedade (iCloud em Ajustes).
+    var id: UUID = UUID()
     /// Referência solta (não é relationship) para o histórico sobreviver à
     /// exclusão da assinatura.
-    var subscriptionID: UUID
-    var name: String
-    var amount: Double
-    var currencyCode: String
-    var categoryRaw: String
-    var paidAt: Date
+    var subscriptionID: UUID = UUID()
+    var name: String = ""
+    var amount: Double = 0
+    var currencyCode: String = "BRL"
+    var categoryRaw: String = CategoryType.miscellaneous.rawValue
+    var paidAt: Date = Date()
     /// `true` quando o registro foi reconstruído a partir da data de início
     /// e da frequência (sem confirmação do usuário).
-    var isEstimated: Bool
+    var isEstimated: Bool = false
 
     init(
         id: UUID = UUID(),
