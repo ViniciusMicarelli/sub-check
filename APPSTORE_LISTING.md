@@ -148,14 +148,15 @@ app (Ajustes › Sobre), coloque também em [AppLinks.swift](file:///Users/vinic
 
 | Campo | Valor |
 |---|---|
-| URL de suporte (obrigatória) | _preencher_ (ex.: `https://github.com/ViniciusMicarelli/sub-check/issues`) |
-| URL de marketing (opcional) | _preencher_ |
-| URL da política de privacidade (obrigatória) | _preencher_ |
+| URL de suporte (obrigatória) | `https://viniciusmicarelli.github.io/sub-check/support.html` |
+| URL da política de privacidade (obrigatória) | `https://viniciusmicarelli.github.io/sub-check/privacy.html` |
+| URL de marketing (opcional) | `https://viniciusmicarelli.github.io/sub-check/` |
 | Copyright | `2026 Vinicius Micarelli` |
-| Contato para revisão | _preencher_ (e-mail) |
+| Contato para revisão | `viniciusmicarelli@hotmail.com` |
 
-Enquanto as URLs em `AppLinks.swift` forem `nil`, os links ficam ocultos na tela
-Sobre (em vez de abrir uma página quebrada). Preencha-as antes de publicar.
+As páginas já existem na pasta `docs/` deste repositório e estão ligadas em
+[AppLinks.swift](file:///Users/viniciusmicarelli/development/mobile/SubCheck/SubCheck/Services/AppLinks.swift).
+Basta publicar a pasta: **Settings › Pages › Deploy from a branch › `main` / `/docs`**.
 
 ### Privacidade (App Privacy)
 - **Dados coletados:** nenhum (sem analytics e sem rastreamento).
@@ -205,7 +206,7 @@ automática. Depois do período, tudo continua funcionando com o limite grátis
 - [ ] Criar o app no App Store Connect com o bundle `com.viniciusmicarelli.subcheck`.
 - [ ] Criar o IAP não consumível `com.viniciusmicarelli.subcheck.pro.lifetime` e anexá-lo à versão.
 - [ ] Completar "Acordos, impostos e bancário" (contrato de Apps pagos).
-- [ ] Preencher as URLs em `AppLinks.swift` e no App Store Connect.
+- [ ] Publicar a pasta `docs/` no GitHub Pages (Settings › Pages › `main` / `/docs`) e usar as URLs no App Store Connect.
 - [ ] Deploy do schema do CloudKit para produção (CloudKit Dashboard), se o iCloud for publicado.
 - [ ] Screenshots: iPhone 6.9" (obrigatório); iPad só se mantiver `TARGETED_DEVICE_FAMILY: "1,2"`.
 - [ ] `MARKETING_VERSION` e `CURRENT_PROJECT_VERSION` corretos em `project.yml` + `xcodegen generate`.

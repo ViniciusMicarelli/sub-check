@@ -43,7 +43,7 @@ Known limits: no conflict UI (last writer wins per record); the widget does not 
 
 **Metadata**
 - Ready-to-paste copy (name, subtitle, description, keywords, promotional text, what's new — pt-BR + en) and the required URLs/IAP fields are in `APPSTORE_LISTING.md`.
-- Privacy Policy URL and Support URL (required). Put them in `SubCheck/Services/AppLinks.swift`; the About section shows them once set.
+- Privacy Policy URL and Support URL (required). They are already set in `SubCheck/Services/AppLinks.swift` and served from the `docs/` folder via GitHub Pages (`https://viniciusmicarelli.github.io/sub-check/`); enable Pages under Settings > Pages > Deploy from a branch (`main` / `/docs`).
 - App Privacy ("nutrition label"): the app has no analytics or tracking → *Data Not Collected*. It calls `api.frankfurter.app` for exchange rates (no user data) and fetches icon URLs the user types. iCloud data lives in the user's own private database. Keep `PrivacyInfo.xcprivacy` (added, UserDefaults reason codes) in both targets; re-check if you add SDKs.
 - Export compliance: `ITSAppUsesNonExemptEncryption = NO` is set in Info.plist (only standard HTTPS/Keychain).
 - Age rating questionnaire, category (Finance or Productivity), keywords, description, promotional text, what's new — in pt-BR and en.
