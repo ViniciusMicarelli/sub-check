@@ -16,5 +16,11 @@ xcuserdata/
 # macOS
 .DS_Store
 
+# Site (React/Vite): dependências e cache de build.
+# A saída vai para docs/, que é publicada pelo GitHub Pages e fica versionada.
+web/node_modules/
+web/.vite/
+web/dist/
+
 # Signing
 *.mobileprovision

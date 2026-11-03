@@ -1,170 +1,21 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Suporte — SubCheck</title>
-<meta name="description" content="Suporte do SubCheck: perguntas frequentes e contato.">
-<link rel="stylesheet" href="styles.css">
-</head>
-<body>
-
-<header>
-  <div class="header-inner">
-    <a class="brand" href="index.html"><span class="mark">✓</span> SubCheck</a>
-    <div class="lang">
-      <button type="button" data-lang-btn="pt" onclick="setLang('pt')">PT</button>
-      <button type="button" data-lang-btn="en" onclick="setLang('en')">EN</button>
-    </div>
-  </div>
-
-  <div class="hero" data-lang="pt">
-    <h1>Suporte</h1>
-    <p>Precisa de ajuda com o SubCheck? Estamos por aqui.</p>
-  </div>
-  <div class="hero" data-lang="en" hidden>
-    <h1>Support</h1>
-    <p>Need help with SubCheck? We're here.</p>
-  </div>
-</header>
-
-<main>
-
-<!-- ===================== PORTUGUÊS ===================== -->
-<div data-lang="pt">
-  <div class="note">
-    <strong>Fale com a gente:</strong> escreva para
-    <a href="mailto:viniciusmicarelli@hotmail.com">viniciusmicarelli@hotmail.com</a>
-    ou abra um tópico em
-    <a href="https://github.com/ViniciusMicarelli/sub-check/issues">github.com/ViniciusMicarelli/sub-check/issues</a>.
-    Respondemos em até 2 dias úteis.
-  </div>
-
-  <p class="muted">Para agilizar, conte o modelo do seu iPhone, a versão do iOS e o que
-  aconteceu. Se possível, anexe uma captura de tela.</p>
-
-  <h2>Perguntas frequentes</h2>
-
-  <h3>Como adiciono uma assinatura?</h3>
-  <p>Toque no botão <strong>+</strong> na tela Resumo ou Assinaturas. Digite o nome do
-  serviço; o ícone, a categoria e a próxima cobrança são preenchidos automaticamente.
-  Você pode ajustar tudo antes de salvar.</p>
-
-  <h3>O que é o SubCheck Pro?</h3>
-  <p>É uma <strong>compra única</strong> (não consumível) que libera todos os recursos
-  para sempre: assinaturas ilimitadas, Análise, Ilha Dinâmica, orçamento com alertas,
-  simulador de cancelamento, relatório em PDF, exportação em CSV, bloqueio por Face ID e
-  sincronização com iCloud. Não é assinatura e não renova.</p>
-
-  <h3>Como funciona o teste de 7 dias?</h3>
-  <p>Ao instalar, você tem 7 dias com tudo liberado, sem cobrança. Não é uma assinatura:
-  quando o período termina, nada é cobrado. O app continua funcionando no plano gratuito.</p>
-
-  <h3>Comprei o Pro e troquei de aparelho. Como recupero?</h3>
-  <p>Abra <em>Ajustes › SubCheck Pro › Ver opções</em> e toque em <strong>Restaurar
-  compra</strong>. Use a mesma conta da App Store da compra.</p>
-
-  <h3>Os meus dados ficam sincronizados entre aparelhos?</h3>
-  <p>Sim, se você ligar <em>Ajustes › Sincronizar com iCloud</em> (Pro) e entrar na mesma
-  conta do iCloud em ambos. A sincronização acontece pela sua base privada do iCloud.</p>
-
-  <h3>A Ilha Dinâmica não aparece. O que fazer?</h3>
-  <ol>
-    <li>Confirme que o aparelho tem Ilha Dinâmica (iPhone 14 Pro ou mais novo).</li>
-    <li>Em Ajustes do iOS › SubCheck, deixe <em>Atividades ao Vivo</em> ligadas.</li>
-    <li>No app, use <em>Ajustes › Ilha Dinâmica › Testar</em> e depois <strong>saia do
-      app</strong> (a ilha aparece quando o SubCheck não está na frente).</li>
-  </ol>
-
-  <h3>Como apago todos os meus dados?</h3>
-  <p>Em <em>Ajustes › Apagar todos os dados</em>. Isso remove as assinaturas e o
-  histórico do aparelho. Se a sincronização com iCloud estiver ligada, remova também pelo
-  iCloud (Ajustes do iOS › Apple ID › iCloud › Gerenciar armazenamento). Desinstalar o app
-  também apaga os dados locais.</p>
-
-  <h3>Os valores e as cotações estão errados.</h3>
-  <p>Os totais e a conversão de moeda são <strong>estimativas</strong> com base no que
-  você cadastrou e em fontes públicas de câmbio. Confira sempre na fatura do serviço.
-  Você pode atualizar as cotações em <em>Ajustes › Moeda e cotação › Atualizar cotação</em>.</p>
-
-  <h2>Ainda com dúvida?</h2>
-  <p>Fale com a gente em
-  <a href="mailto:viniciusmicarelli@hotmail.com">viniciusmicarelli@hotmail.com</a>.</p>
-</div>
-
-<!-- ===================== ENGLISH ===================== -->
-<div data-lang="en" hidden>
-  <div class="note">
-    <strong>Get in touch:</strong> email
-    <a href="mailto:viniciusmicarelli@hotmail.com">viniciusmicarelli@hotmail.com</a>
-    or open a topic at
-    <a href="https://github.com/ViniciusMicarelli/sub-check/issues">github.com/ViniciusMicarelli/sub-check/issues</a>.
-    We reply within 2 business days.
-  </div>
-
-  <p class="muted">To help us faster, tell us your iPhone model, your iOS version and
-  what happened. A screenshot helps a lot.</p>
-
-  <h2>Frequently asked questions</h2>
-
-  <h3>How do I add a subscription?</h3>
-  <p>Tap the <strong>+</strong> button on the Overview or Subscriptions screen. Type the
-  service name; the icon, the category and the next charge are filled in automatically.
-  You can adjust everything before saving.</p>
-
-  <h3>What is SubCheck Pro?</h3>
-  <p>A <strong>one-time purchase</strong> (non-consumable) that unlocks every feature for
-  good: unlimited subscriptions, Analysis, Dynamic Island, budget with alerts,
-  cancellation simulator, PDF report, CSV export, Face ID lock and iCloud sync. It is
-  not a subscription and does not renew.</p>
-
-  <h3>How does the 7-day trial work?</h3>
-  <p>When you install the app you get 7 days with everything unlocked, free of charge.
-  It is not a subscription: when the period ends, nothing is charged. The app keeps
-  working on the free plan.</p>
-
-  <h3>I bought Pro and changed phones. How do I restore it?</h3>
-  <p>Open <em>Settings › SubCheck Pro › See options</em> and tap <strong>Restore
-  purchase</strong>. Use the same App Store account you bought it with.</p>
-
-  <h3>Do my data sync between devices?</h3>
-  <p>Yes, if you turn on <em>Settings › Sync with iCloud</em> (Pro) and sign in with the
-  same iCloud account on both devices. Syncing happens through your own private iCloud
-  database.</p>
-
-  <h3>The Dynamic Island does not show up. What should I do?</h3>
-  <ol>
-    <li>Make sure the device has a Dynamic Island (iPhone 14 Pro or newer).</li>
-    <li>In iOS Settings › SubCheck, keep <em>Live Activities</em> on.</li>
-    <li>In the app, use <em>Settings › Dynamic Island › Test</em> and then <strong>leave
-      the app</strong> (the island shows while SubCheck is not in the foreground).</li>
-  </ol>
-
-  <h3>How do I delete all my data?</h3>
-  <p>In <em>Settings › Erase all data</em>. This removes subscriptions and history from
-  the device. If iCloud sync is on, also remove it from iCloud (iOS Settings › Apple ID ›
-  iCloud › Manage Storage). Uninstalling the app also deletes local data.</p>
-
-  <h3>The amounts and rates look wrong.</h3>
-  <p>Totals and currency conversion are <strong>estimates</strong> based on what you
-  entered and on public exchange-rate sources. Always check the service's invoice. You
-  can refresh rates in <em>Settings › Currency &amp; rates › Refresh rates</em>.</p>
-
-  <h2>Still stuck?</h2>
-  <p>Email us at <a href="mailto:viniciusmicarelli@hotmail.com">viniciusmicarelli@hotmail.com</a>.</p>
-</div>
-
-</main>
-
-<footer>
-  <div class="footer-inner">
-    <span>© 2026 Vinicius Micarelli</span>
-    <a href="index.html">Home</a>
-    <a href="privacy.html">Privacy</a>
-    <a href="terms.html">Terms</a>
-  </div>
-</footer>
-
-<script src="app.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="icon" type="image/svg+xml" href="/sub-check/favicon.svg" />
+    <meta name="theme-color" content="#07070c" />
+    <title>Suporte — SubCheck</title>
+    <meta
+      name="description"
+      content="Suporte do SubCheck: perguntas frequentes e canal de contato para dúvidas, problemas e sugestões."
+    />
+    <script type="module" crossorigin src="/sub-check/assets/support-DyhiUTw7.js"></script>
+    <link rel="modulepreload" crossorigin href="/sub-check/assets/styles-cjJWeRiA.js">
+    <link rel="modulepreload" crossorigin href="/sub-check/assets/Docs-D4OwzE36.js">
+    <link rel="stylesheet" crossorigin href="/sub-check/assets/styles-0xtUeW6D.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
 </html>
