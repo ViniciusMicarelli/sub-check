@@ -1,9 +1,9 @@
 name: SubCheck
 
 options:
-  bundleIdPrefix: github.com-ViniciusMicarelli
+  bundleIdPrefix: com.viniciusmicarelli
   deploymentTarget:
-    iOS: "27.0"
+    iOS: "17.0"
   createIntermediateGroups: true
   groupSortPosition: top
   developmentLanguage: pt-BR
@@ -55,12 +55,12 @@ targets:
         # Sem criptografia própria: dispensa o questionário de exportação.
         ITSAppUsesNonExemptEncryption: false
         CFBundleURLTypes:
-          - CFBundleURLName: github.com-ViniciusMicarelli.SubCheck
+          - CFBundleURLName: com.viniciusmicarelli.subcheck
             CFBundleURLSchemes:
               - subcheck
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: github.com-ViniciusMicarelli.SubCheck
+        PRODUCT_BUNDLE_IDENTIFIER: com.viniciusmicarelli.subcheck
         PRODUCT_NAME: SubCheck
         TARGETED_DEVICE_FAMILY: "1,2"
         GENERATE_INFOPLIST_FILE: "NO"
@@ -97,7 +97,7 @@ targets:
       - path: SubCheck/Color.swift
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: github.com-ViniciusMicarelli.SubCheck.widgets
+        PRODUCT_BUNDLE_IDENTIFIER: com.viniciusmicarelli.subcheck.widgets
         PRODUCT_NAME: SubCheckWidgets
         TARGETED_DEVICE_FAMILY: "1,2"
         GENERATE_INFOPLIST_FILE: "NO"
@@ -114,7 +114,7 @@ targets:
       - target: SubCheck
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: github.com-ViniciusMicarelli.SubCheck.tests
+        PRODUCT_BUNDLE_IDENTIFIER: com.viniciusmicarelli.subcheck.tests
         GENERATE_INFOPLIST_FILE: "YES"
 
 schemes:

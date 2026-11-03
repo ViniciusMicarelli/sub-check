@@ -12,6 +12,7 @@
 		0ECEBC489883A55E5F8F0FB6 /* BrandIconCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C6BD34A2635D9AB3D7E320 /* BrandIconCatalog.swift */; };
 		0FABE787D185C5F66BF9C1E8 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A57F87853A3BCB4ECBEC350 /* User.swift */; };
 		152DBA580E135457A2F227AA /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98F9814344871E427A3F810 /* KeychainStore.swift */; };
+		1B090A82BF4E0B50B756798C /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 104ADE560EAD63B7C3EEEFA9 /* Profile.swift */; };
 		1FED348D969FD90515E7955E /* Subscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617B1C21B1D34ECDC5AA0B7C /* Subscription.swift */; };
 		25F84F3E44FC66B0C811222A /* SubCheckLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE65F8BD37A4E41574877789 /* SubCheckLiveActivity.swift */; };
 		263E3AD4918D056FAB15C6B0 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 1B9929FC82C92DDF349B95FD /* PrivacyInfo.xcprivacy */; };
@@ -31,6 +32,7 @@
 		42DA94637262E3C88A386759 /* RemoteIconStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D5F28403C3946B5AB73852A /* RemoteIconStore.swift */; };
 		44B10F6F171881859951A3C8 /* pt-BR.lproj in Resources */ = {isa = PBXBuildFile; fileRef = D3C4EBC7B1953B9478AFC54F /* pt-BR.lproj */; };
 		44E5EC1186B4981D672601DF /* StoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39DA69F859E9EF0738F38B8 /* StoreService.swift */; };
+		49FFD8F0BB89FC800E51A4AD /* Loading.swift in Sources */ = {isa = PBXBuildFile; fileRef = A65B4649C259D02A09F36F6E /* Loading.swift */; };
 		4C96C3E0F898F178CEF538DF /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6CF31D13E41A029C7658DEC /* Currency.swift */; };
 		4FA803465C727EFC974ABCEA /* CategoryStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4775FE8C99C8C04863178B1 /* CategoryStyle.swift */; };
 		511417101DF16ADAD9F76DA7 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA6070CEADF73027A7AAA92 /* OnboardingView.swift */; };
@@ -152,6 +154,7 @@
 		0AFE3139F66987DCE4CD468D /* MetricCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricCard.swift; sourceTree = "<group>"; };
 		0C7C2043C3BEA0D8693188FE /* WidgetLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetLink.swift; sourceTree = "<group>"; };
 		0E11F9E3338CD0EAD3F6BDC9 /* AppLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLanguage.swift; sourceTree = "<group>"; };
+		104ADE560EAD63B7C3EEEFA9 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		13C62323FC1BBDA8D3D39FBF /* UpcomingPaymentsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingPaymentsSection.swift; sourceTree = "<group>"; };
 		19BC4F0C4A4D1E220B4456A4 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		1B9929FC82C92DDF349B95FD /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
@@ -203,6 +206,7 @@
 		A39DA69F859E9EF0738F38B8 /* StoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreService.swift; sourceTree = "<group>"; };
 		A44405F71E5CC52525268D4E /* DeletedSubscription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeletedSubscription.swift; sourceTree = "<group>"; };
 		A55F443B383A8F2220AB69F7 /* SubCheckWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubCheckWidgetBundle.swift; sourceTree = "<group>"; };
+		A65B4649C259D02A09F36F6E /* Loading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loading.swift; sourceTree = "<group>"; };
 		A70C5796341CD009A7FB5DB0 /* BudgetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetService.swift; sourceTree = "<group>"; };
 		A98F9814344871E427A3F810 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
 		AA075F2392AFC604570937B0 /* TrialsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrialsCard.swift; sourceTree = "<group>"; };
@@ -312,6 +316,7 @@
 			children = (
 				E4775FE8C99C8C04863178B1 /* CategoryStyle.swift */,
 				FE1EF94BD2C8E2A5568A9633 /* Formatters.swift */,
+				A65B4649C259D02A09F36F6E /* Loading.swift */,
 				5DD6AB44EFBCD9E2CC2125C2 /* Motion.swift */,
 				6F7A6AD4D3A9E9E0FD09DAD8 /* SubscriptionIconView.swift */,
 				E62957C75B822D3D81AE53D3 /* Theme.swift */,
@@ -344,6 +349,7 @@
 				B8BAB2C958FADF2A5004C92A /* Localization.swift */,
 				19BC4F0C4A4D1E220B4456A4 /* NotificationService.swift */,
 				DEE28588DE4177F31EFCC114 /* PaymentLedger.swift */,
+				104ADE560EAD63B7C3EEEFA9 /* Profile.swift */,
 				2D5F28403C3946B5AB73852A /* RemoteIconStore.swift */,
 				6EEA705A5295899330A279C3 /* ReportService.swift */,
 				960E873556925623B687CEF5 /* SampleDataSeeder.swift */,
@@ -654,6 +660,7 @@
 				0990D34D904E2D849C2F1E52 /* InsightsService.swift in Sources */,
 				152DBA580E135457A2F227AA /* KeychainStore.swift in Sources */,
 				031C9A86A9A579119CFF9E22 /* LiveActivityService.swift in Sources */,
+				49FFD8F0BB89FC800E51A4AD /* Loading.swift in Sources */,
 				F2A3E0094520F00C373FF2C8 /* Localization.swift in Sources */,
 				F96D57D658E1C6400FDD0136 /* MetricCard.swift in Sources */,
 				B86CA93CF61AF2A376FE8CAA /* Motion.swift in Sources */,
@@ -662,6 +669,7 @@
 				BE086855D86D8841F853EC58 /* PaymentLedger.swift in Sources */,
 				BCBB43BA65B4933AE3081C30 /* PaymentRecord.swift in Sources */,
 				6CDEAB2A60DE810F3A0B46EA /* ProView.swift in Sources */,
+				1B090A82BF4E0B50B756798C /* Profile.swift in Sources */,
 				9E5D9C6E41C90E90D24684A3 /* RecurrenceFrequency.swift in Sources */,
 				CF62D663367E368E8D2F0E7D /* RemoteIconStore.swift in Sources */,
 				FC6AF828F0F80CB158E61DFB /* ReportService.swift in Sources */,
@@ -776,7 +784,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "github.com-ViniciusMicarelli.SubCheck";
+				PRODUCT_BUNDLE_IDENTIFIER = com.viniciusmicarelli.subcheck;
 				PRODUCT_NAME = SubCheck;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -832,7 +840,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -855,7 +863,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "github.com-ViniciusMicarelli.SubCheck.widgets";
+				PRODUCT_BUNDLE_IDENTIFIER = com.viniciusmicarelli.subcheck.widgets;
 				PRODUCT_NAME = SubCheckWidgets;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -876,7 +884,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "github.com-ViniciusMicarelli.SubCheck";
+				PRODUCT_BUNDLE_IDENTIFIER = com.viniciusmicarelli.subcheck;
 				PRODUCT_NAME = SubCheck;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -938,7 +946,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -961,7 +969,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "github.com-ViniciusMicarelli.SubCheck.tests";
+				PRODUCT_BUNDLE_IDENTIFIER = com.viniciusmicarelli.subcheck.tests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SubCheck.app/SubCheck";
@@ -978,7 +986,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "github.com-ViniciusMicarelli.SubCheck.tests";
+				PRODUCT_BUNDLE_IDENTIFIER = com.viniciusmicarelli.subcheck.tests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SubCheck.app/SubCheck";
@@ -996,7 +1004,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "github.com-ViniciusMicarelli.SubCheck.widgets";
+				PRODUCT_BUNDLE_IDENTIFIER = com.viniciusmicarelli.subcheck.widgets;
 				PRODUCT_NAME = SubCheckWidgets;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;

@@ -6,7 +6,7 @@
 	<string>development</string>
 	<key>com.apple.developer.icloud-container-identifiers</key>
 	<array>
-		<string>iCloud.github.com-ViniciusMicarelli.SubCheck</string>
+		<string>iCloud.com.viniciusmicarelli.subcheck</string>
 	</array>
 	<key>com.apple.developer.icloud-services</key>
 	<array>
@@ -14,7 +14,7 @@
 	</array>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.github.com-ViniciusMicarelli.SubCheck</string>
+		<string>group.com.viniciusmicarelli.subcheck</string>
 	</array>
 </dict>
 </plist>

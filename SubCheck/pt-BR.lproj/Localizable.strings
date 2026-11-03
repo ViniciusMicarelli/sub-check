@@ -476,3 +476,18 @@
 "Você atingiu o limite de %lld assinaturas ativas. O SubCheck Pro libera ilimitadas." = "Você atingiu o limite de %lld assinaturas ativas. O SubCheck Pro libera ilimitadas.";
 "Informe um valor maior que zero." = "Informe um valor maior que zero.";
 "%@ adicionada." = "%@ adicionada.";
+
+// MARK: - Nome e onboarding interativo
+"Olá, %@"                        = "Olá, %@";
+"Como podemos te chamar?"        = "Como podemos te chamar?";
+"Serve só para personalizar o resumo. Você pode pular." = "Serve só para personalizar o resumo. Você pode pular.";
+"Usado só para personalizar o resumo. Fica no aparelho." = "Usado só para personalizar o resumo. Fica no aparelho.";
+"Sobre você"                     = "Sobre você";
+"Pular"                          = "Pular";
+"Voltar"                         = "Voltar";
+"Preparando tudo…"               = "Preparando tudo…";
+"Adicione suas assinaturas"      = "Adicione suas assinaturas";
+"Toque em + e escolha o serviço. O ícone, a categoria e a próxima cobrança são preenchidos para você." = "Toque em + e escolha o serviço. O ícone, a categoria e a próxima cobrança são preenchidos para você.";
+"O painel mostra o total mensal, o custo por dia e o que mais pesa no seu bolso." = "O painel mostra o total mensal, o custo por dia e o que mais pesa no seu bolso.";
+"Avisamos antes de cada cobrança, na véspera do fim de um teste e na Ilha Dinâmica." = "Avisamos antes de cada cobrança, na véspera do fim de um teste e na Ilha Dinâmica.";
+"Insights, previsão de 12 meses e o simulador de cancelamento mostram onde cortar." = "Insights, previsão de 12 meses e o simulador de cancelamento mostram onde cortar.";

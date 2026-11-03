@@ -18,11 +18,11 @@ import SwiftData
 enum SharedModelContainer {
 
     /// Must match the App Group declared in both entitlements files.
-    static let appGroupID = "group.github.com-ViniciusMicarelli.SubCheck"
+    static let appGroupID = "group.com.viniciusmicarelli.subcheck"
 
     /// Contêiner do CloudKit; precisa existir no portal do desenvolvedor e
     /// em `Config/SubCheck.entitlements`.
-    static let cloudKitContainerID = "iCloud.github.com-ViniciusMicarelli.SubCheck"
+    static let cloudKitContainerID = "iCloud.com.viniciusmicarelli.subcheck"
 
     /// Preferência gravada em `UserDefaults`; vale a partir do próximo
     /// lançamento, porque o contêiner é criado uma única vez.

@@ -200,7 +200,11 @@ struct ProView: View {
                 } label: {
                     HStack(spacing: Spacing.sm) {
                         if store.isPurchasing {
-                            ProgressView().tint(.white)
+                            BrandSpinner(
+                                size: 18,
+                                lineWidth: 2,
+                                colors: [.white.opacity(0.25), .white]
+                            )
                         }
                         Text(purchaseTitle)
                             .font(.headline)

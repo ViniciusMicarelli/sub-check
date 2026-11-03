@@ -294,6 +294,13 @@ struct DashboardView: View {
 
     private var heroCard: some View {
         VStack(alignment: .leading, spacing: Spacing.sm) {
+            if let greeting = Profile.greeting {
+                Text(greeting)
+                    .font(.headline)
+                    .foregroundStyle(.white)
+                    .transition(.opacity)
+            }
+
             Text("Total mensal")
                 .font(.subheadline)
                 .foregroundStyle(.white.opacity(0.85))

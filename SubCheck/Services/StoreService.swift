@@ -15,7 +15,7 @@ import StoreKit
 final class StoreService {
 
     /// Mesmo identificador de `Config/SubCheck.storekit` e do App Store Connect.
-    static let proProductID = "github.com-ViniciusMicarelli.SubCheck.pro.lifetime"
+    static let proProductID = "com.viniciusmicarelli.subcheck.pro.lifetime"
 
     /// Assinaturas ativas permitidas na versão gratuita.
     static let freeLimit = 5

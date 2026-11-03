@@ -11,7 +11,7 @@ import Security
 
 enum KeychainStore {
 
-    private static let service = "github.com-ViniciusMicarelli.SubCheck"
+    private static let service = "com.viniciusmicarelli.subcheck"
 
     private static func query(_ key: String) -> [String: Any] {
         [

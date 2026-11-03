@@ -16,13 +16,13 @@ The activity is also (re)started automatically on every launch and whenever subs
 
 ## 2. iCloud sync
 
-What was built: optional **Settings > Sincronizar com iCloud** (Pro). It switches the SwiftData store to CloudKit (`iCloud.github.com-ViniciusMicarelli.SubCheck`, private database). Takes effect on next launch. The widget extension opens the same file **without** CloudKit; its changes reach iCloud when the app next runs.
+What was built: optional **Settings > Sincronizar com iCloud** (Pro). It switches the SwiftData store to CloudKit (`iCloud.com.viniciusmicarelli.subcheck`, private database). Takes effect on next launch. The widget extension opens the same file **without** CloudKit; its changes reach iCloud when the app next runs.
 
 Model changes made for CloudKit: every stored property now has a default value; `User` and `PaymentMethod` (unused, and `PaymentMethod` stored a CVV) were removed from the schema because CloudKit rejects `@Attribute(.unique)`. Sample data is now seeded in DEBUG builds only, once, so a second device never uploads fake subscriptions. `PaymentLedger.removeDuplicates` cleans up repeated history rows created by two devices before they synced.
 
 You must do (cannot be done from code):
 1. **Paid Apple Developer Program account** (US$99/yr). Free "Personal Team" signing cannot use iCloud/CloudKit, push or in-app purchases to production — the build will fail to sign with the new entitlements until the team is a paid one.
-2. Xcode > SubCheck target > **Signing & Capabilities**: confirm *iCloud (CloudKit)* with container `iCloud.github.com-ViniciusMicarelli.SubCheck`, *Push Notifications*, *Background Modes > Remote notifications*, *App Groups*. Xcode creates the container in your account on first build.
+2. Xcode > SubCheck target > **Signing & Capabilities**: confirm *iCloud (CloudKit)* with container `iCloud.com.viniciusmicarelli.subcheck`, *Push Notifications*, *Background Modes > Remote notifications*, *App Groups*. Xcode creates the container in your account on first build.
 3. Run on **two real devices** (or one device + one simulator signed in to iCloud), turn the toggle on in both, relaunch, add a subscription on one and watch it arrive on the other.
 4. **Before App Store release:** open the [CloudKit Dashboard](https://icloud.developer.apple.com), select the container, and **Deploy Schema Changes to Production**. Without this, sync works in development builds and silently does nothing for App Store users. Re-deploy whenever a model gains a field.
 5. `aps-environment` in `Config/SubCheck.entitlements` is `development`; Xcode swaps it to `production` when archiving for distribution.
@@ -32,16 +32,17 @@ Known limits: no conflict UI (last writer wins per record); the widget does not 
 ## 3. App Store checklist
 
 **Decide first (cannot change later):**
-- **Bundle ID.** Current: `github.com-ViniciusMicarelli.SubCheck` (valid, but unusual). The ID is permanent once the app record exists in App Store Connect. Consider a reverse-DNS ID you control (e.g. `com.<yourdomain>.subcheck`). If you change it, update together: `project.yml` (app + widgets IDs), both `.entitlements` (App Group, iCloud container), `SharedModelContainer` (`appGroupID`, `cloudKitContainerID`), `StoreService.proProductID`, and `Config/SubCheck.storekit`; then `xcodegen generate`.
-- **Deployment target** is iOS 27.0 in `project.yml`, which excludes everyone on older iOS. The code uses iOS 17-era APIs; lowering to 17.0 (then testing) widens your audience considerably.
+- **Bundle ID.** Current: `com.viniciusmicarelli.subcheck` (reverse-DNS, permanent once the app record exists in App Store Connect). It is already applied across `project.yml` (app + widgets + tests), both `.entitlements` (App Group, iCloud container), `SharedModelContainer` (`appGroupID`, `cloudKitContainerID`), `KeychainStore.service`, `StoreService.proProductID`, `Config/SubCheck.storekit` and `Config/Info.plist`; if you ever change it again, update all of them together and re-run `xcodegen generate`.
+- **Deployment target** is iOS 17.0 in `project.yml`, so iOS 17 and newer are supported.
 
 **Accounts and records**
 1. Enroll in the Apple Developer Program. Create the **App ID** with capabilities: App Groups, iCloud/CloudKit, Push, In-App Purchase.
 2. App Store Connect > New App: name, primary language pt-BR, bundle ID, SKU. Check the name "SubCheck" is available.
-3. **In-App Purchase**: create a *Non-Consumable* with product ID `github.com-ViniciusMicarelli.SubCheck.pro.lifetime` (or your new prefix), price, localized name/description (pt-BR + en), and a review screenshot of the paywall. Attach it to the first app version.
+3. **In-App Purchase**: create a *Non-Consumable* with product ID `com.viniciusmicarelli.subcheck.pro.lifetime`, price, localized name/description (pt-BR + en), and a review screenshot of the paywall. Attach it to the first app version.
 4. Agreements, Tax and Banking: complete the *Paid Apps* agreement or IAP will not work in review.
 
 **Metadata**
+- Ready-to-paste copy (name, subtitle, description, keywords, promotional text, what's new — pt-BR + en) and the required URLs/IAP fields are in `APPSTORE_LISTING.md`.
 - Privacy Policy URL and Support URL (required). Put them in `SubCheck/Services/AppLinks.swift`; the About section shows them once set.
 - App Privacy ("nutrition label"): the app has no analytics or tracking → *Data Not Collected*. It calls `api.frankfurter.app` for exchange rates (no user data) and fetches icon URLs the user types. iCloud data lives in the user's own private database. Keep `PrivacyInfo.xcprivacy` (added, UserDefaults reason codes) in both targets; re-check if you add SDKs.
 - Export compliance: `ITSAppUsesNonExemptEncryption = NO` is set in Info.plist (only standard HTTPS/Keychain).

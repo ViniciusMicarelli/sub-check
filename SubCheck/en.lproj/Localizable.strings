@@ -475,3 +475,18 @@
 "Você atingiu o limite de %lld assinaturas ativas. O SubCheck Pro libera ilimitadas." = "You reached the limit of %lld active subscriptions. SubCheck Pro unlocks unlimited.";
 "Informe um valor maior que zero." = "Enter an amount greater than zero.";
 "%@ adicionada." = "%@ added.";
+
+// MARK: - Name and interactive onboarding
+"Olá, %@"                        = "Hi, %@";
+"Como podemos te chamar?"        = "What should we call you?";
+"Serve só para personalizar o resumo. Você pode pular." = "It only personalizes your overview. You can skip it.";
+"Usado só para personalizar o resumo. Fica no aparelho." = "Used only to personalize your overview. It stays on your device.";
+"Sobre você"                     = "About you";
+"Pular"                          = "Skip";
+"Voltar"                         = "Back";
+"Preparando tudo…"               = "Getting things ready…";
+"Adicione suas assinaturas"      = "Add your subscriptions";
+"Toque em + e escolha o serviço. O ícone, a categoria e a próxima cobrança são preenchidos para você." = "Tap + and pick the service. The icon, the category and the next charge are filled in for you.";
+"O painel mostra o total mensal, o custo por dia e o que mais pesa no seu bolso." = "The dashboard shows your monthly total, the cost per day and what weighs most on your wallet.";
+"Avisamos antes de cada cobrança, na véspera do fim de um teste e na Ilha Dinâmica." = "We warn you before every charge, the day before a trial ends and in the Dynamic Island.";
+"Insights, previsão de 12 meses e o simulador de cancelamento mostram onde cortar." = "Insights, a 12-month forecast and the cancellation simulator show where to cut.";

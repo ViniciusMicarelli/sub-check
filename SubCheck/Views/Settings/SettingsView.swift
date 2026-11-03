@@ -11,6 +11,8 @@ struct SettingsView: View {
     @Environment(\.modelContext) private var context
     @Query private var subscriptions: [Subscription]
 
+    /// Mesma chave lida por `Profile`, o onboarding e a saudação do resumo.
+    @AppStorage(Profile.nameKey) private var userName = ""
     @AppStorage("appearance") private var appearance: AppearanceOption = .system
     @AppStorage(L.languageKey) private var language: AppLanguage = .system
     @AppStorage("appLockEnabled") private var appLockEnabled = false
@@ -38,6 +40,7 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
+                profileSection
                 proSection
                 budgetSection
                 toolsSection
@@ -80,6 +83,24 @@ struct SettingsView: View {
             } message: {
                 Text("Todas as assinaturas e o histórico serão removidos. Esta ação não pode ser desfeita.")
             }
+        }
+    }
+
+    // MARK: - Sobre você
+
+    /// Nome informado no onboarding; fica só no aparelho e personaliza o resumo.
+    private var profileSection: some View {
+        Section {
+            LabeledContent("Nome") {
+                TextField(L.t("Como podemos te chamar?"), text: $userName)
+                    .textInputAutocapitalization(.words)
+                    .autocorrectionDisabled()
+                    .multilineTextAlignment(.trailing)
+            }
+        } header: {
+            Text("Sobre você")
+        } footer: {
+            Text("Usado só para personalizar o resumo. Fica no aparelho.")
         }
     }
 
