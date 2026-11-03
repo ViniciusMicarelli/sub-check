@@ -87,22 +87,46 @@ export const content = {
         categoryValue: "Entretenimento",
       },
       chips: [
-        { label: "Custo por dia", value: "R$ 9,58" },
-        { label: "Orçamento do mês", value: "74%" },
-        { label: "Próxima cobrança", value: "em 3 dias" },
+        { icon: "calendar", label: "Custo por dia", value: "R$ 9,58" },
+        { icon: "target", label: "Orçamento do mês", value: "74%" },
+        { icon: "bell", label: "Próxima cobrança", value: "em 3 dias" },
       ],
+      // Dados do gráfico do painel. As somas de cada período batem com o total
+      // mensal (1M), semestral (6M) e anual (12M) mostrados no card do topo.
+      chart: {
+        types: [
+          { id: "evolution", label: "Evolução" },
+          { id: "categories", label: "Categorias" },
+          { id: "forecast", label: "Previsão" },
+        ],
+        periods: ["1M", "6M", "12M"],
+        evolution: {
+          "1M": [58, 71, 63, 95.4],
+          "6M": [252, 268, 275, 289, 296, 344.4],
+          "12M": [252, 262, 271, 268, 279, 284, 276, 291, 298, 305, 312, 350.8],
+        },
+        forecast: {
+          "1M": [70, 72, 71, 74.4],
+          "6M": [287.4, 289, 285, 291, 288, 284],
+          "12M": [287.4, 289, 285, 291, 288, 284, 290, 292, 286, 293, 295, 268.4],
+        },
+        categories: [
+          { label: "Streaming", monthly: 55.9 },
+          { label: "Nuvem", monthly: 34.9 },
+          { label: "Música", monthly: 21.9 },
+          { label: "Outros", monthly: 174.7 },
+        ],
+      },
     },
     story: {
       title: "Veja o SubCheck em ação",
       subtitle: "Role a página: o app se monta na sua frente, do primeiro toque ao painel pronto.",
-      namePrompt: "Como podemos te chamar?",
-      namePlaceholder: "Digite seu nome",
-      nameNote: "Ele aparece no app logo abaixo. Nada sai do seu aparelho.",
-      hint: "Role para continuar",
+      hint: "Role para começar",
+      phoneHint: "Toque no campo dentro do iPhone e digite o seu nome — ele aparece no painel.",
       scenes: [
         {
           title: "Boas-vindas",
-          text: "Uma apresentação rápida e o seu nome para personalizar o resumo.",
+          text: "A apresentação anda conforme você rola. Digite o seu nome no aparelho para personalizar o resumo.",
         },
         {
           title: "Nova assinatura",
@@ -110,7 +134,7 @@ export const content = {
         },
         {
           title: "Painel pronto",
-          text: "Total mensal, custo por dia e as próximas cobranças, tudo num painel só.",
+          text: "Total mensal, custo por dia e gráficos que trocam com um toque: evolução, categorias e previsão.",
         },
       ],
       finalNote: "Pronto. É assim que o SubCheck fica no seu iPhone.",
@@ -600,22 +624,46 @@ export const content = {
         categoryValue: "Entertainment",
       },
       chips: [
-        { label: "Cost per day", value: "R$ 9.58" },
-        { label: "Monthly budget", value: "74%" },
-        { label: "Next charge", value: "in 3 days" },
+        { icon: "calendar", label: "Cost per day", value: "R$ 9.58" },
+        { icon: "target", label: "Monthly budget", value: "74%" },
+        { icon: "bell", label: "Next charge", value: "in 3 days" },
       ],
+      // Dashboard chart data. The sum of each period matches the monthly (1M),
+      // half-year (6M) and yearly (12M) totals shown in the top card.
+      chart: {
+        types: [
+          { id: "evolution", label: "Trends" },
+          { id: "categories", label: "Categories" },
+          { id: "forecast", label: "Forecast" },
+        ],
+        periods: ["1M", "6M", "12M"],
+        evolution: {
+          "1M": [58, 71, 63, 95.4],
+          "6M": [252, 268, 275, 289, 296, 344.4],
+          "12M": [252, 262, 271, 268, 279, 284, 276, 291, 298, 305, 312, 350.8],
+        },
+        forecast: {
+          "1M": [70, 72, 71, 74.4],
+          "6M": [287.4, 289, 285, 291, 288, 284],
+          "12M": [287.4, 289, 285, 291, 288, 284, 290, 292, 286, 293, 295, 268.4],
+        },
+        categories: [
+          { label: "Streaming", monthly: 55.9 },
+          { label: "Cloud", monthly: 34.9 },
+          { label: "Music", monthly: 21.9 },
+          { label: "Other", monthly: 174.7 },
+        ],
+      },
     },
     story: {
       title: "See SubCheck in action",
       subtitle: "Scroll the page: the app builds itself in front of you, from the first tap to a ready dashboard.",
-      namePrompt: "What should we call you?",
-      namePlaceholder: "Type your name",
-      nameNote: "It shows up in the app below. Nothing leaves your device.",
-      hint: "Keep scrolling",
+      hint: "Scroll to start",
+      phoneHint: "Tap the field inside the iPhone and type your name — it shows up on the dashboard.",
       scenes: [
         {
           title: "Welcome",
-          text: "A quick introduction and your name to personalise the summary.",
+          text: "The intro moves as you scroll. Type your name on the device to personalise the summary.",
         },
         {
           title: "New subscription",
@@ -623,7 +671,7 @@ export const content = {
         },
         {
           title: "Dashboard ready",
-          text: "Monthly total, cost per day and the next charges, all on one panel.",
+          text: "Monthly total, cost per day and charts you switch with a tap: trends, categories and forecast.",
         },
       ],
       finalNote: "Done. That is what SubCheck looks like on your iPhone.",

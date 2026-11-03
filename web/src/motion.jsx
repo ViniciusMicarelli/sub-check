@@ -137,8 +137,7 @@ export function useHeroTimeline(scopeRef) {
       add('[data-hero="lead"]', { y: 24, opacity: 0, duration: 0.8 }, '-=0.6')
       add('[data-hero="actions"]', { y: 20, opacity: 0, duration: 0.7 }, '-=0.55')
       add('[data-hero="note"]', { y: 14, opacity: 0, duration: 0.6 }, '-=0.45')
-      add('[data-hero="phone"]', { y: 46, opacity: 0, scale: 0.94, duration: 1.1 }, '-=0.85')
-      add('[data-hero="chip"]', { y: 18, opacity: 0, duration: 0.6, stagger: 0.12 }, '-=0.6')
+      add('[data-hero="chip"]', { y: 24, opacity: 0, scale: 0.96, duration: 0.7, stagger: 0.12 }, '-=0.5')
     }, el)
 
     return () => ctx.revert()
