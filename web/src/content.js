@@ -122,7 +122,8 @@ export const content = {
       title: "Veja o SubCheck em ação",
       subtitle: "Role a página: o app se monta na sua frente, do primeiro toque ao painel pronto.",
       hint: "Role para começar",
-      phoneHint: "Toque no campo dentro do iPhone e digite o seu nome — ele aparece no painel.",
+      phoneHint:
+        "Digite o seu nome dentro do iPhone e toque em Continuar. Nos gráficos, dá para tocar nas abas e nos períodos.",
       scenes: [
         {
           title: "Boas-vindas",
@@ -659,7 +660,8 @@ export const content = {
       title: "See SubCheck in action",
       subtitle: "Scroll the page: the app builds itself in front of you, from the first tap to a ready dashboard.",
       hint: "Scroll to start",
-      phoneHint: "Tap the field inside the iPhone and type your name — it shows up on the dashboard.",
+      phoneHint:
+        "Type your name inside the iPhone and tap Continue. On the charts, you can tap the tabs and the periods.",
       scenes: [
         {
           title: "Welcome",

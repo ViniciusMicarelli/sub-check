@@ -1138,8 +1138,16 @@ main {
 }
 
 .ob-skip {
+  padding: 0;
+  border: 0;
+  background: transparent;
   font-size: 12px;
   color: var(--text-muted);
+  transition: color 0.25s ease;
+}
+
+.ob-skip:hover {
+  color: var(--text);
 }
 
 .ob-progress {
@@ -1244,13 +1252,26 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
   padding: 14px;
+  border: 0;
   border-radius: var(--radius);
   background: var(--brand-grad);
   box-shadow: var(--shadow-brand);
   color: #fff;
   font-size: 14px;
   font-weight: 600;
+  transition: transform 0.2s var(--ease-snappy), filter 0.2s ease;
+}
+
+.ob-cta:hover,
+.form-cta:hover {
+  filter: brightness(1.08);
+}
+
+.ob-cta:active,
+.form-cta:active {
+  transform: scale(0.98);
 }
 
 /* Depois que o nome é digitado, o botão dá um pulinho. */
@@ -1286,9 +1307,30 @@ main {
   color: var(--text);
 }
 
+.form-nav-cancel,
+.form-nav-save {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 12.5px;
+  transition: color 0.25s ease;
+}
+
+.form-nav-cancel {
+  color: var(--text-muted);
+}
+
+.form-nav-cancel:hover {
+  color: var(--text);
+}
+
 .form-nav-save {
   font-weight: 700;
   color: #b7b5ff;
+}
+
+.form-nav-save:hover {
+  color: #d5d3ff;
 }
 
 .form-block {

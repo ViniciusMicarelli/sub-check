@@ -296,13 +296,16 @@ function MockChart({ c, lang, type, period, onType, onPeriod }) {
 
 /**
  * Onboarding, passo 1. O campo de nome é um `input` de verdade: dá para
- * clicar e digitar dentro do aparelho. A barra enche conforme a rolagem.
+ * clicar e digitar dentro do aparelho. A barra enche conforme a rolagem e
+ * o “Continuar” leva para a próxima cena da história.
  */
-function OnboardingScreen({ m, name, onChange, barRef }) {
+function OnboardingScreen({ m, name, onChange, barRef, onNext, onSkip }) {
   return (
     <div className="screen screen-onboarding">
       <div className="ob-top" data-anim>
-        <span className="ob-skip">{m.skip}</span>
+        <button type="button" className="ob-skip" onClick={onSkip}>
+          {m.skip}
+        </button>
       </div>
 
       <span className="ob-progress">
@@ -338,21 +341,30 @@ function OnboardingScreen({ m, name, onChange, barRef }) {
         {m.nameHelper}
       </p>
 
-      <span className={`ob-cta${name ? ' is-ready' : ''}`} data-anim>
+      <button
+        type="button"
+        className={`ob-cta${name ? ' is-ready' : ''}`}
+        data-anim
+        onClick={onNext}
+      >
         {m.next}
-      </span>
+      </button>
     </div>
   )
 }
 
 /** Nova assinatura: ícone e dados detectados automaticamente. */
-function AddScreen({ m }) {
+function AddScreen({ m, onBack, onNext }) {
   return (
     <div className="screen screen-add">
       <div className="form-nav" data-anim>
-        <span>{m.cancel}</span>
+        <button type="button" className="form-nav-cancel" onClick={onBack}>
+          {m.cancel}
+        </button>
         <strong>{m.title}</strong>
-        <span className="form-nav-save">{m.save}</span>
+        <button type="button" className="form-nav-save" onClick={onNext}>
+          {m.save}
+        </button>
       </div>
 
       <div className="form-block" data-anim>
@@ -384,9 +396,9 @@ function AddScreen({ m }) {
         </ul>
       </div>
 
-      <span className="form-cta" data-anim>
+      <button type="button" className="form-cta" data-anim onClick={onNext}>
         {m.save}
-      </span>
+      </button>
     </div>
   )
 }
@@ -413,17 +425,21 @@ function AppStory({ t }) {
   const [period, setPeriod] = useState('6M')
   const still = useRef(reduceMotion()).current
 
-  // Cada cena troca a tela do app quando entra na faixa de leitura.
+  // Cada cena troca a tela do app quando entra na faixa de leitura. A faixa
+  // começa na mesma linha em que o aparelho gruda (nav + 24): assim a cena só
+  // fica ativa com o telefone inteiro na tela, com o campo e o botão à mão.
   useEffect(() => {
     const el = sectionRef.current
     if (!el || still) return undefined
 
+    const navHeight = document.querySelector('.nav')?.offsetHeight ?? 68
+    const line = `${navHeight + 24}px`
     const scenes = Array.from(el.querySelectorAll('[data-scene]'))
     const triggers = scenes.map((scene, index) =>
       ScrollTrigger.create({
         trigger: scene,
-        start: 'top 62%',
-        end: 'bottom 62%',
+        start: `top ${line}`,
+        end: `bottom ${line}`,
         onEnter: () => setActive(index),
         onEnterBack: () => setActive(index),
       }),
@@ -438,8 +454,8 @@ function AppStory({ t }) {
       triggers.push(
         ScrollTrigger.create({
           trigger: scenes[0],
-          start: 'top 62%',
-          end: 'bottom 62%',
+          start: `top ${line}`,
+          end: `bottom ${line}`,
           onUpdate: fill,
           onRefresh: fill,
         }),
@@ -485,6 +501,14 @@ function AppStory({ t }) {
   const screens = ['onboarding', 'add', 'dashboard']
   const current = still ? 'dashboard' : screens[active]
 
+  // Os botões dentro do aparelho levam a história para a cena pedida. Quem
+  // decide a cena ativa é sempre a rolagem: aqui só rolamos até ela.
+  const goToScene = (index) => {
+    const scenes = sectionRef.current?.querySelectorAll('[data-scene]')
+    const target = scenes && scenes[index]
+    if (target) scrollToId(target)
+  }
+
   return (
     <section className="section story" id="story" ref={sectionRef}>
       <div className="container">
@@ -528,9 +552,17 @@ function AppStory({ t }) {
                       name={name}
                       onChange={setName}
                       barRef={barRef}
+                      onNext={() => goToScene(1)}
+                      onSkip={() => goToScene(screens.length - 1)}
                     />
                   )}
-                  {current === 'add' && <AddScreen m={t.mock.add} />}
+                  {current === 'add' && (
+                    <AddScreen
+                      m={t.mock.add}
+                      onBack={() => goToScene(0)}
+                      onNext={() => goToScene(2)}
+                    />
+                  )}
                   {current === 'dashboard' && (
                     <DashboardScreen
                       m={t.mock}
