@@ -1,10 +1,13 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useI18n } from '../i18n'
 import { Reveal, Stagger, scrollToId, useHeroTimeline, reduceMotion } from '../motion'
-import { Layout, StoreButton } from './Layout'
+import { BrandMark, Layout, StoreButton } from './Layout'
 import { Icon } from './Icons'
 import { Accordion } from './Accordion'
+
+gsap.registerPlugin(ScrollTrigger)
 
 export function Home() {
   const { t } = useI18n()
@@ -16,6 +19,7 @@ export function Home() {
       <Hero heroRef={heroRef} t={t} />
       <Marquee t={t} />
       <Features t={t} />
+      <AppStory t={t} />
       <Showcase t={t} />
       <Steps t={t} />
       <Pricing t={t} />
@@ -72,40 +76,15 @@ function Hero({ heroRef, t }) {
   )
 }
 
-function PhoneMock({ t }) {
-  const ref = useRef(null)
+/* ------------------------- Telas do app (mock) ------------------------- */
 
-  useEffect(() => {
-    const el = ref.current
-    if (!el || reduceMotion()) return undefined
+/** Cores dos cartões de métrica, na ordem do conteúdo. */
+const METRIC_TINTS = ['brand', 'success', 'warning', 'info']
 
-    const ctx = gsap.context(() => {
-      gsap.from('.mock-row', {
-        x: 16,
-        opacity: 0,
-        duration: 0.7,
-        stagger: 0.12,
-        delay: 1,
-        ease: 'power3.out',
-      })
-      gsap.from('.mock-bar', {
-        scaleY: 0,
-        opacity: 0,
-        transformOrigin: 'bottom center',
-        duration: 0.8,
-        stagger: 0.07,
-        delay: 1.3,
-        ease: 'power2.out',
-      })
-    }, el)
-
-    return () => ctx.revert()
-  }, [])
-
-  const bars = [38, 54, 30, 66, 46, 78, 58]
-
+/** Moldura do iPhone: barra de status, (Ilha Dinâmica) e a tela ativa. */
+function PhoneFrame({ children, island = null, className = '', frameRef, ...rest }) {
   return (
-    <div className="phone" data-hero="phone" ref={ref} aria-hidden="true">
+    <div className={`phone ${className}`.trim()} ref={frameRef} aria-hidden="true" {...rest}>
       <div className="phone-screen">
         <div className="phone-status">
           <span>9:41</span>
@@ -116,44 +95,330 @@ function PhoneMock({ t }) {
           </span>
         </div>
 
-        <div className="island">
-          <span className="island-dot" />
-          <div className="island-text">
-            <small>{t.mock.island.label}</small>
-            <strong>
-              {t.mock.island.service} · {t.mock.island.when}
-            </strong>
+        {island}
+
+        <div className="phone-body">{children}</div>
+      </div>
+    </div>
+  )
+}
+
+/** Atividade ao vivo na Ilha Dinâmica. */
+function Island({ m }) {
+  return (
+    <div className="island">
+      <span className="island-dot" />
+      <div className="island-text">
+        <small>{m.island.label}</small>
+        <strong>
+          {m.island.service} · {m.island.when}
+        </strong>
+      </div>
+    </div>
+  )
+}
+
+/** Painel: card do total, métricas e próximas cobranças. */
+function DashboardScreen({ m, name }) {
+  return (
+    <div className="screen">
+      <div className="mock-hero-card">
+        {name ? (
+          <p className="mock-greeting">
+            {m.greetingPrefix} <span className="mock-greeting-name">{name}</span>
+          </p>
+        ) : null}
+        <p className="mock-hero-label">{m.totalLabel}</p>
+        <strong className="mock-hero-value">{m.total}</strong>
+        <p className="mock-hero-meta">
+          <span>{m.yearly}</span>
+          <i className="mock-hero-sep" />
+          <span>{m.active}</span>
+        </p>
+        <span className="mock-next-pill">{m.nextPill}</span>
+      </div>
+
+      <div className="mock-metrics">
+        {m.metrics.map((metric, index) => (
+          <div className="mock-metric" key={metric.label}>
+            <span className={`mock-metric-icon tint-${METRIC_TINTS[index % METRIC_TINTS.length]}`}>
+              <Icon name={metric.icon} size={14} strokeWidth={2} />
+            </span>
+            <strong className="mock-metric-value">{metric.value}</strong>
+            <span className="mock-metric-label">{metric.label}</span>
           </div>
+        ))}
+      </div>
+
+      <div className="mock-block">
+        <div className="mock-block-head">
+          <h4>{m.upcomingTitle}</h4>
+          <span className="mock-period">{m.upcomingPeriod}</span>
         </div>
 
-        <div className="phone-body">
-          <div className="mock-total">
-            <span className="mock-total-label">{t.mock.totalLabel}</span>
-            <strong className="mock-total-value">{t.mock.total}</strong>
-            <span className="mock-total-sub">{t.mock.sub}</span>
+        <ul className="mock-upcoming">
+          {m.upcoming.map((row) => (
+            <li className={`mock-svc-row${row.level === 'warn' ? ' is-warn' : ''}`} key={row.name}>
+              <span className="mock-svc">
+                <Icon name={row.icon} size={15} strokeWidth={1.9} />
+              </span>
+              <span className="mock-row-main">
+                <strong>{row.name}</strong>
+                <small>{row.when}</small>
+              </span>
+              <span className="mock-row-end">
+                <strong>{row.price}</strong>
+                <small>{row.days}</small>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  )
+}
+
+/** Onboarding, passo 1: boas-vindas com o campo de nome. */
+function OnboardingScreen({ m, name }) {
+  return (
+    <div className="screen screen-onboarding">
+      <div className="ob-top">
+        <span className="ob-skip">{m.skip}</span>
+      </div>
+
+      <span className="ob-progress">
+        <i />
+      </span>
+
+      <div className="ob-art">
+        <span className="ob-art-glow" />
+        <BrandMark size={62} />
+      </div>
+
+      <div className="ob-copy">
+        <h3 className="ob-title">{m.title}</h3>
+        <p className="ob-body">{m.body}</p>
+      </div>
+
+      <div className={`ob-field${name ? ' is-filled' : ''}`}>
+        <span className="ob-field-text">{name || m.namePlaceholder}</span>
+        <span className="ob-caret" />
+      </div>
+
+      <p className="ob-helper">{m.nameHelper}</p>
+
+      <span className="ob-cta">{m.next}</span>
+    </div>
+  )
+}
+
+/** Nova assinatura: ícone e dados detectados automaticamente. */
+function AddScreen({ m }) {
+  return (
+    <div className="screen screen-add">
+      <div className="form-nav">
+        <span>{m.cancel}</span>
+        <strong>{m.title}</strong>
+        <span className="form-nav-save">{m.save}</span>
+      </div>
+
+      <div className="form-block">
+        <span className="form-label">{m.iconTitle}</span>
+        <div className="form-hero">
+          <span className="form-hero-tile">
+            <Icon name="play" size={20} strokeWidth={1.9} />
+          </span>
+          <span className="form-hero-note">
+            <Icon name="check" size={12} strokeWidth={2.6} />
+            {m.detected}
+          </span>
+        </div>
+      </div>
+
+      <div className="form-block">
+        <span className="form-label">{m.details}</span>
+        <ul className="form-rows">
+          <FormRow label={m.nameLabel} value={m.nameValue} />
+          <FormRow label={m.valueLabel} value={m.valueValue} />
+          <FormRow label={m.frequencyLabel} value={m.frequencyValue} />
+        </ul>
+      </div>
+
+      <div className="form-block">
+        <ul className="form-rows">
+          <FormRow label={m.dateLabel} value={m.dateValue} />
+          <FormRow label={m.categoryTitle} value={m.categoryValue} />
+        </ul>
+      </div>
+
+      <span className="form-cta">{m.save}</span>
+    </div>
+  )
+}
+
+function FormRow({ label, value }) {
+  return (
+    <li className="form-row">
+      <span className="form-row-label">{label}</span>
+      <span className="form-row-value">{value}</span>
+    </li>
+  )
+}
+
+function PhoneMock({ t }) {
+  const ref = useRef(null)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el || reduceMotion()) return undefined
+
+    const ctx = gsap.context(() => {
+      gsap.from('.mock-hero-card', {
+        y: 18,
+        opacity: 0,
+        duration: 0.8,
+        delay: 0.9,
+        ease: 'power3.out',
+      })
+      gsap.from('.mock-metric', {
+        y: 14,
+        opacity: 0,
+        duration: 0.7,
+        stagger: 0.09,
+        delay: 1.1,
+        ease: 'power3.out',
+      })
+      gsap.from('.mock-svc-row', {
+        x: 16,
+        opacity: 0,
+        duration: 0.7,
+        stagger: 0.12,
+        delay: 1.3,
+        ease: 'power3.out',
+      })
+    }, el)
+
+    return () => ctx.revert()
+  }, [])
+
+  return (
+    <PhoneFrame frameRef={ref} island={<Island m={t.mock} />} data-hero="phone">
+      <DashboardScreen m={t.mock} />
+    </PhoneFrame>
+  )
+}
+
+/* --------------------- O app se monta na rolagem --------------------- */
+
+function AppStory({ t }) {
+  const sectionRef = useRef(null)
+  const swapRef = useRef(null)
+  const [name, setName] = useState('')
+  const [active, setActive] = useState(0)
+  const still = useRef(reduceMotion()).current
+
+  // Cada cena troca a tela do app quando entra na faixa de leitura.
+  useEffect(() => {
+    const el = sectionRef.current
+    if (!el || still) return undefined
+
+    const scenes = Array.from(el.querySelectorAll('[data-scene]'))
+    const triggers = scenes.map((scene, index) =>
+      ScrollTrigger.create({
+        trigger: scene,
+        start: 'top 62%',
+        end: 'bottom 62%',
+        onEnter: () => setActive(index),
+        onEnterBack: () => setActive(index),
+      }),
+    )
+
+    return () => triggers.forEach((trigger) => trigger.kill())
+  }, [still])
+
+  // Trocar o idioma muda a altura do texto: recalcula as faixas de leitura.
+  useEffect(() => {
+    if (still) return undefined
+    const id = window.setTimeout(() => ScrollTrigger.refresh(), 80)
+    return () => window.clearTimeout(id)
+  }, [t, still])
+
+  // Entrada da tela nova dentro do aparelho.
+  useEffect(() => {
+    const el = swapRef.current
+    if (!el || still) return undefined
+    const tween = gsap.fromTo(
+      el,
+      { y: 24, opacity: 0, scale: 0.985 },
+      { y: 0, opacity: 1, scale: 1, duration: 0.55, ease: 'power3.out' },
+    )
+    return () => tween.kill()
+  }, [active, still])
+
+  const screens = ['onboarding', 'add', 'dashboard']
+  const current = still ? 'dashboard' : screens[active]
+
+  return (
+    <section className="section story" id="story" ref={sectionRef}>
+      <div className="container">
+        <Reveal className="section-head">
+          <h2>{t.story.title}</h2>
+          <p>{t.story.subtitle}</p>
+        </Reveal>
+
+        <div className="story-grid">
+          <div className="story-copy">
+            <Reveal className="story-name">
+              <label htmlFor="story-name">{t.story.namePrompt}</label>
+              <input
+                id="story-name"
+                className="story-input"
+                type="text"
+                value={name}
+                maxLength={18}
+                autoComplete="off"
+                spellCheck="false"
+                placeholder={t.story.namePlaceholder}
+                onChange={(event) => setName(event.target.value)}
+              />
+              <p className="story-note">{t.story.nameNote}</p>
+            </Reveal>
+
+            <p className="story-hint">
+              {t.story.hint}
+              <Icon name="chevron" size={14} />
+            </p>
+
+            <ol className="story-scenes">
+              {t.story.scenes.map((scene, index) => (
+                <li
+                  className={`story-scene${still || index === active ? ' is-active' : ''}`}
+                  data-scene
+                  key={scene.title}
+                >
+                  <span className="story-scene-index">{index + 1}</span>
+                  <h3>{scene.title}</h3>
+                  <p>{scene.text}</p>
+                </li>
+              ))}
+            </ol>
           </div>
 
-          <ul className="mock-list">
-            {t.mock.items.map((item) => (
-              <li className="mock-row" key={item.name}>
-                <span className="mock-dot" />
-                <span className="mock-name">{item.name}</span>
-                <span className="mock-price">{item.price}</span>
-              </li>
-            ))}
-          </ul>
-
-          <div className="mock-chart">
-            <span className="mock-chart-label">{t.mock.chartLabel}</span>
-            <div className="bars">
-              {bars.map((height, index) => (
-                <span className="mock-bar" key={index} style={{ height: `${height}%` }} />
-              ))}
+          <div className="story-visual">
+            <div className="story-sticky">
+              <PhoneFrame className="phone-story">
+                <div className="screen-swap" ref={swapRef} data-screen={current}>
+                  {current === 'onboarding' && <OnboardingScreen m={t.mock.onboarding} name={name} />}
+                  {current === 'add' && <AddScreen m={t.mock.add} />}
+                  {current === 'dashboard' && <DashboardScreen m={t.mock} name={name} />}
+                </div>
+              </PhoneFrame>
+              <p className="story-final">{t.story.finalNote}</p>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   )
 }
 

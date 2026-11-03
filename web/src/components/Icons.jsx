@@ -78,6 +78,19 @@ const stroked = {
   code: <path d="m9 8-4 4 4 4M15 8l4 4-4 4" />,
   plus: <path d="M12 5v14M5 12h14" />,
   chevron: <path d="m6 9 6 6 6-6" />,
+  play: (
+    <>
+      <rect x="3" y="4.5" width="18" height="15" rx="3.5" />
+      <path d="M10.5 9.2v5.6l4.8-2.8-4.8-2.8Z" />
+    </>
+  ),
+  music: (
+    <>
+      <path d="M9 18V5.5l10-2V16" />
+      <circle cx="6.6" cy="18" r="2.4" />
+      <circle cx="16.6" cy="16" r="2.4" />
+    </>
+  ),
 }
 
 const applePath =
