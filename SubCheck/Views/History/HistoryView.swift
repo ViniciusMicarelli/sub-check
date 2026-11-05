@@ -95,6 +95,7 @@ private struct HistoryRow: View {
             Image(systemName: "xmark.circle.fill")
                 .font(.title3)
                 .foregroundStyle(Color.danger.opacity(0.8))
+                .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(record.name)

@@ -154,6 +154,7 @@ struct ImportStatementView: View {
             }
         }
         .buttonStyle(.plain)
+        .accessibilityAddTraits(selected.contains(item.id) ? .isSelected : [])
     }
 
     private var addBar: some View {

@@ -306,14 +306,18 @@ struct DashboardView: View {
                 .foregroundStyle(.white.opacity(0.85))
 
             Text(Money.format(monthlyTotal))
-                .font(.system(size: 40, weight: .bold, design: .rounded))
+                .font(.system(.largeTitle, design: .rounded, weight: .bold))
+                .lineLimit(1)
+                .minimumScaleFactor(0.5)
                 .foregroundStyle(.white)
                 .contentTransition(.numericText())
                 .animation(.snappy, value: monthlyTotal)
 
-            HStack(spacing: Spacing.lg) {
-                Label(L.t("dashboard.perYear", Money.compact(yearlyTotal)), systemImage: "calendar")
-                Label(L.t("dashboard.services", active.count), systemImage: "square.stack.3d.up.fill")
+            // Lado a lado quando cabe; empilhado com textos grandes.
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: Spacing.lg) { heroStats }
+                    .fixedSize(horizontal: true, vertical: false)
+                VStack(alignment: .leading, spacing: Spacing.xs) { heroStats }
             }
             .font(.caption)
             .foregroundStyle(.white.opacity(0.9))
@@ -339,5 +343,11 @@ struct DashboardView: View {
         .background(Color.brandGradient)
         .clipShape(RoundedRectangle(cornerRadius: Radius.lg, style: .continuous))
         .softShadow()
+    }
+
+    @ViewBuilder
+    private var heroStats: some View {
+        Label(L.t("dashboard.perYear", Money.compact(yearlyTotal)), systemImage: "calendar")
+        Label(L.t("dashboard.services", active.count), systemImage: "square.stack.3d.up.fill")
     }
 }

@@ -31,6 +31,7 @@ struct AppLockView: View {
                         in: RoundedRectangle(cornerRadius: Radius.lg, style: .continuous)
                     )
                     .softShadow()
+                    .accessibilityHidden(true)
 
                 Text("SubCheck bloqueado")
                     .font(.headline)
@@ -44,6 +45,7 @@ struct AppLockView: View {
                             ProgressView()
                         } else {
                             Image(systemName: "faceid")
+                                .accessibilityHidden(true)
                         }
                         Text("Desbloquear")
                             .font(.subheadline.weight(.semibold))
