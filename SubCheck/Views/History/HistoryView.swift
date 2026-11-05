@@ -71,7 +71,7 @@ struct HistoryView: View {
                 Button("Limpar", role: .destructive) {
                     Haptics.warning()
                     try? context.delete(model: DeletedSubscription.self)
-                    try? context.save()
+                    context.saveReporting()
                 }
                 Button("Cancelar", role: .cancel) {}
             }
@@ -82,7 +82,7 @@ struct HistoryView: View {
         for index in offsets {
             context.delete(records[index])
         }
-        try? context.save()
+        context.saveReporting()
     }
 }
 

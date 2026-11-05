@@ -40,7 +40,7 @@ enum PaymentLedger {
             }
         }
 
-        if inserted > 0 { try? context.save() }
+        if inserted > 0 { context.saveReporting() }
         return inserted
     }
 
@@ -66,7 +66,7 @@ enum PaymentLedger {
                 kept[key] = record
             }
         }
-        if removed > 0 { try? context.save() }
+        if removed > 0 { context.saveReporting() }
         return removed
     }
 

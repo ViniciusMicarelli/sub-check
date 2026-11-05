@@ -22,13 +22,13 @@ final class StoreService {
 
     /// Dias de teste liberados a partir da primeira abertura do app. O teste
     /// é local: não existe oferta introdutória em compra única na App Store.
-    static let trialDays = 7
+    static let trialDays = ProAccessSnapshot.trialDays
 
     static let shared = StoreService()
 
-    private static let unlockedKey = "proUnlocked"
-    private static let trialStartKey = "proTrialStart"
-    private static let lastSeenKey = "proTrialLastSeen"
+    private static let unlockedKey = ProAccessSnapshot.unlockedKey
+    private static let trialStartKey = ProAccessSnapshot.trialStartKey
+    private static let lastSeenKey = ProAccessSnapshot.lastSeenKey
 
     private(set) var product: Product?
     private(set) var isPro: Bool

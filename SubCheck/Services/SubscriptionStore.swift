@@ -30,7 +30,7 @@ enum SubscriptionStore {
         )
         context.insert(record)
         context.delete(subscription)
-        try? context.save()
+        context.saveReporting()
         sync(context)
     }
 
@@ -43,7 +43,7 @@ enum SubscriptionStore {
         } else {
             NotificationService.shared.scheduleNotification(for: subscription)
         }
-        try? context.save()
+        context.saveReporting()
         sync(context)
     }
 
