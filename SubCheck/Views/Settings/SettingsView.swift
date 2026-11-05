@@ -231,6 +231,12 @@ struct SettingsView: View {
             }
 
             reportRow
+
+            NavigationLink {
+                SiriTutorialView()
+            } label: {
+                Label("Siri e Atalhos", systemImage: "waveform.circle")
+            }
         } header: {
             Text("Ferramentas")
         } footer: {

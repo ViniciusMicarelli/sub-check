@@ -16,6 +16,7 @@
 		112FAEB96F7C27028D7400C6 /* ExchangeHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97F6F3D41205ED023B2DE7F0 /* ExchangeHistory.swift */; };
 		152DBA580E135457A2F227AA /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98F9814344871E427A3F810 /* KeychainStore.swift */; };
 		170B33CA8A89D2861148ACE2 /* NotificationActionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66821909AC06DB9921832C5D /* NotificationActionHandler.swift */; };
+		184B14A252ADC3BC3CE19810 /* SiriTutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32C38DC9D1FB91A14BF7DE5F /* SiriTutorialView.swift */; };
 		1B090A82BF4E0B50B756798C /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 104ADE560EAD63B7C3EEEFA9 /* Profile.swift */; };
 		1FED348D969FD90515E7955E /* Subscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617B1C21B1D34ECDC5AA0B7C /* Subscription.swift */; };
 		25F84F3E44FC66B0C811222A /* SubCheckLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE65F8BD37A4E41574877789 /* SubCheckLiveActivity.swift */; };
@@ -64,6 +65,7 @@
 		7F57DC23A7A8B48DB48E043F /* CostProjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB7E93464F8957BAD0B7A89A /* CostProjection.swift */; };
 		80B9C8CFE79C0F0BE943A11B /* StatementImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8207501E2F9D01287E396CC5 /* StatementImport.swift */; };
 		818723531EC5C746DF9F4D4C /* CategoryType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F9A4E6E2FAEAEF2B7307F7F /* CategoryType.swift */; };
+		83D29962C0E4B4F5EECD0792 /* SubscriptionNameMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F45FB024C34889BC9B70857 /* SubscriptionNameMatcher.swift */; };
 		85849FDA640D73BF73DE9A07 /* PaymentRateHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7153113D16D3FF6476B24143 /* PaymentRateHistoryView.swift */; };
 		8619118A761A509DB5CD5CE6 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = E62957C75B822D3D81AE53D3 /* Theme.swift */; };
 		89595D6E6A97B686BDF6D5E4 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E04958F9BCDBF2DF5672CB9 /* Haptics.swift */; };
@@ -85,6 +87,7 @@
 		A70D8DF1F8CB84BE0B62A76C /* PaymentRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B524D918F64CF02A77AA75 /* PaymentRecord.swift */; };
 		AD97A16BFD2351BED9DA6B02 /* UpcomingPaymentsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13C62323FC1BBDA8D3D39FBF /* UpcomingPaymentsSection.swift */; };
 		AF17DB2CB1E55DE171D972C6 /* SubCheckActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A244B4D88EB23D6D745C8C /* SubCheckActivityAttributes.swift */; };
+		B0EA25BDB0A30A7E8A669C21 /* SubscriptionNameMatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8025F3DC585EEFD27665C084 /* SubscriptionNameMatcherTests.swift */; };
 		B3B52A69925CCCCCA64C8EA3 /* AppLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4477C8336AF21FAF95E47FE2 /* AppLinks.swift */; };
 		B6201154A86B6547F0CE8B0B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D146464C2D6159BE3560CD4 /* SettingsView.swift */; };
 		B6261C9CBE482CB754C9E7DD /* SubscriptionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00636F320602E7E72779E3FD /* SubscriptionDetailView.swift */; };
@@ -183,6 +186,7 @@
 		2D5F28403C3946B5AB73852A /* RemoteIconStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteIconStore.swift; sourceTree = "<group>"; };
 		2EB7CA8DC05E52E45CD59170 /* SubCheckIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubCheckIntents.swift; sourceTree = "<group>"; };
 		2F9A4E6E2FAEAEF2B7307F7F /* CategoryType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryType.swift; sourceTree = "<group>"; };
+		32C38DC9D1FB91A14BF7DE5F /* SiriTutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriTutorialView.swift; sourceTree = "<group>"; };
 		38FD071276D90E72BF2D5676 /* SubscriptionIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionIcon.swift; sourceTree = "<group>"; };
 		39B524D918F64CF02A77AA75 /* PaymentRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentRecord.swift; sourceTree = "<group>"; };
 		3AC19344E9300040284EFA2F /* StatementImportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatementImportTests.swift; sourceTree = "<group>"; };
@@ -207,12 +211,14 @@
 		6A57F87853A3BCB4ECBEC350 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		6D4BCD420E8DB9DD4BBD8613 /* BrandMark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandMark.swift; sourceTree = "<group>"; };
 		6EEA705A5295899330A279C3 /* ReportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportService.swift; sourceTree = "<group>"; };
+		6F45FB024C34889BC9B70857 /* SubscriptionNameMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionNameMatcher.swift; sourceTree = "<group>"; };
 		6F7A6AD4D3A9E9E0FD09DAD8 /* SubscriptionIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionIconView.swift; sourceTree = "<group>"; };
 		7153113D16D3FF6476B24143 /* PaymentRateHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentRateHistoryView.swift; sourceTree = "<group>"; };
 		73F949F68E2A3EB1301A153E /* CancelGuide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelGuide.swift; sourceTree = "<group>"; };
 		768F1A1C5BF40D87F1C7C25E /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		7737AC940DFD816CE54A65C7 /* TrialPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrialPolicy.swift; sourceTree = "<group>"; };
 		7D146464C2D6159BE3560CD4 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		8025F3DC585EEFD27665C084 /* SubscriptionNameMatcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionNameMatcherTests.swift; sourceTree = "<group>"; };
 		80F479B0901F13F72A50DD14 /* CostProjectionCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostProjectionCard.swift; sourceTree = "<group>"; };
 		8207501E2F9D01287E396CC5 /* StatementImport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatementImport.swift; sourceTree = "<group>"; };
 		84E3668B63FE3517FE63D23D /* InsightsServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsServiceTests.swift; sourceTree = "<group>"; };
@@ -275,6 +281,7 @@
 				84E3668B63FE3517FE63D23D /* InsightsServiceTests.swift */,
 				A49804A0536267D5BE54DB6B /* LiveActivityTests.swift */,
 				3AC19344E9300040284EFA2F /* StatementImportTests.swift */,
+				8025F3DC585EEFD27665C084 /* SubscriptionNameMatcherTests.swift */,
 				6859A2DC28DC694C2361FD1C /* TrialPolicyTests.swift */,
 			);
 			path = SubCheckTests;
@@ -393,6 +400,7 @@
 				8207501E2F9D01287E396CC5 /* StatementImport.swift */,
 				A39DA69F859E9EF0738F38B8 /* StoreService.swift */,
 				99C11C62B77D80447093AD06 /* SubscriptionCategorizer.swift */,
+				6F45FB024C34889BC9B70857 /* SubscriptionNameMatcher.swift */,
 				62D510CB3EF9475B098E2678 /* SubscriptionStore.swift */,
 				7737AC940DFD816CE54A65C7 /* TrialPolicy.swift */,
 				0C7C2043C3BEA0D8693188FE /* WidgetLink.swift */,
@@ -521,6 +529,7 @@
 			isa = PBXGroup;
 			children = (
 				7D146464C2D6159BE3560CD4 /* SettingsView.swift */,
+				32C38DC9D1FB91A14BF7DE5F /* SiriTutorialView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -665,6 +674,7 @@
 				3A7C043CB8FED9871DC29065 /* InsightsServiceTests.swift in Sources */,
 				261CA83BC9CA4A438E6091EC /* LiveActivityTests.swift in Sources */,
 				05CE1E8169328755E6B3BDE9 /* StatementImportTests.swift in Sources */,
+				B0EA25BDB0A30A7E8A669C21 /* SubscriptionNameMatcherTests.swift in Sources */,
 				32FFE4748E5CCCE7DDDB5128 /* TrialPolicyTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -729,6 +739,7 @@
 				997CD45A335E5272C85C81B9 /* SavingsGoalCard.swift in Sources */,
 				B6201154A86B6547F0CE8B0B /* SettingsView.swift in Sources */,
 				A3DC865222E35FF9685E79C5 /* SharedModelContainer.swift in Sources */,
+				184B14A252ADC3BC3CE19810 /* SiriTutorialView.swift in Sources */,
 				BB1B0E2E2517119732B2AE8C /* SpendHistory.swift in Sources */,
 				80B9C8CFE79C0F0BE943A11B /* StatementImport.swift in Sources */,
 				44E5EC1186B4981D672601DF /* StoreService.swift in Sources */,
@@ -740,6 +751,7 @@
 				B6261C9CBE482CB754C9E7DD /* SubscriptionDetailView.swift in Sources */,
 				A6C72F2FC0804F7D8AAE9A90 /* SubscriptionIcon.swift in Sources */,
 				D807F87A29E596625D10C8FB /* SubscriptionIconView.swift in Sources */,
+				83D29962C0E4B4F5EECD0792 /* SubscriptionNameMatcher.swift in Sources */,
 				9F4252EACAA8C4F8753FB328 /* SubscriptionRowView.swift in Sources */,
 				624E637DAAC599BC299CD536 /* SubscriptionStore.swift in Sources */,
 				373248CA01677EB02E727D4E /* SubscriptionsView.swift in Sources */,
