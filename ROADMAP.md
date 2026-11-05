@@ -56,4 +56,6 @@ See `PUBLISHING.md` for iCloud setup, seeing the Dynamic Island and the App Stor
 
 ## Not verified
 
-No full Xcode on this machine: new code was syntax-checked (`swiftc -parse`) but **not compiled or run**. Build in Xcode and eyeball the dashboard, paywall and icon before shipping.
+The app builds and 69 unit tests pass in the simulator (Xcode 27). Still **never run on a real device**: iCloud sync between two devices, StoreKit purchase/restore (Sandbox), the Dynamic Island drawing, widgets, Siri phrases, notification actions, and a real bank CSV for statement import. The checklist is `TESTPLAN.md`.
+
+1.0 scope: iPhone only. iPad, Mac and full price-change history are 1.1 candidates.

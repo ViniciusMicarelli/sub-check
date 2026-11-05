@@ -286,6 +286,12 @@ struct SettingsView: View {
                     .foregroundStyle(Color.warning)
             }
 
+            if iCloudSync && !store.hasProAccess {
+                Label("Sincronização pausada: o iCloud faz parte do Pro. Seus dados continuam no aparelho.", systemImage: "pause.circle.fill")
+                    .font(.footnote)
+                    .foregroundStyle(Color.warning)
+            }
+
             if iCloudNeedsRestart {
                 Label("Feche e abra o SubCheck de novo para aplicar.", systemImage: "arrow.clockwise")
                     .font(.footnote)

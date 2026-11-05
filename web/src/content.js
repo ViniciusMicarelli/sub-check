@@ -288,7 +288,7 @@ export const content = {
         kicker: "Legal",
         title: "Política de Privacidade",
         lead: "Sem contas, sem rastreamento e sem anúncios.",
-        effective: "Vigente desde 3 de novembro de 2026.",
+        effective: "Vigente desde 5 de novembro de 2026.",
         summary:
           "O SubCheck não pede cadastro, não usa analytics, não exibe anúncios e não rastreia você. Tudo o que você digita fica no seu aparelho. Se você ligar a sincronização com iCloud, os seus dados vão para a sua própria conta do iCloud — nós não temos acesso a eles.",
         sections: [
@@ -307,6 +307,12 @@ export const content = {
             blocks: [
               {
                 p: "Você pode cadastrar assinaturas (nome do serviço, valor, moeda, frequência, datas, categoria, lembrete e um ícone) e, opcionalmente, um nome para a saudação do app. Esses dados ficam <strong>armazenados no seu aparelho</strong> e são usados apenas para exibir os seus gastos, gerar gráficos, previsões e lembretes.",
+              },
+              {
+                p: "Cada pagamento registrado guarda também a <strong>cotação da moeda no dia</strong>, para mostrar quanto o câmbio mudou o custo desde então. Esse histórico fica no seu aparelho.",
+              },
+              {
+                p: "<strong>Importar do extrato (opcional):</strong> se você escolher um arquivo CSV do seu banco ou cartão, ele é lido <strong>apenas no seu aparelho</strong> para encontrar cobranças que se repetem. O arquivo não é enviado a nenhum servidor e não é copiado: só as assinaturas que você confirmar são cadastradas.",
               },
             ],
           },
@@ -354,6 +360,8 @@ export const content = {
                   "<strong>Face ID / senha:</strong> o desbloqueio é feito pelo iOS (LocalAuthentication). O app recebe apenas “liberado” ou “não liberado” — nunca os seus dados biométricos.",
                   "<strong>Notificações:</strong> os lembretes de cobrança são agendados localmente no aparelho. Não enviamos notificações por servidores nossos.",
                   "<strong>Compras:</strong> o pagamento do SubCheck Pro é processado pela Apple (StoreKit). Nós não recebemos nem armazenamos dados do seu cartão. Guardamos apenas se o Pro está desbloqueado neste aparelho.",
+                  "<strong>Siri e Atalhos:</strong> a fala é interpretada pela Apple. O SubCheck recebe só o nome da assinatura e o valor para executar a ação no seu aparelho.",
+                  "<strong>Teste grátis:</strong> a data da primeira abertura fica guardada no Keychain do aparelho, para o teste não reiniciar ao reinstalar. Não enviamos essa data a lugar nenhum.",
                 ],
               },
             ],
@@ -826,7 +834,7 @@ export const content = {
         kicker: "Legal",
         title: "Privacy Policy",
         lead: "No accounts, no tracking, no ads.",
-        effective: "Effective November 3, 2026.",
+        effective: "Effective November 5, 2026.",
         summary:
           "SubCheck has no sign-up, no analytics, no ads and no tracking. Everything you type stays on your device. If you turn on iCloud sync, your data goes to your own iCloud account — we cannot access it.",
         sections: [
@@ -845,6 +853,12 @@ export const content = {
             blocks: [
               {
                 p: "You can add subscriptions (service name, amount, currency, frequency, dates, category, reminder and an icon) and, optionally, a name used for the app greeting. This data is <strong>stored on your device</strong> and used only to show your spending, charts, forecasts and reminders.",
+              },
+              {
+                p: "Each logged payment also keeps the <strong>currency rate of that day</strong>, to show how much the exchange rate changed its cost since. This history stays on your device.",
+              },
+              {
+                p: "<strong>Import from a statement (optional):</strong> if you pick a CSV file from your bank or card, it is read <strong>only on your device</strong> to find repeating charges. The file is not sent to any server and is not copied: only the subscriptions you confirm are added.",
               },
             ],
           },
@@ -892,6 +906,8 @@ export const content = {
                   "<strong>Face ID / passcode:</strong> unlocking is handled by iOS (LocalAuthentication). The app only receives “unlocked” or “not unlocked” — never your biometric data.",
                   "<strong>Notifications:</strong> charge reminders are scheduled locally on the device. We do not send notifications from our servers.",
                   "<strong>Purchases:</strong> SubCheck Pro payments are processed by Apple (StoreKit). We never receive or store your card details. We only keep whether Pro is unlocked on this device.",
+                  "<strong>Siri and Shortcuts:</strong> speech is interpreted by Apple. SubCheck only receives the subscription name and amount to run the action on your device.",
+                  "<strong>Free trial:</strong> the date of the first launch is kept in the device Keychain so the trial does not restart on reinstall. We never send this date anywhere.",
                 ],
               },
             ],

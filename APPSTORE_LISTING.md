@@ -208,7 +208,7 @@ automática. Depois do período, tudo continua funcionando com o limite grátis
 - [ ] Completar "Acordos, impostos e bancário" (contrato de Apps pagos).
 - [ ] Publicar a pasta `docs/` no GitHub Pages (Settings › Pages › `main` / `/docs`) e usar as URLs no App Store Connect.
 - [ ] Deploy do schema do CloudKit para produção (CloudKit Dashboard), se o iCloud for publicado.
-- [ ] Screenshots: iPhone 6.9" (obrigatório); iPad só se mantiver `TARGETED_DEVICE_FAMILY: "1,2"`.
+- [ ] Screenshots: iPhone 6.9" (obrigatório). O 1.0 é só para iPhone (`TARGETED_DEVICE_FAMILY: "1"`).
 - [ ] `MARKETING_VERSION` e `CURRENT_PROJECT_VERSION` corretos em `project.yml` + `xcodegen generate`.
 - [ ] Archive (Release) › Distribute › App Store Connect › Upload.
 - [ ] TestFlight interno → externo; testar compra em Sandbox, restaurar compra, widgets e Ilha Dinâmica.

@@ -1,0 +1,59 @@
+# SubCheck — roteiro de teste no iPhone (≈ 30 min)
+
+Rode isto num **iPhone real**, com uma build de TestFlight (ou do Xcode) antes de enviar para a revisão. O simulador já foi coberto pelos 69 testes automáticos; aqui estão só as coisas que ele não consegue provar. Marque `[x]` e anote o que estranhar.
+
+> Dica: para testar o teste grátis, use **Ajustes > Geral > Data e Hora** e avance o relógio. O app foi feito para não reabrir o teste se você voltar a data.
+
+## 1. Instalação limpa (3 min)
+- [ ] Apague o app, instale de novo: abre a **introdução** (7 páginas), sem dados de exemplo.
+- [ ] Trocar idioma e tema na primeira página muda o texto na hora, sem voltar ao início.
+- [ ] A permissão de notificação **só** aparece depois da introdução.
+- [ ] A página do teste grátis mostra "7 dias grátis", "sem cartão". Termina em "Começar".
+
+## 2. Cadastro e painel (3 min)
+- [ ] Adicionar uma assinatura (nome, valor, categoria) → aparece no painel e em Assinaturas.
+- [ ] Adicionar em **dólar**; abrir a assinatura > **Histórico e cotação** abre sem travar.
+- [ ] Marcar como paga, editar o valor, cancelar e excluir funcionam.
+- [ ] No limite grátis (5 ativas) a 6ª pede o Pro (depois do teste).
+
+## 3. Importar do extrato (4 min)
+- [ ] Exporte o **CSV real** do seu banco/cartão (3 meses ou mais) e importe em Assinaturas > ⬇︎.
+- [ ] As assinaturas conhecidas aparecem; as canceladas vêm desmarcadas.
+- [ ] Se **não** reconhecer o formato, anote as colunas (sem dados pessoais) para eu ajustar o leitor.
+
+## 4. Teste grátis e Pro (5 min)
+- [ ] Ajustes > SubCheck Pro mostra os dias restantes.
+- [ ] Avance o relógio **8 dias**: recursos Pro travam; o app continua grátis.
+- [ ] Volte o relógio: o Pro **não** destrava de novo.
+- [ ] Compra com **Sandbox tester**: libera o Pro. **Restaurar compra** funciona em outro aparelho.
+- [ ] iCloud ligado durante o teste e teste expirado: aparece "Sincronização pausada".
+
+## 5. Ilha Dinâmica e widgets (4 min)
+*(iPhone 14 Pro ou mais novo.)*
+- [ ] Ajustes > Testar Ilha Dinâmica; volte à tela inicial: aparece a ilha compacta.
+- [ ] Toque e segure: expande com contagem e botão **Registrar pagamento**; o botão funciona.
+- [ ] Bloqueie a tela: a Live Activity aparece na tela de bloqueio.
+- [ ] Adicione os 3 widgets à tela inicial; mudam quando você paga algo.
+- [ ] Deixe 5+ horas sem abrir o app e abra de novo: a ilha **volta** sozinha.
+
+## 6. Notificações e Siri (4 min)
+- [ ] Crie uma assinatura que vença em 2 dias com lembrete: chega a notificação.
+- [ ] Segure a notificação: **Marcar como pago** e **Lembrar amanhã** funcionam.
+- [ ] "Ei Siri, qual a próxima cobrança no SubCheck".
+- [ ] "Ei Siri, registrar pagamento de [nome] no SubCheck" registra e responde.
+- [ ] "Ei Siri, adicionar assinatura no SubCheck" pergunta nome e valor.
+- [ ] Ajustes > Siri e Atalhos abre o tutorial e o botão abre o app Atalhos.
+
+## 7. iCloud (4 min) — precisa de **dois** aparelhos no mesmo Apple ID
+- [ ] Ligue "Sincronizar com iCloud" nos dois e **reabra** o app.
+- [ ] Uma assinatura criada no aparelho A aparece no B em alguns minutos.
+- [ ] Anote se o que foi criado **antes** de ligar o iCloud também sobe.
+
+## 8. Acessibilidade e aparência (3 min)
+- [ ] **VoiceOver** (triplo clique no lateral): navegue pelo painel; cada cartão e linha é lido como uma frase ("Netflix, R$ 55,90, mensal, cobra em 3 dias").
+- [ ] Ajustes > Acessibilidade > Tamanho do texto > o maior: nada fica cortado no painel e nas assinaturas.
+- [ ] **Reduzir movimento** ligado: o app segue usável.
+- [ ] Modo escuro e claro, em português e em inglês.
+
+## O que anotar
+Para cada item que falhar: o que você esperava, o que aconteceu e, se der, uma captura de tela. Erros de "não foi possível salvar" também importam.

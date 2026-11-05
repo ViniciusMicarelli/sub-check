@@ -36,9 +36,16 @@ enum SharedModelContainer {
 
     static let shared: ModelContainer = makeContainer()
 
-    /// `true` quando o usuário ligou a sincronização nas Ajustes.
-    static var iCloudSyncEnabled: Bool {
+    /// O usuário ligou a sincronização nas Ajustes (ou na introdução).
+    static var iCloudSyncRequested: Bool {
         UserDefaults.standard.bool(forKey: iCloudSyncKey)
+    }
+
+    /// Sincroniza de fato: pedido pelo usuário **e** com Pro (ou teste) ativo.
+    /// Quando o teste acaba sem compra, o app volta a ser só local na próxima
+    /// abertura; os dados continuam no aparelho.
+    static var iCloudSyncEnabled: Bool {
+        iCloudSyncRequested && ProAccessSnapshot.current()
     }
 
     /// Extensões (widgets) terminam em `.appex`; só o app sincroniza.

@@ -54,6 +54,12 @@ struct TopSubscriptionsChart: View {
                 .frame(height: CGFloat(top.count) * 42 + 16)
                 // Anima a entrada das barras e a troca de filtro.
                 .animation(.snappy, value: top.map(\.id))
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(Text("Maiores gastos mensais"))
+                .accessibilityValue(
+                    top.map { "\($0.name): \(Money.format($0.monthlyCost(in: .shared)))" }
+                        .joined(separator: ", ")
+                )
             }
         }
         .cardSurface()

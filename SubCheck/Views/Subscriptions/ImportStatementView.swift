@@ -154,6 +154,7 @@ struct ImportStatementView: View {
             }
         }
         .buttonStyle(.plain)
+        .accessibilityAddTraits(selected.contains(item.id) ? .isSelected : [])
     }
 
     private var addBar: some View {
@@ -214,7 +215,7 @@ struct ImportStatementView: View {
             )
             context.insert(subscription)
         }
-        try? context.save()
+        context.saveReporting()
 
         let all = (try? context.fetch(FetchDescriptor<Subscription>())) ?? []
         // Reconstrói os pagamentos passados e realinha lembretes e ilha.

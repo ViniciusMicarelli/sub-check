@@ -94,6 +94,12 @@ struct CategoryDonutChart: View {
             }
         }
         .animation(.snappy, value: selection)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text("Gastos por categoria"))
+        .accessibilityValue(
+            breakdown.map { "\($0.category.displayName): \(Money.format($0.total))" }
+                .joined(separator: ", ")
+        )
     }
 
     private var legend: some View {

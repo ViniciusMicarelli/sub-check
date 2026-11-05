@@ -16,17 +16,38 @@ struct SubCheckApp: App {
         NotificationActionHandler.install()
     }
 
+    /// Em builds de depuração, `-seedSampleData` evita o diálogo do sistema
+    /// para os testes visuais no simulador.
+    private static var skipsNotificationPrompt: Bool {
+        #if DEBUG
+        CommandLine.arguments.contains("-seedSampleData")
+        #else
+        false
+        #endif
+    }
+
     var body: some Scene {
         WindowGroup {
             RootView()
                 .task {
                     // Durante a introdução o app ainda não explicou nada: a
                     // permissão é pedida só depois que ela termina.
-                    if UserDefaults.standard.bool(forKey: OnboardingView.doneKey) {
-                        await NotificationService.shared.requestAuthorization()
+                    // Roda à parte: se esperasse a resposta, todo o resto da
+                    // abertura (histórico, Ilha, cotações) ficaria parado até o
+                    // usuário tocar em "Permitir".
+                    if UserDefaults.standard.bool(forKey: OnboardingView.doneKey),
+                       !Self.skipsNotificationPrompt {
+                        Task { await NotificationService.shared.requestAuthorization() }
                     }
 
                     let context = SharedModelContainer.shared.mainContext
+
+                    #if DEBUG
+                    // `-seedSampleData` ao lançar no simulador: abre já com dados.
+                    if CommandLine.arguments.contains("-seedSampleData") {
+                        SampleDataSeeder.seedIfNeeded(in: context)
+                    }
+                    #endif
 
                     // Reconstrói o histórico de cobranças a partir do início de cada assinatura.
                     let subscriptions = (try? context.fetch(FetchDescriptor<Subscription>())) ?? []

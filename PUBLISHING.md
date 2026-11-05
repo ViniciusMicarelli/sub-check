@@ -1,6 +1,6 @@
 # SubCheck — iCloud, Dynamic Island and App Store guide
 
-Written 2026-11-01. Code in this repo was syntax-checked only (no full Xcode on the dev machine), so every step below that touches Xcode is also a verification step.
+Written 2026-11-01, updated 2026-11-05. The app now builds with Xcode (`DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`) and the unit tests pass; what is still unverified lives in `TESTPLAN.md` (needs a real iPhone).
 
 ## 1. Seeing the Dynamic Island
 
@@ -47,7 +47,7 @@ Known limits: no conflict UI (last writer wins per record); the widget does not 
 - App Privacy ("nutrition label"): the app has no analytics or tracking → *Data Not Collected*. It calls `api.frankfurter.app` for exchange rates (no user data) and fetches icon URLs the user types. iCloud data lives in the user's own private database. Keep `PrivacyInfo.xcprivacy` (added, UserDefaults reason codes) in both targets; re-check if you add SDKs.
 - Export compliance: `ITSAppUsesNonExemptEncryption = NO` is set in Info.plist (only standard HTTPS/Keychain).
 - Age rating questionnaire, category (Finance or Productivity), keywords, description, promotional text, what's new — in pt-BR and en.
-- **Screenshots**: 6.9" iPhone (required) and 6.5"/iPad if iPad is supported (`TARGETED_DEVICE_FAMILY: "1,2"` — either test iPad layouts or set it to `1`). Show the dashboard, insights, widgets, Dynamic Island, paywall.
+- **Screenshots**: 6.9" iPhone only (the 1.0 build is iPhone-only: `TARGETED_DEVICE_FAMILY: "1"`, Mac "Designed for iPad" opted out). Show the dashboard, insights, widgets, Dynamic Island, paywall. In the simulator, `-onboardingDone 1 -seedSampleData` launches straight into a populated dashboard (Debug builds only).
 - Review notes: explain the 7-day local trial and how to reach the Pro paywall; no login needed.
 
 **Build and submit**
@@ -58,6 +58,7 @@ Known limits: no conflict UI (last writer wins per record); the widget does not 
 
 **Before the first release, also**
 - Remove or review `.kilo/`, `AGENTS.md`, `PLAN.md`, `TIMELINE.md` (stale planning files, untracked).
+- Run `TESTPLAN.md` on a real iPhone (about 30 minutes) before the first TestFlight build.
 - The trial start date lives in the Keychain; a reinstall keeps it by design.
 - Verify the app on a clean install: it now opens with an empty list (no sample data) and the onboarding.
 

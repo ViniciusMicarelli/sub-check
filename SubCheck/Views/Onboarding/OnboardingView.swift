@@ -128,6 +128,7 @@ struct OnboardingView: View {
             Spacer(minLength: 0)
 
             illustration(for: step)
+                .accessibilityHidden(true)
 
             VStack(spacing: Spacing.md) {
                 Text(step.title)
@@ -372,6 +373,7 @@ struct OnboardingView: View {
         }
         .buttonStyle(PressableStyle())
         .disabled(!enabled)
+        .accessibilityAddTraits(selected ? .isSelected : [])
     }
 
     private func choose(sync: Bool) {
