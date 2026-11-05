@@ -37,9 +37,9 @@ Free must be useful and honest (5 subscriptions, dashboard, widgets, reminders, 
 
 ## Visual identity
 
-- **Concept:** a billing *cycle* (ring + arrowhead) around a *check* — "recurring charges, under control".
-- **Palette:** brand indigo `#5457DB` → violet `#9C4AF0` gradient (`Color.brandGradient`); status green/amber/red/blue stay semantic. Dark: lighter lavender accent `#8A87FF`.
-- **Icon:** `AppIcon.png` (gradient), `AppIcon-Dark.png` (deep indigo, lavender glyph), `AppIcon-Tinted.png` (grayscale for system tint). Regenerate with the CoreGraphics script (kept outside the repo; the glyph geometry is mirrored in `BrandMark.swift`).
+- **Concept (v2, 2026-11):** a mint billing *cycle* (ring + arrowhead) around a white disc with an indigo *check* — "recurring charges, under control".
+- **Palette:** brand mint `#4DE8AB` (ring, savings highlights) on top of brand indigo `#5457DB` → violet `#9C4AF0` gradient (`Color.brandGradient`); status green/amber/red/blue stay semantic. Dark: lighter lavender accent `#8A87FF`.
+- **Icon:** `AppIcon.png` (gradient), `AppIcon-Dark.png` (deep indigo, lavender glyph), `AppIcon-Tinted.png` (grayscale for system tint). Regenerate with `tools/make-icon.swift` (header has the command); the geometry is mirrored in `BrandMark.swift`.
 - **In-app mark:** `BrandMark(size:filled:)` — used on the paywall; use it for empty states and onboarding next.
 - **Type & shape:** SF Rounded for hero numbers, continuous corners (`Radius`), soft shadows only on hero/floating elements.
 - **Voice:** direct and a little wry — "Mesmo sem abrir nenhuma delas."

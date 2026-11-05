@@ -34,6 +34,8 @@ extension Color {
 
     // MARK: - Status
 
+    /// Verde-menta da marca: o anel do ícone e os destaques de economia.
+    static let brandMint = Color(red: 0.30, green: 0.91, blue: 0.67)
     static let success = Color(red: 0.14, green: 0.72, blue: 0.45)
     static let warning = Color(red: 0.96, green: 0.65, blue: 0.13)
     static let danger = Color(red: 0.91, green: 0.26, blue: 0.29)
