@@ -71,6 +71,10 @@ struct RootView: View {
         }
         .animation(.snappy, value: isLocked)
         .onAppear(perform: lockIfNeeded)
+        .onChange(of: onboardingDone) { _, done in
+            guard done else { return }
+            Task { await NotificationService.shared.requestAuthorization() }
+        }
         .onChange(of: scenePhase) { _, phase in
             if phase == .background { lockIfNeeded() }
             if phase == .active { store.refreshClock() }

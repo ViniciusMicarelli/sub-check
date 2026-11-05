@@ -44,6 +44,7 @@ final class CurrencyService {
 
     init(defaults: UserDefaults = CurrencyService.sharedDefaults) {
         self.defaults = defaults
+        self.history = Self.loadHistory()
         self.baseCode = defaults.string(forKey: Self.baseKey) ?? CurrencyCode.brl.code
 
         let cached = defaults.dictionary(forKey: Self.ratesKey) as? [String: Double]
@@ -54,7 +55,6 @@ final class CurrencyService {
             self.lastUpdated = stamp
         }
 
-        self.history = Self.loadHistory()
     }
 
     // MARK: - Histórico

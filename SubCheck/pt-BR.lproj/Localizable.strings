@@ -25,7 +25,7 @@
 "appearance.system" = "Automático";
 "appearance.light"  = "Claro";
 "appearance.dark"   = "Escuro";
-"language.system"   = "Idioma do aparelho";
+"language.system"   = "Auto";
 
 // MARK: - Ícone
 "icon.category" = "Ícone da categoria";

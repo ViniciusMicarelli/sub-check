@@ -24,7 +24,7 @@
 "appearance.system" = "System";
 "appearance.light"  = "Light";
 "appearance.dark"   = "Dark";
-"language.system"   = "Device language";
+"language.system"   = "Auto";
 
 // MARK: - Icon
 "icon.category" = "Category icon";

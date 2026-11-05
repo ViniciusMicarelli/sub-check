@@ -16,7 +16,11 @@ struct SubCheckApp: App {
         WindowGroup {
             RootView()
                 .task {
-                    await NotificationService.shared.requestAuthorization()
+                    // Durante a introdução o app ainda não explicou nada: a
+                    // permissão é pedida só depois que ela termina.
+                    if UserDefaults.standard.bool(forKey: OnboardingView.doneKey) {
+                        await NotificationService.shared.requestAuthorization()
+                    }
 
                     let context = SharedModelContainer.shared.mainContext
 

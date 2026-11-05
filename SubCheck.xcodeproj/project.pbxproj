@@ -12,6 +12,7 @@
 		0990D34D904E2D849C2F1E52 /* InsightsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57664FB8C48AFDCC457B60BC /* InsightsService.swift */; };
 		0ECEBC489883A55E5F8F0FB6 /* BrandIconCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C6BD34A2635D9AB3D7E320 /* BrandIconCatalog.swift */; };
 		0FABE787D185C5F66BF9C1E8 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A57F87853A3BCB4ECBEC350 /* User.swift */; };
+		112FAEB96F7C27028D7400C6 /* ExchangeHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97F6F3D41205ED023B2DE7F0 /* ExchangeHistory.swift */; };
 		152DBA580E135457A2F227AA /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98F9814344871E427A3F810 /* KeychainStore.swift */; };
 		1B090A82BF4E0B50B756798C /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 104ADE560EAD63B7C3EEEFA9 /* Profile.swift */; };
 		1FED348D969FD90515E7955E /* Subscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617B1C21B1D34ECDC5AA0B7C /* Subscription.swift */; };
@@ -744,6 +745,7 @@
 				8F6F5B6C742857F001DBF49C /* Currency.swift in Sources */,
 				3A4230B57972AF50C3944985 /* CurrencyService.swift in Sources */,
 				736224F43A0E2E1D122D4689 /* DeletedSubscription.swift in Sources */,
+				112FAEB96F7C27028D7400C6 /* ExchangeHistory.swift in Sources */,
 				983EC6ACD06F515247BAD525 /* Formatters.swift in Sources */,
 				8B6565DE31C9596044546E45 /* LiveActivityService.swift in Sources */,
 				2F9E460219AEEA06F1CC7647 /* Localization.swift in Sources */,
