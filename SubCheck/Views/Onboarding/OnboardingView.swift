@@ -2,9 +2,9 @@
 //  OnboardingView.swift
 //  SubCheck
 //
-//  Primeira abertura: um passo a passo que ensina o app em seis telas
-//  animadas — boas-vindas (com o nome), cadastro, gastos, avisos, economia e
-//  a pergunta do iCloud.
+//  Primeira abertura: um passo a passo que ensina o app em sete telas
+//  animadas — boas-vindas (com o nome), cadastro, gastos, avisos, economia,
+//  o teste grátis do Pro e a pergunta do iCloud.
 //  Termina com uma espera curta e a marca, para o app parecer pronto antes
 //  de mostrar a tela inicial. Aparece uma vez (`onboardingDone`).
 //
@@ -25,6 +25,7 @@ struct OnboardingView: View {
     @State private var showAdd = false
     /// `true` depois que o usuário respondeu à pergunta do iCloud.
     @State private var syncAnswered = false
+    @State private var showTour = false
     private var store = StoreService.shared
 
     @State private var page = 0
@@ -54,6 +55,14 @@ struct OnboardingView: View {
         .environment(\.locale, language.locale ?? Locale.current)
         .onChange(of: language) { _, newValue in L.store(newValue) }
         .sheet(isPresented: $showAdd) { AddSubscriptionView() }
+        .sheet(isPresented: $showTour) { ProTourView() }
+        #if DEBUG
+        // `-onboardingStartPage 5` ao lançar pula direto para uma página.
+        .onAppear {
+            let start = UserDefaults.standard.integer(forKey: "onboardingStartPage")
+            if (1..<steps.count).contains(start) { page = start }
+        }
+        #endif
     }
 
     // MARK: - Estrutura
@@ -136,6 +145,7 @@ struct OnboardingView: View {
                 preferences
             }
             if step == .add { addNowButton }
+            if step == .pro { proOffer }
             if step == .sync { syncChoice }
 
             Spacer(minLength: 0)
@@ -151,6 +161,7 @@ struct OnboardingView: View {
         case .spending: SpendingArt()
         case .alerts:   AlertArt()
         case .savings:  SavingsArt()
+        case .pro:      TrialArt(days: StoreService.trialDays)
         case .sync:     SyncArt()
         }
     }
@@ -224,6 +235,62 @@ struct OnboardingView: View {
                 .foregroundStyle(Color.success)
                 .transition(.opacity)
         }
+    }
+
+    // MARK: - Teste grátis e Pro
+
+    /// O que o teste libera, em linhas curtas. Termina deixando claro que
+    /// nada é cobrado e que o app continua grátis depois.
+    private var proOffer: some View {
+        VStack(spacing: Spacing.md) {
+            VStack(alignment: .leading, spacing: Spacing.sm) {
+                perk(L.t("Assinaturas ilimitadas"))
+                perk(L.t("Ilha Dinâmica e iCloud"))
+                perk(L.t("Relatório em PDF, exportação e Face ID"))
+                perk(L.t("Análise, previsão e simulador de cancelamento"))
+            }
+            .frame(maxWidth: 320, alignment: .leading)
+
+            Button {
+                Haptics.impact(.light)
+                showTour = true
+            } label: {
+                Label(L.t("Ver o que muda no Pro"), systemImage: "sparkles")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Color.brand)
+            }
+            .buttonStyle(PressableStyle())
+
+            Text(afterTrialText)
+                .font(.footnote)
+                .foregroundStyle(Color.textSecondary)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: 320)
+        }
+    }
+
+    private func perk(_ text: String) -> some View {
+        Label {
+            Text(text)
+                .font(.footnote)
+                .foregroundStyle(Color.textPrimary)
+        } icon: {
+            Image(systemName: "checkmark.circle.fill")
+                .foregroundStyle(Color.success)
+        }
+    }
+
+    /// Deixa explícito que testar não custa nada e o que acontece depois.
+    private var afterTrialText: String {
+        var text = L.t(
+            "Sem cartão e sem cobrança. Depois dos %lld dias, o app continua grátis com até %lld assinaturas.",
+            StoreService.trialDays, StoreService.freeLimit
+        )
+        if let price = store.displayPrice {
+            text += " " + L.t("Para manter o Pro: %@, uma única vez.", price)
+        }
+        return text
     }
 
     // MARK: - iCloud
@@ -382,7 +449,7 @@ struct OnboardingView: View {
 
 private enum Step: Int, CaseIterable, Identifiable {
 
-    case welcome, add, spending, alerts, savings, sync
+    case welcome, add, spending, alerts, savings, pro, sync
 
     var id: Int { rawValue }
 
@@ -393,6 +460,7 @@ private enum Step: Int, CaseIterable, Identifiable {
         case .spending: L.t("Entenda seus gastos")
         case .alerts:   L.t("Nada de cobrança surpresa")
         case .savings:  L.t("Economize de verdade")
+        case .pro:      L.t("onboarding.pro.title", StoreService.trialDays)
         case .sync:     L.t("Seus dados, onde você estiver")
         }
     }
@@ -409,6 +477,8 @@ private enum Step: Int, CaseIterable, Identifiable {
             L.t("Avisamos antes de cada cobrança, na véspera do fim de um teste e na Ilha Dinâmica.")
         case .savings:
             L.t("Insights, previsão de 12 meses e o simulador de cancelamento mostram onde cortar.")
+        case .pro:
+            L.t("Use tudo do SubCheck Pro de graça por %lld dias. É só para testar: ninguém te cobra nada.", StoreService.trialDays)
         case .sync:
             L.t("Com o iCloud, suas assinaturas ficam iguais no iPhone e no iPad. Quer ligar a sincronização?")
         }
@@ -661,6 +731,44 @@ private struct SavingsArt: View {
         }
         .onAppear {
             withAnimation(.easeOut(duration: 1.2).delay(0.15)) { fill = 0.8 }
+        }
+    }
+}
+
+/// Selo grande com os dias de teste.
+private struct TrialArt: View {
+
+    let days: Int
+    @State private var shine = false
+
+    var body: some View {
+        VStack(spacing: Spacing.sm) {
+            ZStack {
+                Circle()
+                    .fill(Color.brandGradient)
+                    .frame(width: 104, height: 104)
+                    .shadow(color: Color.brand.opacity(0.35), radius: shine ? 18 : 8)
+                VStack(spacing: -2) {
+                    Text("\(days)")
+                        .font(.system(size: 44, weight: .heavy, design: .rounded))
+                    Text(L.t("dias"))
+                        .font(.caption.weight(.bold))
+                        .textCase(.uppercase)
+                }
+                .foregroundStyle(.white)
+            }
+
+            Text(L.t("TESTE GRÁTIS"))
+                .font(.caption.weight(.heavy))
+                .tracking(1.2)
+                .foregroundStyle(Color.success)
+                .padding(.horizontal, Spacing.md)
+                .padding(.vertical, 4)
+                .background(Color.success.opacity(0.14), in: Capsule())
+        }
+        .frame(height: 156)
+        .onAppear {
+            withAnimation(.easeInOut(duration: 1.6).repeatForever(autoreverses: true)) { shine = true }
         }
     }
 }

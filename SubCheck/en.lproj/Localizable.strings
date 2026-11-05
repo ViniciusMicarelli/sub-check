@@ -621,3 +621,12 @@
 "Nada sai do seu iPhone" = "Nothing leaves your iPhone";
 "Passa a valer na próxima vez que você abrir o SubCheck." = "Takes effect the next time you open SubCheck.";
 "Você pode mudar isso depois em Ajustes." = "You can change this later in Settings.";
+"onboarding.pro.title" = "%lld days of Pro, free";
+"Use tudo do SubCheck Pro de graça por %lld dias. É só para testar: ninguém te cobra nada." = "Use everything in SubCheck Pro free for %lld days. It's just a trial: nobody charges you anything.";
+"Ilha Dinâmica e iCloud" = "Dynamic Island and iCloud";
+"Relatório em PDF, exportação e Face ID" = "PDF report, export and Face ID";
+"Análise, previsão e simulador de cancelamento" = "Analysis, forecast and cancellation simulator";
+"Sem cartão e sem cobrança. Depois dos %lld dias, o app continua grátis com até %lld assinaturas." = "No card and no charge. After %lld days, the app stays free with up to %lld subscriptions.";
+"Para manter o Pro: %@, uma única vez." = "To keep Pro: %@, one time only.";
+"dias" = "days";
+"TESTE GRÁTIS" = "FREE TRIAL";
