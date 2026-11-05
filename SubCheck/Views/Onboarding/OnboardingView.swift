@@ -2,8 +2,9 @@
 //  OnboardingView.swift
 //  SubCheck
 //
-//  Primeira abertura: um passo a passo que ensina o app em cinco telas
-//  animadas — boas-vindas (com o nome), cadastro, gastos, avisos e economia.
+//  Primeira abertura: um passo a passo que ensina o app em seis telas
+//  animadas — boas-vindas (com o nome), cadastro, gastos, avisos, economia e
+//  a pergunta do iCloud.
 //  Termina com uma espera curta e a marca, para o app parecer pronto antes
 //  de mostrar a tela inicial. Aparece uma vez (`onboardingDone`).
 //
@@ -19,8 +20,12 @@ struct OnboardingView: View {
     @AppStorage(Profile.nameKey) private var name = ""
     @AppStorage(L.languageKey) private var language: AppLanguage = .system
     @AppStorage("appearance") private var appearance: AppearanceOption = .system
+    @AppStorage(SharedModelContainer.iCloudSyncKey) private var iCloudSync = false
     @Query private var subscriptions: [Subscription]
     @State private var showAdd = false
+    /// `true` depois que o usuário respondeu à pergunta do iCloud.
+    @State private var syncAnswered = false
+    private var store = StoreService.shared
 
     @State private var page = 0
     /// `true` depois de "Começar": mostra a espera e fecha.
@@ -131,6 +136,7 @@ struct OnboardingView: View {
                 preferences
             }
             if step == .add { addNowButton }
+            if step == .sync { syncChoice }
 
             Spacer(minLength: 0)
         }
@@ -145,6 +151,7 @@ struct OnboardingView: View {
         case .spending: SpendingArt()
         case .alerts:   AlertArt()
         case .savings:  SavingsArt()
+        case .sync:     SyncArt()
         }
     }
 
@@ -219,6 +226,93 @@ struct OnboardingView: View {
         }
     }
 
+    // MARK: - iCloud
+
+    /// `true` quando há uma conta do iCloud entrada neste aparelho.
+    private var hasICloudAccount: Bool { FileManager.default.ubiquityIdentityToken != nil }
+
+    /// A pergunta é explícita: quem não responder fica só neste aparelho
+    /// (o padrão seguro) e pode ligar depois em Ajustes.
+    private var syncChoice: some View {
+        VStack(spacing: Spacing.sm) {
+            syncOption(
+                title: L.t("Sincronizar com iCloud"),
+                detail: L.t("Iguais em todos os seus aparelhos"),
+                symbol: "icloud.fill",
+                selected: syncAnswered && iCloudSync,
+                enabled: store.hasProAccess
+            ) { choose(sync: true) }
+
+            syncOption(
+                title: L.t("Só neste aparelho"),
+                detail: L.t("Nada sai do seu iPhone"),
+                symbol: "iphone",
+                selected: syncAnswered && !iCloudSync,
+                enabled: true
+            ) { choose(sync: false) }
+
+            Group {
+                if !store.hasProAccess {
+                    Text(L.t("A sincronização com iCloud faz parte do SubCheck Pro."))
+                } else if syncAnswered && iCloudSync && !hasICloudAccount {
+                    Text(L.t("Entre no iCloud em Ajustes do iOS para sincronizar."))
+                        .foregroundStyle(Color.warning)
+                } else if syncAnswered && iCloudSync {
+                    Text(L.t("Passa a valer na próxima vez que você abrir o SubCheck."))
+                } else {
+                    Text(L.t("Você pode mudar isso depois em Ajustes."))
+                }
+            }
+            .font(.caption2)
+            .foregroundStyle(Color.textTertiary)
+            .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: 320)
+    }
+
+    private func syncOption(
+        title: String, detail: String, symbol: String,
+        selected: Bool, enabled: Bool, action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            HStack(spacing: Spacing.md) {
+                Image(systemName: symbol)
+                    .font(.title3)
+                    .foregroundStyle(selected ? Color.brand : Color.textSecondary)
+                    .frame(width: 28)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Color.textPrimary)
+                    Text(detail)
+                        .font(.caption)
+                        .foregroundStyle(Color.textSecondary)
+                }
+                Spacer(minLength: 0)
+                Image(systemName: selected ? "checkmark.circle.fill" : "circle")
+                    .foregroundStyle(selected ? Color.brand : Color.textTertiary)
+            }
+            .padding(Spacing.md)
+            .background(
+                Color.cardBackground,
+                in: RoundedRectangle(cornerRadius: Radius.md, style: .continuous)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: Radius.md, style: .continuous)
+                    .stroke(selected ? Color.brand : Color.hairline, lineWidth: selected ? 2 : 1)
+            )
+            .opacity(enabled ? 1 : 0.5)
+        }
+        .buttonStyle(PressableStyle())
+        .disabled(!enabled)
+    }
+
+    private func choose(sync: Bool) {
+        Haptics.impact(.light)
+        iCloudSync = sync
+        withAnimation(Motion.snappy) { syncAnswered = true }
+    }
+
     // MARK: - Rodapé
 
     private var footer: some View {
@@ -288,7 +382,7 @@ struct OnboardingView: View {
 
 private enum Step: Int, CaseIterable, Identifiable {
 
-    case welcome, add, spending, alerts, savings
+    case welcome, add, spending, alerts, savings, sync
 
     var id: Int { rawValue }
 
@@ -299,6 +393,7 @@ private enum Step: Int, CaseIterable, Identifiable {
         case .spending: L.t("Entenda seus gastos")
         case .alerts:   L.t("Nada de cobrança surpresa")
         case .savings:  L.t("Economize de verdade")
+        case .sync:     L.t("Seus dados, onde você estiver")
         }
     }
 
@@ -314,6 +409,8 @@ private enum Step: Int, CaseIterable, Identifiable {
             L.t("Avisamos antes de cada cobrança, na véspera do fim de um teste e na Ilha Dinâmica.")
         case .savings:
             L.t("Insights, previsão de 12 meses e o simulador de cancelamento mostram onde cortar.")
+        case .sync:
+            L.t("Com o iCloud, suas assinaturas ficam iguais no iPhone e no iPad. Quer ligar a sincronização?")
         }
     }
 }
@@ -564,6 +661,35 @@ private struct SavingsArt: View {
         }
         .onAppear {
             withAnimation(.easeOut(duration: 1.2).delay(0.15)) { fill = 0.8 }
+        }
+    }
+}
+
+/// Dois aparelhos ligados por uma nuvem.
+private struct SyncArt: View {
+
+    @State private var pulse = false
+
+    var body: some View {
+        VStack(spacing: Spacing.lg) {
+            Image(systemName: "icloud.fill")
+                .font(.system(size: 64))
+                .foregroundStyle(Color.brandGradient)
+                .scaleEffect(pulse ? 1.06 : 0.96)
+
+            HStack(spacing: Spacing.lg) {
+                Image(systemName: "iphone")
+                Image(systemName: "arrow.left.arrow.right")
+                    .font(.title3)
+                    .foregroundStyle(Color.textTertiary)
+                Image(systemName: "ipad")
+            }
+            .font(.system(size: 34))
+            .foregroundStyle(Color.textSecondary)
+        }
+        .frame(height: 156)
+        .onAppear {
+            withAnimation(.easeInOut(duration: 1.6).repeatForever(autoreverses: true)) { pulse = true }
         }
     }
 }

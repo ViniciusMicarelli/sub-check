@@ -614,3 +614,10 @@
 "Marcar %@ como cancelada no SubCheck?" = "Mark %@ as cancelled in SubCheck?";
 "%@ marcada como cancelada. Lembre de cancelar também no serviço." = "%@ marked as cancelled. Remember to cancel with the service too.";
 "Atualizar valor" = "Update price";
+"Seus dados, onde você estiver" = "Your data, wherever you are";
+"Com o iCloud, suas assinaturas ficam iguais no iPhone e no iPad. Quer ligar a sincronização?" = "With iCloud, your subscriptions stay the same on iPhone and iPad. Turn on sync?";
+"Iguais em todos os seus aparelhos" = "The same on all your devices";
+"Só neste aparelho" = "This device only";
+"Nada sai do seu iPhone" = "Nothing leaves your iPhone";
+"Passa a valer na próxima vez que você abrir o SubCheck." = "Takes effect the next time you open SubCheck.";
+"Você pode mudar isso depois em Ajustes." = "You can change this later in Settings.";
