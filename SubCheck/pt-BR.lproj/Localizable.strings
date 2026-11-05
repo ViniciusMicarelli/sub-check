@@ -531,3 +531,4 @@
 "Nenhum pagamento registrado ainda." = "Nenhum pagamento registrado ainda.";
 "Cotação da época: %@" = "Cotação da época: %@";
 "Sem cotação registrada" = "Sem cotação registrada";
+"live.footer" = "Contagem regressiva e próximas cobranças na tela de bloqueio. O iOS encerra a ilha após cerca de 8 horas; ela volta sozinha quando você abre o SubCheck.";

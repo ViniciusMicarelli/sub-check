@@ -530,3 +530,4 @@
 "Nenhum pagamento registrado ainda." = "No payments recorded yet.";
 "Cotação da época: %@" = "Rate at the time: %@";
 "Sem cotação registrada" = "No rate recorded";
+"live.footer" = "Countdown and upcoming charges on the lock screen. iOS ends the island after about 8 hours; it comes back on its own when you open SubCheck.";

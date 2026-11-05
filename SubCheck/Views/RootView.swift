@@ -77,8 +77,22 @@ struct RootView: View {
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .background { lockIfNeeded() }
-            if phase == .active { store.refreshClock() }
+            if phase == .active {
+                store.refreshClock()
+                refreshLiveActivity()
+            }
         }
+    }
+
+    // MARK: - Ilha Dinâmica
+
+    /// Ao voltar para o app, realinha a Live Activity com as assinaturas e
+    /// recria a que já está velha (o iOS derruba a atividade após ~8h).
+    private func refreshLiveActivity() {
+        guard onboardingDone else { return }
+        let context = SharedModelContainer.shared.mainContext
+        let all = (try? context.fetch(FetchDescriptor<Subscription>())) ?? []
+        LiveActivityService.shared.syncAll(with: all)
     }
 
     // MARK: - Bloqueio

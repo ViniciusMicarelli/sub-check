@@ -338,7 +338,7 @@ struct SettingsView: View {
         } footer: {
             Text(
                 store.hasProAccess
-                    ? L.t("Contagem regressiva e próximas cobranças na tela de bloqueio.")
+                    ? L.t("live.footer")
                     : L.t("A Ilha Dinâmica faz parte do SubCheck Pro.")
             )
         }
