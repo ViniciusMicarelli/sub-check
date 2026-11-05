@@ -28,11 +28,15 @@ final class StoreService {
 
     private static let unlockedKey = "proUnlocked"
     private static let trialStartKey = "proTrialStart"
+    private static let lastSeenKey = "proTrialLastSeen"
 
     private(set) var product: Product?
     private(set) var isPro: Bool
     /// Primeira abertura do app, que marca o começo do teste.
     private(set) var trialStartDate: Date
+    /// Relógio do teste: avança em `refreshClock()` e nunca volta, mesmo que
+    /// o usuário atrase a data do aparelho.
+    private(set) var now = Date()
     private(set) var isLoading = false
     private(set) var isPurchasing = false
     /// Mensagem para exibir no paywall quando algo falha.
@@ -43,6 +47,7 @@ final class StoreService {
     private init() {
         isPro = UserDefaults.standard.bool(forKey: Self.unlockedKey)
         trialStartDate = Self.startTrialIfNeeded()
+        refreshClock()
         updatesTask = observeTransactions()
         Task { await refresh() }
     }
@@ -51,36 +56,43 @@ final class StoreService {
 
     /// Libera os recursos Pro: compra registrada ou teste ainda em curso.
     /// Todos os portões do app devem usar isto, nunca `isPro` direto.
-    var hasProAccess: Bool { isPro || isTrialActive }
+    var hasProAccess: Bool { policy.hasProAccess(isPurchased: isPro, now: now) }
 
-    var trialEndDate: Date {
-        Calendar.current.date(
-            byAdding: .day,
-            value: Self.trialDays,
-            to: trialStartDate
-        ) ?? trialStartDate
+    private var policy: TrialPolicy {
+        TrialPolicy(startDate: trialStartDate, days: Self.trialDays)
     }
 
-    var isTrialActive: Bool { !isPro && Date() < trialEndDate }
+    var trialEndDate: Date { policy.endDate }
+
+    var isTrialActive: Bool { !isPro && policy.isActive(now: now) }
 
     /// Dias inteiros que ainda restam do teste. Zero quando expirou ou
     /// quando a compra já foi feita.
     var trialDaysRemaining: Int {
-        guard isTrialActive else { return 0 }
-        let seconds = trialEndDate.timeIntervalSinceNow
-        return max(1, Int(ceil(seconds / 86_400)))
+        isPro ? 0 : policy.daysRemaining(now: now)
+    }
+
+    /// Atualiza o relógio do teste; chamado ao abrir e ao voltar ao primeiro
+    /// plano, para o Pro travar sozinho quando o teste termina.
+    func refreshClock() {
+        let effective = TrialPolicy.effectiveNow(
+            Date(), lastSeen: KeychainStore.date(for: Self.lastSeenKey)
+        )
+        now = effective
+        KeychainStore.set(effective, for: Self.lastSeenKey)
     }
 
     /// Grava a data da primeira abertura no Keychain (sobrevive à
     /// reinstalação) e espelha no UserDefaults. Vale a data mais antiga.
     private static func startTrialIfNeeded() -> Date {
         let defaults = UserDefaults.standard
-        let stored = [
-            KeychainStore.date(for: trialStartKey),
-            defaults.object(forKey: trialStartKey) as? Date
-        ].compactMap { $0 }.min()
-
-        let start = stored ?? Date()
+        let start = TrialPolicy.startDate(
+            from: [
+                KeychainStore.date(for: trialStartKey),
+                defaults.object(forKey: trialStartKey) as? Date
+            ],
+            now: Date()
+        )
         defaults.set(start, forKey: trialStartKey)
         KeychainStore.set(start, for: trialStartKey)
         return start
