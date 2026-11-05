@@ -60,3 +60,30 @@ Known limits: no conflict UI (last writer wins per record); the widget does not 
 - Remove or review `.kilo/`, `AGENTS.md`, `PLAN.md`, `TIMELINE.md` (stale planning files, untracked).
 - The trial start date lives in the Keychain; a reinstall keeps it by design.
 - Verify the app on a clean install: it now opens with an empty list (no sample data) and the onboarding.
+
+## 4. Branches
+
+| Branch | Para quê |
+|---|---|
+| `main` | O que já está publicado e estável (inclui o site em `docs/`, servido pelo GitHub Pages). Só recebe merges de `release/*`. |
+| `develop` | Integração: onde as novidades se juntam e onde o TestFlight é gerado. |
+| `feature/<nome>` | Uma novidade por branch, criada a partir de `develop` e mesclada de volta nela. |
+| `fix/<nome>` | Correção pequena, mesmo fluxo da `feature/*`. |
+| `release/<versão>` | Congela uma versão (ex.: `release/1.0`): só bugs de última hora. Depois entra na `main` e ganha a tag `v1.0`. |
+
+Fluxo:
+
+```bash
+git switch develop && git pull
+git switch -c feature/historico-reajustes     # trabalha e faz commits
+git switch develop && git merge --no-ff feature/historico-reajustes
+git push -u origin develop
+
+# Ao lançar:
+git switch -c release/1.0 develop             # sobe o build para a App Store aqui
+git switch main && git merge --no-ff release/1.0
+git tag v1.0 && git push origin main --tags
+git switch develop && git merge main          # traz de volta qualquer ajuste da release
+```
+
+Regras: nunca fazer `push --force` na `main` nem na `develop`; subir o número de build (`CURRENT_PROJECT_VERSION`) a cada envio ao TestFlight.
