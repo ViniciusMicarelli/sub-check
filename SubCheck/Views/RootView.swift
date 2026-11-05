@@ -49,6 +49,7 @@ struct RootView: View {
                 .tag(Tab.settings)
         }
         .tint(.brand)
+        .id(language)
         .fullScreenCover(isPresented: Binding(
             get: { !onboardingDone },
             set: { _ in }
@@ -58,7 +59,6 @@ struct RootView: View {
         .preferredColorScheme(appearance.colorScheme)
         // A troca de idioma reavalia as `LocalizedStringKey` sem reiniciar o app.
         .environment(\.locale, language.locale ?? Locale.current)
-        .id(language)
         .onOpenURL(perform: handle)
         .sheet(item: $linkedSubscription) { linked in
             LinkedSubscriptionView(link: linked)
@@ -71,9 +71,28 @@ struct RootView: View {
         }
         .animation(.snappy, value: isLocked)
         .onAppear(perform: lockIfNeeded)
+        .onChange(of: onboardingDone) { _, done in
+            guard done else { return }
+            Task { await NotificationService.shared.requestAuthorization() }
+        }
         .onChange(of: scenePhase) { _, phase in
             if phase == .background { lockIfNeeded() }
+            if phase == .active {
+                store.refreshClock()
+                refreshLiveActivity()
+            }
         }
+    }
+
+    // MARK: - Ilha Dinâmica
+
+    /// Ao voltar para o app, realinha a Live Activity com as assinaturas e
+    /// recria a que já está velha (o iOS derruba a atividade após ~8h).
+    private func refreshLiveActivity() {
+        guard onboardingDone else { return }
+        let context = SharedModelContainer.shared.mainContext
+        let all = (try? context.fetch(FetchDescriptor<Subscription>())) ?? []
+        LiveActivityService.shared.syncAll(with: all)
     }
 
     // MARK: - Bloqueio

@@ -231,6 +231,12 @@ struct SettingsView: View {
             }
 
             reportRow
+
+            NavigationLink {
+                SiriTutorialView()
+            } label: {
+                Label("Siri e Atalhos", systemImage: "waveform.circle")
+            }
         } header: {
             Text("Ferramentas")
         } footer: {
@@ -318,7 +324,7 @@ struct SettingsView: View {
     private var liveActivitySection: some View {
         Section {
             Toggle(isOn: liveActivityBinding) {
-                Label("Ilha Dinâmica", systemImage: "live.activity")
+                Label("Ilha Dinâmica", systemImage: "platter.filled.top.iphone")
             }
 
             Button {
@@ -338,7 +344,7 @@ struct SettingsView: View {
         } footer: {
             Text(
                 store.hasProAccess
-                    ? L.t("Contagem regressiva e próximas cobranças na tela de bloqueio.")
+                    ? L.t("live.footer")
                     : L.t("A Ilha Dinâmica faz parte do SubCheck Pro.")
             )
         }
@@ -486,12 +492,14 @@ struct SettingsView: View {
         Section {
             exportRow
 
+            #if DEBUG
             Button {
                 SampleDataSeeder.seed(in: context)
                 Haptics.success()
             } label: {
                 Label("Carregar dados de exemplo", systemImage: "wand.and.stars")
             }
+            #endif
 
             Button(role: .destructive) {
                 showEraseConfirmation = true

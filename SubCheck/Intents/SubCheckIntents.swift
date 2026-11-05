@@ -16,6 +16,7 @@ import SwiftData
 private enum IntentFailure: Error, CustomLocalizedStringResourceConvertible {
     case limitReached(Int)
     case invalidAmount
+    case notFound
 
     var localizedStringResource: LocalizedStringResource {
         switch self {
@@ -23,6 +24,8 @@ private enum IntentFailure: Error, CustomLocalizedStringResourceConvertible {
             "\(L.t("Você atingiu o limite de %lld assinaturas ativas. O SubCheck Pro libera ilimitadas.", limit))"
         case .invalidAmount:
             "\(L.t("Informe um valor maior que zero."))"
+        case .notFound:
+            "\(L.t("Não encontrei essa assinatura."))"
         }
     }
 }
@@ -125,10 +128,10 @@ struct AddSubscriptionIntent: AppIntent {
     static var title: LocalizedStringResource = "Adicionar assinatura"
     static var description = IntentDescription("Cadastra uma nova assinatura no SubCheck.")
 
-    @Parameter(title: "Nome")
+    @Parameter(title: "Nome", requestValueDialog: "Qual o nome da assinatura?")
     var name: String
 
-    @Parameter(title: "Valor")
+    @Parameter(title: "Valor", requestValueDialog: "Qual o valor?")
     var cost: Double
 
     @Parameter(title: "Frequência", default: .monthly)
@@ -168,6 +171,155 @@ struct AddSubscriptionIntent: AppIntent {
     }
 }
 
+// MARK: - Assinatura como entidade (a Siri pergunta "qual?")
+
+struct SubscriptionEntity: AppEntity {
+
+    static var typeDisplayRepresentation: TypeDisplayRepresentation { "Assinatura" }
+    static var defaultQuery = SubscriptionEntityQuery()
+
+    var id: String
+    var name: String
+
+    var displayRepresentation: DisplayRepresentation {
+        DisplayRepresentation(title: "\(name)")
+    }
+
+    init(id: String, name: String) {
+        self.id = id
+        self.name = name
+    }
+
+    init(_ subscription: Subscription) {
+        self.init(id: subscription.id.uuidString, name: subscription.name)
+    }
+}
+
+struct SubscriptionEntityQuery: EntityStringQuery {
+
+    @MainActor
+    func entities(for identifiers: [String]) async throws -> [SubscriptionEntity] {
+        try allSubscriptions()
+            .filter { identifiers.contains($0.id.uuidString) }
+            .map(SubscriptionEntity.init)
+    }
+
+    /// "Netflix", "o spotify": casa pelo nome sem diferenciar acento.
+    @MainActor
+    func entities(matching string: String) async throws -> [SubscriptionEntity] {
+        let all = try allSubscriptions()
+        return SubscriptionNameMatcher
+            .rank(string, in: all.map(\.name))
+            .map { SubscriptionEntity(all[$0]) }
+    }
+
+    @MainActor
+    func suggestedEntities() async throws -> [SubscriptionEntity] {
+        try allSubscriptions()
+            .filter { !$0.isCancelled }
+            .sorted { $0.nextBillingDate < $1.nextBillingDate }
+            .map(SubscriptionEntity.init)
+    }
+}
+
+@MainActor
+private func subscription(for entity: SubscriptionEntity) throws -> Subscription {
+    guard let id = UUID(uuidString: entity.id),
+          let found = try allSubscriptions().first(where: { $0.id == id }) else {
+        throw IntentFailure.notFound
+    }
+    return found
+}
+
+// MARK: - Registrar pagamento
+
+struct MarkSubscriptionPaidIntent: AppIntent {
+
+    static var title: LocalizedStringResource = "Registrar pagamento de assinatura"
+    static var description = IntentDescription("Marca a próxima cobrança de uma assinatura como paga.")
+
+    @Parameter(title: "Assinatura", requestValueDialog: "Qual assinatura?")
+    var subscription: SubscriptionEntity
+
+    @MainActor
+    func perform() async throws -> some IntentResult & ProvidesDialog {
+        let target = try SubCheck.subscription(for: subscription)
+        PaymentLedger.markPaid(target, in: SharedModelContainer.shared.mainContext)
+
+        let next = target.nextBillingDate.formatted(date: .abbreviated, time: .omitted)
+        return .result(dialog: "\(L.t("Pagamento de %@ registrado. Próxima cobrança em %@.", target.name, next))")
+    }
+}
+
+// MARK: - Atualizar valor
+
+struct UpdateSubscriptionPriceIntent: AppIntent {
+
+    static var title: LocalizedStringResource = "Atualizar valor da assinatura"
+    static var description = IntentDescription("Muda o valor de uma assinatura quando houver reajuste.")
+
+    @Parameter(title: "Assinatura", requestValueDialog: "Qual assinatura?")
+    var subscription: SubscriptionEntity
+
+    @Parameter(title: "Novo valor", requestValueDialog: "Qual o novo valor?")
+    var newCost: Double
+
+    static var parameterSummary: some ParameterSummary {
+        Summary("Atualizar \(\.$subscription) para \(\.$newCost)")
+    }
+
+    @MainActor
+    func perform() async throws -> some IntentResult & ProvidesDialog {
+        guard newCost > 0 else { throw IntentFailure.invalidAmount }
+
+        let target = try SubCheck.subscription(for: subscription)
+        let old = target.cost
+        target.cost = newCost
+        target.recordPriceChange(from: old)
+
+        let context = SharedModelContainer.shared.mainContext
+        try context.save()
+        NotificationService.shared.scheduleNotification(for: target)
+
+        let all = try allSubscriptions()
+        LiveActivityService.shared.syncAll(with: all)
+        BudgetService.evaluate(all)
+
+        let text = L.t(
+            "%@ agora custa %@ (antes %@).",
+            target.name,
+            Money.format(newCost, code: target.currencyCode),
+            Money.format(old, code: target.currencyCode)
+        )
+        return .result(dialog: "\(text)")
+    }
+}
+
+// MARK: - Cancelar
+
+struct CancelSubscriptionIntent: AppIntent {
+
+    static var title: LocalizedStringResource = "Marcar assinatura como cancelada"
+    static var description = IntentDescription("Marca uma assinatura como cancelada no SubCheck. Não cancela o serviço de verdade.")
+
+    @Parameter(title: "Assinatura", requestValueDialog: "Qual assinatura?")
+    var subscription: SubscriptionEntity
+
+    @MainActor
+    func perform() async throws -> some IntentResult & ProvidesDialog {
+        let target = try SubCheck.subscription(for: subscription)
+
+        // Confirma antes: a Siri pode ter entendido o nome errado.
+        let question = L.t("Marcar %@ como cancelada no SubCheck?", target.name)
+        try await requestConfirmation(result: .result(dialog: "\(question)"))
+
+        if !target.isCancelled {
+            SubscriptionStore.toggleCancelled(target, in: SharedModelContainer.shared.mainContext)
+        }
+        return .result(dialog: "\(L.t("%@ marcada como cancelada. Lembre de cancelar também no serviço.", target.name))")
+    }
+}
+
 // MARK: - Atalhos prontos (Siri e app Atalhos)
 
 struct SubCheckShortcuts: AppShortcutsProvider {
@@ -202,10 +354,38 @@ struct SubCheckShortcuts: AppShortcutsProvider {
         AppShortcut(
             intent: AddSubscriptionIntent(),
             phrases: [
-                "Adicionar assinatura no \(.applicationName)"
+                "Adicionar assinatura no \(.applicationName)",
+                "Registrar assinatura no \(.applicationName)"
             ],
             shortTitle: "Adicionar assinatura",
             systemImageName: "plus.circle"
+        )
+        AppShortcut(
+            intent: MarkSubscriptionPaidIntent(),
+            phrases: [
+                "Registrar pagamento de \(\.$subscription) no \(.applicationName)",
+                "Registrar pagamento no \(.applicationName)"
+            ],
+            shortTitle: "Registrar pagamento",
+            systemImageName: "checkmark.circle"
+        )
+        AppShortcut(
+            intent: UpdateSubscriptionPriceIntent(),
+            phrases: [
+                "Atualizar valor de \(\.$subscription) no \(.applicationName)",
+                "Atualizar valor de assinatura no \(.applicationName)"
+            ],
+            shortTitle: "Atualizar valor",
+            systemImageName: "arrow.up.arrow.down.circle"
+        )
+        AppShortcut(
+            intent: CancelSubscriptionIntent(),
+            phrases: [
+                "Cancelar \(\.$subscription) no \(.applicationName)",
+                "Cancelar assinatura no \(.applicationName)"
+            ],
+            shortTitle: "Cancelar assinatura",
+            systemImageName: "xmark.circle"
         )
     }
 }

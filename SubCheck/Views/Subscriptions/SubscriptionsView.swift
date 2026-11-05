@@ -16,6 +16,7 @@ struct SubscriptionsView: View {
 
     @State private var search = ""
     @State private var showAddSheet = false
+    @State private var showImport = false
     /// Paywall aberto quando o limite da versão gratuita é atingido.
     @State private var showPaywall = false
 
@@ -80,6 +81,14 @@ struct SubscriptionsView: View {
             .navigationTitle("Assinaturas")
             .searchable(text: $search, prompt: "Buscar assinatura")
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        Haptics.impact(.light)
+                        showImport = true
+                    } label: {
+                        Label("Importar do extrato", systemImage: "square.and.arrow.down")
+                    }
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         Haptics.impact(.light)
@@ -91,6 +100,9 @@ struct SubscriptionsView: View {
             }
             .sheet(isPresented: $showAddSheet) {
                 AddSubscriptionView()
+            }
+            .sheet(isPresented: $showImport) {
+                ImportStatementView()
             }
             .sheet(isPresented: $showPaywall) {
                 ProView(

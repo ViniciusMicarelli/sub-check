@@ -12,6 +12,29 @@ import Foundation
 import Observation
 import WidgetKit
 
+/// Regras de duração da atividade, sem depender do ActivityKit para poderem
+/// ser testadas.
+///
+/// O iOS encerra qualquer Live Activity depois de ~8 horas ativa (e tira da
+/// tela de bloqueio até 4 horas depois). Sem servidor de push, só o app em
+/// primeiro plano consegue iniciar outra. Por isso, ao abrir o app, uma
+/// atividade já velha é recriada: o relógio de 8 horas recomeça.
+enum LiveActivityLifecycle {
+
+    /// Idade a partir da qual vale recriar a atividade ao abrir o app.
+    static let recycleAfter: TimeInterval = 4 * 60 * 60
+
+    static func shouldRecycle(startedAt: Date, now: Date = Date()) -> Bool {
+        now.timeIntervalSince(startedAt) >= recycleAfter
+    }
+
+    /// Depois do vencimento o conteúdo fica desatualizado (o sistema marca
+    /// `isStale`). Antes disso não há o que expirar.
+    static func staleDate(forDue due: Date, now: Date = Date()) -> Date? {
+        due > now ? due : nil
+    }
+}
+
 @Observable
 @MainActor
 final class LiveActivityService {
@@ -33,6 +56,10 @@ final class LiveActivityService {
 
     /// Maior número de cobranças listadas na visão expandida.
     private static let upcomingLimit = 3
+
+    /// A extensão de widgets só pode atualizar ou encerrar; criar atividade
+    /// exige o app em primeiro plano.
+    private var isAppExtension: Bool { Bundle.main.bundlePath.hasSuffix(".appex") }
 
     private var running: Activity<SubCheckActivityAttributes>? {
         Activity<SubCheckActivityAttributes>.activities.first
@@ -64,24 +91,48 @@ final class LiveActivityService {
     func start(with subscriptions: [Subscription], service: CurrencyService = .shared) -> StartResult {
         guard areActivitiesEnabled else { return .disabledBySystem }
         guard let state = Self.state(from: subscriptions, service: service) else {
+            // Sem assinaturas ativas não sobra nada a mostrar: encerra a
+            // atividade antiga em vez de deixá-la com dados apagados.
+            stop()
             return .noSubscriptions
         }
 
+        let content = ActivityContent(
+            state: state,
+            staleDate: LiveActivityLifecycle.staleDate(forDue: state.nextDueDate)
+        )
+
         if let running {
-            let content = ActivityContent(state: state, staleDate: nil)
+            // Atividade velha: encerra e cria outra para zerar o limite de 8h.
+            if !isAppExtension,
+               LiveActivityLifecycle.shouldRecycle(startedAt: running.attributes.startedAt) {
+                let old = running
+                Task {
+                    await old.end(nil, dismissalPolicy: .immediate)
+                    _ = Self.request(content)
+                }
+                return .started
+            }
             Task { await running.update(content) }
             return .updated
         }
 
+        guard !isAppExtension else { return .failed("extension") }
+        if let error = Self.request(content) { return .failed(error) }
+        return .started
+    }
+
+    /// Cria a atividade. Devolve a mensagem de erro, se houver.
+    private static func request(_ content: ActivityContent<SubCheckActivityAttributes.ContentState>) -> String? {
         do {
             _ = try Activity.request(
                 attributes: SubCheckActivityAttributes(startedAt: Date()),
-                content: ActivityContent(state: state, staleDate: nil)
+                content: content
             )
-            return .started
+            return nil
         } catch {
             // Sem permissão ou limite de atividades atingido: o app segue normal.
-            return .failed(error.localizedDescription)
+            return error.localizedDescription
         }
     }
 
@@ -89,7 +140,10 @@ final class LiveActivityService {
     func refresh(with subscriptions: [Subscription], service: CurrencyService = .shared) {
         guard let running,
               let state = Self.state(from: subscriptions, service: service) else { return }
-        let content = ActivityContent(state: state, staleDate: nil)
+        let content = ActivityContent(
+            state: state,
+            staleDate: LiveActivityLifecycle.staleDate(forDue: state.nextDueDate)
+        )
         Task { await running.update(content) }
     }
 

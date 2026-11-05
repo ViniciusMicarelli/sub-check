@@ -15,6 +15,7 @@ struct ProView: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var store = StoreService.shared
+    @State private var showTour = false
 
     /// Ícone, título, descrição e cor de cada recurso desbloqueado.
     private var benefits: [(icon: String, title: String, detail: String, tint: Color)] {
@@ -25,7 +26,7 @@ struct ProView: View {
              L.t("Dicas automáticas para cortar gastos e economizar."), .warning),
             ("chart.xyaxis.line", L.t("Análise completa"),
              L.t("Evolução, mapa de calor e previsão de 12 meses."), .info),
-            ("live.activity", L.t("Ilha Dinâmica ao vivo"),
+            ("platter.filled.top.iphone", L.t("Ilha Dinâmica ao vivo"),
              L.t("Contagem regressiva e próximas cobranças na tela."), .danger),
             ("chart.pie", L.t("Orçamento com alertas"),
              L.t("Defina um teto mensal e seja avisado ao ultrapassar."), .warning),
@@ -47,6 +48,7 @@ struct ProView: View {
             ScrollView {
                 VStack(spacing: Spacing.xl) {
                     header
+                    tourButton
                     benefitsList
                     comparison
                     purchaseBlock
@@ -81,6 +83,22 @@ struct ProView: View {
             }
         }
         .frame(maxWidth: .infinity)
+    }
+
+    private var tourButton: some View {
+        Button {
+            Haptics.impact(.light)
+            showTour = true
+        } label: {
+            Label(L.t("Ver o que muda no Pro"), systemImage: "play.circle.fill")
+                .font(.subheadline.weight(.semibold))
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, Spacing.md)
+                .foregroundStyle(Color.brand)
+                .background(Color.brand.opacity(0.12), in: RoundedRectangle(cornerRadius: Radius.md, style: .continuous))
+        }
+        .buttonStyle(PressableStyle())
+        .sheet(isPresented: $showTour) { ProTourView() }
     }
 
     // MARK: - Recursos
@@ -129,13 +147,13 @@ struct ProView: View {
     private var comparisonRows: [(title: String, free: String, pro: String)] {
         [
             (L.t("Assinaturas ativas"), "\(StoreService.freeLimit)", "∞"),
-            (L.t("Resumo e widgets"), "✓", "✓"),
+            (L.t("Resumo e widgets"), L.t("Sim"), L.t("Sim")),
             (L.t("Insights"), "1", L.t("Todos")),
-            (L.t("Análise e previsão"), "—", "✓"),
-            (L.t("Orçamento e simulador"), "—", "✓"),
-            (L.t("Ilha Dinâmica"), "—", "✓"),
-            (L.t("PDF, CSV e Face ID"), "—", "✓"),
-            (L.t("iCloud"), "—", "✓")
+            (L.t("Análise e previsão"), L.t("Não"), L.t("Sim")),
+            (L.t("Orçamento e simulador"), L.t("Não"), L.t("Sim")),
+            (L.t("Ilha Dinâmica"), L.t("Não"), L.t("Sim")),
+            (L.t("PDF, CSV e Face ID"), L.t("Não"), L.t("Sim")),
+            (L.t("iCloud"), L.t("Não"), L.t("Sim"))
         ]
     }
 

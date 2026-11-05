@@ -4,3 +4,10 @@
 "Total mensal do ${applicationName}" = "Monthly total in ${applicationName}";
 "O que vence nos próximos dias no ${applicationName}" = "What is due soon in ${applicationName}";
 "Adicionar assinatura no ${applicationName}" = "Add subscription in ${applicationName}";
+"Registrar assinatura no ${applicationName}" = "Register a subscription in ${applicationName}";
+"Registrar pagamento de ${subscription} no ${applicationName}" = "Register payment for ${subscription} in ${applicationName}";
+"Registrar pagamento no ${applicationName}" = "Register payment in ${applicationName}";
+"Atualizar valor de ${subscription} no ${applicationName}" = "Update price of ${subscription} in ${applicationName}";
+"Atualizar valor de assinatura no ${applicationName}" = "Update subscription price in ${applicationName}";
+"Cancelar ${subscription} no ${applicationName}" = "Cancel ${subscription} in ${applicationName}";
+"Cancelar assinatura no ${applicationName}" = "Cancel subscription in ${applicationName}";

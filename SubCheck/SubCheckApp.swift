@@ -12,14 +12,21 @@ import SwiftData
 @main
 struct SubCheckApp: App {
 
+    init() {
+        NotificationActionHandler.install()
+    }
+
     var body: some Scene {
         WindowGroup {
             RootView()
                 .task {
-                    await NotificationService.shared.requestAuthorization()
+                    // Durante a introdução o app ainda não explicou nada: a
+                    // permissão é pedida só depois que ela termina.
+                    if UserDefaults.standard.bool(forKey: OnboardingView.doneKey) {
+                        await NotificationService.shared.requestAuthorization()
+                    }
 
                     let context = SharedModelContainer.shared.mainContext
-                    SampleDataSeeder.seedIfNeeded(in: context)
 
                     // Reconstrói o histórico de cobranças a partir do início de cada assinatura.
                     let subscriptions = (try? context.fetch(FetchDescriptor<Subscription>())) ?? []

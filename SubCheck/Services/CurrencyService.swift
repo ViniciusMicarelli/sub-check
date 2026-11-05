@@ -39,8 +39,12 @@ final class CurrencyService {
     private(set) var isRefreshing = false
     private(set) var lastError: String?
 
+    /// Fotos diárias das cotações, para mostrar quanto o câmbio mudou.
+    private(set) var history: RateHistory
+
     init(defaults: UserDefaults = CurrencyService.sharedDefaults) {
         self.defaults = defaults
+        self.history = Self.loadHistory()
         self.baseCode = defaults.string(forKey: Self.baseKey) ?? CurrencyCode.brl.code
 
         let cached = defaults.dictionary(forKey: Self.ratesKey) as? [String: Double]
@@ -50,6 +54,18 @@ final class CurrencyService {
         if let stamp = defaults.object(forKey: Self.updatedKey) as? Date {
             self.lastUpdated = stamp
         }
+
+    }
+
+    // MARK: - Histórico
+
+    /// Cotação de `from` em `to` na data do pagamento. Sem foto próxima no
+    /// histórico, só aceita a cotação atual se a data for hoje.
+    func historicalRate(from: String, to: String, on date: Date) -> Double? {
+        if from.uppercased() == to.uppercased() { return 1 }
+        if let rate = history.rate(from: from, to: to, on: date) { return rate }
+        guard Calendar.current.isDateInToday(date) else { return nil }
+        return convert(1, from: from, to: to)
     }
 
     // MARK: - Conversão
@@ -122,7 +138,9 @@ final class CurrencyService {
             usdRates = merged
             lastUpdated = Date()
             lastError = nil
+            history.record(merged, at: Date())
             persist()
+            Self.saveHistory(history)
         } catch {
             lastError = error.localizedDescription
         }
@@ -146,6 +164,29 @@ final class CurrencyService {
     /// não estiver disponível (builds sem assinatura).
     static var sharedDefaults: UserDefaults {
         UserDefaults(suiteName: SharedModelContainer.appGroupID) ?? .standard
+    }
+
+    // O histórico é um arquivo (não UserDefaults): um ano de cotações passa
+    // de 300 KB. Fica no App Group para o widget também enxergar.
+    private static var historyURL: URL? {
+        let base = FileManager.default
+            .containerURL(forSecurityApplicationGroupIdentifier: SharedModelContainer.appGroupID)
+            ?? FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
+        return base?.appendingPathComponent("exchange-history.json")
+    }
+
+    private static func loadHistory() -> RateHistory {
+        guard let url = historyURL,
+              let data = try? Data(contentsOf: url),
+              let snapshots = try? JSONDecoder().decode([RateSnapshot].self, from: data)
+        else { return RateHistory() }
+        return RateHistory(snapshots: snapshots)
+    }
+
+    private static func saveHistory(_ history: RateHistory) {
+        guard let url = historyURL,
+              let data = try? JSONEncoder().encode(history.snapshots) else { return }
+        try? data.write(to: url, options: .atomic)
     }
 
     private struct RatesPayload: Decodable {

@@ -23,47 +23,46 @@ struct SubCheckLiveActivity: Widget {
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
                     islandBadge(context.state)
+                        .padding(.leading, 4)
                 }
 
                 DynamicIslandExpandedRegion(.trailing) {
-                    VStack(alignment: .trailing, spacing: 0) {
-                        Text(Money.compact(context.state.monthlyTotal))
-                            .font(.caption.weight(.bold))
+                    VStack(alignment: .trailing, spacing: 1) {
+                        Text(Money.format(context.state.nextAmount))
+                            .font(.subheadline.weight(.bold))
                             .foregroundStyle(.white)
-                            .contentTransition(.numericText())
-                        Text(L.t("Total mensal"))
-                            .font(.caption2)
-                            .foregroundStyle(.white.opacity(0.6))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.7)
+                        CountdownText(until: context.state.nextDueDate)
+                            .font(.caption2.weight(.semibold))
+                            .foregroundStyle(Color.warning)
+                            .lineLimit(1)
                     }
+                    .padding(.trailing, 4)
                 }
 
                 DynamicIslandExpandedRegion(.center) {
-                    VStack(spacing: 2) {
-                        Text(context.state.nextName)
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(.white)
-                            .lineLimit(1)
-                        CountdownText(until: context.state.nextDueDate)
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(Color.warning)
-                    }
+                    Text(context.state.nextName)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.white)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
                 }
 
                 DynamicIslandExpandedRegion(.bottom) {
-                    islandUpcoming(context.state)
+                    islandBottom(context.state)
                 }
             } compactLeading: {
                 Image(systemName: symbol(for: context.state.nextCategory))
                     .foregroundStyle(color(for: context.state.nextCategory))
             } compactTrailing: {
-                Text(timerInterval: countdownRange(context.state.nextDueDate), countsDown: true)
-                    .font(.caption2.weight(.bold))
-                    .monospacedDigit()
-                    .frame(width: 48, alignment: .trailing)
+                // Só o dia: um cronômetro de semanas estoura a largura compacta.
+                CompactCountdown(until: context.state.nextDueDate)
             } minimal: {
                 Image(systemName: symbol(for: context.state.nextCategory))
                     .foregroundStyle(color(for: context.state.nextCategory))
             }
+            .widgetURL(deepLink(context.state))
             .keylineTint(color(for: context.state.nextCategory))
         }
     }
@@ -168,39 +167,30 @@ struct SubCheckLiveActivity: Widget {
             )
     }
 
-    private func islandUpcoming(_ state: SubCheckActivityAttributes.ContentState) -> some View {
+    /// Área inferior enxuta: a ilha expandida tem pouca altura, então só
+    /// cabem o botão de pagamento e a próxima cobrança.
+    private func islandBottom(_ state: SubCheckActivityAttributes.ContentState) -> some View {
         VStack(spacing: Spacing.sm) {
-            ProgressView(timerInterval: countdownRange(state.nextDueDate), countsDown: true) {
-                EmptyView()
-            } currentValueLabel: {
-                EmptyView()
-            }
-            .tint(color(for: state.nextCategory))
-
-            ForEach(state.upcoming.dropFirst()) { charge in
+            if let following = state.upcoming.dropFirst().first {
                 HStack(spacing: Spacing.sm) {
-                    Image(systemName: symbol(for: charge.category))
-                        .font(.caption2)
-                        .foregroundStyle(color(for: charge.category))
-                        .frame(width: 16)
-
-                    Text(charge.name)
+                    Text(following.name)
                         .font(.caption)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.white.opacity(0.8))
                         .lineLimit(1)
-
                     Spacer(minLength: 0)
-
-                    CountdownText(until: charge.dueDate)
-                        .font(.caption2)
-                        .foregroundStyle(.white.opacity(0.7))
-
-                    Text(Money.format(charge.amount))
+                    Text(Money.format(following.amount))
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(.white)
                         .monospacedDigit()
                 }
             }
+
+            Button(intent: MarkPaidIntent(subscriptionID: state.nextID)) {
+                Label(L.t("Registrar pagamento"), systemImage: "checkmark.circle.fill")
+                    .font(.caption.weight(.semibold))
+                    .frame(maxWidth: .infinity)
+            }
+            .tint(color(for: state.nextCategory))
         }
     }
 
@@ -220,6 +210,26 @@ struct SubCheckLiveActivity: Widget {
             } else {
                 Text(daysLabel(until))
             }
+        }
+    }
+
+    /// Texto curto da ilha compacta: horas e minutos se for hoje, senão dias.
+    private struct CompactCountdown: View {
+        let until: Date
+
+        var body: some View {
+            let days = daysBetween(until)
+            Group {
+                if until <= Date() || days == 0 {
+                    Text(L.t("widget.today"))
+                } else {
+                    Text("\(days)d")
+                }
+            }
+            .font(.caption2.weight(.bold))
+            .monospacedDigit()
+            .lineLimit(1)
+            .frame(minWidth: 24, alignment: .trailing)
         }
     }
 
