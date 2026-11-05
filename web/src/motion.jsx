@@ -58,6 +58,12 @@ export function scrollToId(hash) {
   }
 }
 
+/** Rola até uma posição em px, com o Lenis quando ele está ativo. */
+export function scrollToY(y, duration = 1.1) {
+  if (lenisInstance) lenisInstance.scrollTo(y, { duration })
+  else window.scrollTo({ top: y, behavior: reduceMotion() ? 'auto' : 'smooth' })
+}
+
 /** Aparece suavemente quando entra na tela. */
 export function Reveal({ as: Tag = 'div', className = '', y = 26, delay = 0, children, ...rest }) {
   const ref = useRef(null)
