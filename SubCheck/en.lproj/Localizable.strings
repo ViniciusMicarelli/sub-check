@@ -630,3 +630,6 @@
 "Para manter o Pro: %@, uma única vez." = "To keep Pro: %@, one time only.";
 "dias" = "days";
 "TESTE GRÁTIS" = "FREE TRIAL";
+"Não foi possível salvar" = "Couldn't save";
+"Suas últimas alterações podem não ter sido gravadas. Feche e abra o SubCheck de novo. Se continuar, libere espaço no aparelho." = "Your latest changes may not have been saved. Close and reopen SubCheck. If it keeps happening, free up space on your device.";
+"Sincronização pausada: o iCloud faz parte do Pro. Seus dados continuam no aparelho." = "Sync paused: iCloud is part of Pro. Your data stays on this device.";

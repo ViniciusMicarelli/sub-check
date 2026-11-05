@@ -23,6 +23,7 @@ struct RootView: View {
     /// Assinatura aberta a partir do link de um widget.
     @State private var linkedSubscription: LinkedSubscription?
     @Environment(\.scenePhase) private var scenePhase
+    private var saveReporter = SaveReporter.shared
 
     private var store = StoreService.shared
 
@@ -71,6 +72,17 @@ struct RootView: View {
         }
         .animation(.snappy, value: isLocked)
         .onAppear(perform: lockIfNeeded)
+        .alert(
+            L.t("Não foi possível salvar"),
+            isPresented: Binding(
+                get: { saveReporter.failure != nil },
+                set: { if !$0 { saveReporter.failure = nil } }
+            )
+        ) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(L.t("Suas últimas alterações podem não ter sido gravadas. Feche e abra o SubCheck de novo. Se continuar, libere espaço no aparelho."))
+        }
         .onChange(of: onboardingDone) { _, done in
             guard done else { return }
             Task { await NotificationService.shared.requestAuthorization() }

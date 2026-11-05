@@ -71,7 +71,7 @@ struct HistoryView: View {
                 Button("Limpar", role: .destructive) {
                     Haptics.warning()
                     try? context.delete(model: DeletedSubscription.self)
-                    try? context.save()
+                    context.saveReporting()
                 }
                 Button("Cancelar", role: .cancel) {}
             }
@@ -82,7 +82,7 @@ struct HistoryView: View {
         for index in offsets {
             context.delete(records[index])
         }
-        try? context.save()
+        context.saveReporting()
     }
 }
 
@@ -95,6 +95,7 @@ private struct HistoryRow: View {
             Image(systemName: "xmark.circle.fill")
                 .font(.title3)
                 .foregroundStyle(Color.danger.opacity(0.8))
+                .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(record.name)

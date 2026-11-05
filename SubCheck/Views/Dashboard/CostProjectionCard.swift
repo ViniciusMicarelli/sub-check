@@ -52,7 +52,7 @@ struct CostProjectionCard: View {
             }
 
             Text(Money.compact(total(years: selected)))
-                .font(.system(size: 34, weight: .bold, design: .rounded))
+                .font(.system(.largeTitle, design: .rounded, weight: .bold))
                 .foregroundStyle(Color.textPrimary)
                 .contentTransition(.numericText(value: total(years: selected)))
                 .minimumScaleFactor(0.6)

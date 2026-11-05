@@ -41,11 +41,6 @@ targets:
           - UIInterfaceOrientationPortrait
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
-        UISupportedInterfaceOrientations~ipad:
-          - UIInterfaceOrientationPortrait
-          - UIInterfaceOrientationPortraitUpsideDown
-          - UIInterfaceOrientationLandscapeLeft
-          - UIInterfaceOrientationLandscapeRight
         NSFaceIDUsageDescription: "Use o Face ID para proteger suas assinaturas."
         # Habilita a Live Activity (ilha dinâmica + tela de bloqueio).
         NSSupportsLiveActivities: true
@@ -62,7 +57,9 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.viniciusmicarelli.subcheck
         PRODUCT_NAME: SubCheck
-        TARGETED_DEVICE_FAMILY: "1,2"
+        # 1.0 é só para iPhone (iPad e Mac "Designed for iPad" ficam para depois).
+        TARGETED_DEVICE_FAMILY: "1"
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: "NO"
         GENERATE_INFOPLIST_FILE: "NO"
         CODE_SIGN_ENTITLEMENTS: Config/SubCheck.entitlements
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
@@ -85,6 +82,10 @@ targets:
       # Shared code compiled into both targets.
       - path: SubCheck/models
       - path: SubCheck/Services/SharedModelContainer.swift
+      - path: SubCheck/Services/ProAccessSnapshot.swift
+      - path: SubCheck/Services/TrialPolicy.swift
+      - path: SubCheck/Services/KeychainStore.swift
+      - path: SubCheck/Services/SaveReporter.swift
       - path: SubCheck/Services/RemoteIconStore.swift
       - path: SubCheck/Services/Localization.swift
       - path: SubCheck/Services/CurrencyService.swift
@@ -100,7 +101,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.viniciusmicarelli.subcheck.widgets
         PRODUCT_NAME: SubCheckWidgets
-        TARGETED_DEVICE_FAMILY: "1,2"
+        TARGETED_DEVICE_FAMILY: "1"
         GENERATE_INFOPLIST_FILE: "NO"
         INFOPLIST_FILE: SubCheckWidgets/Info.plist
         CODE_SIGN_ENTITLEMENTS: Config/SubCheckWidgets.entitlements

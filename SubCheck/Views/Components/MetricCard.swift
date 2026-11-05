@@ -22,6 +22,7 @@ struct MetricCard: View {
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(tint)
                     .symbolEffect(.bounce, value: value)
+                    .accessibilityHidden(true)
                     .frame(width: 30, height: 30)
                     .background(tint.opacity(0.15), in: RoundedRectangle(cornerRadius: Radius.sm, style: .continuous))
                 Spacer(minLength: 0)
@@ -46,5 +47,8 @@ struct MetricCard: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .cardSurface(padding: Spacing.md)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(title)
+        .accessibilityValue([value, subtitle].compactMap { $0 }.joined(separator: ", "))
     }
 }

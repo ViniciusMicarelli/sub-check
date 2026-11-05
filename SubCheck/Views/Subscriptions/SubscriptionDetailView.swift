@@ -47,19 +47,19 @@ struct SubscriptionDetailView: View {
                 current: subscription.iconRaw.flatMap(SubscriptionIcon.init(rawValue:))
             ) { icon in
                 subscription.iconRaw = icon?.rawValue
-                try? context.save()
+                context.saveReporting()
             }
         }
         .onChange(of: subscription.currencyCode) { _, _ in
-            try? context.save()
+            context.saveReporting()
         }
         .onChange(of: subscription.enableReminders) { _, _ in
             NotificationService.shared.scheduleNotification(for: subscription)
-            try? context.save()
+            context.saveReporting()
         }
         .onChange(of: subscription.daysNoticeBefore) { _, _ in
             NotificationService.shared.scheduleNotification(for: subscription)
-            try? context.save()
+            context.saveReporting()
         }
         .successBurst(trigger: paidCount)
         .confirmationDialog(

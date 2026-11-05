@@ -73,7 +73,7 @@ struct CancellationSimulatorView: View {
                 .foregroundStyle(.white.opacity(0.85))
 
             Text(Money.format(savedYearly))
-                .font(.system(size: 38, weight: .bold))
+                .font(.system(.largeTitle, weight: .bold))
                 .foregroundStyle(.white)
                 .contentTransition(.numericText())
                 .animation(.snappy, value: savedYearly)

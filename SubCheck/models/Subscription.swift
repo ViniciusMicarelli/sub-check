@@ -158,7 +158,7 @@ extension Subscription {
         context.insert(record)
 
         lastPaymentDate = max(due, lastPaymentDate ?? due)
-        try? context.save()
+        context.saveReporting()
         return record
     }
 }

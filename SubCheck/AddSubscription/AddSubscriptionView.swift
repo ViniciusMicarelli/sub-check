@@ -241,7 +241,7 @@ struct AddSubscriptionView: View {
         if isTrial { subscription.startDate = trialEnd }
 
         context.insert(subscription)
-        try? context.save()
+        context.saveReporting()
 
         NotificationService.shared.scheduleNotification(for: subscription)
         Haptics.success()

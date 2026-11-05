@@ -55,9 +55,25 @@ struct SubscriptionRowView: View {
             }
         }
         .padding(.vertical, 4)
+        // O VoiceOver lê a linha como uma frase só, em vez de pedaços soltos.
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(accessibilityText)
         .opacity(subscription.isCancelled ? 0.55 : 1)
         .animation(.snappy, value: subscription.cost)
         .animation(.snappy, value: subscription.monthlyCost(in: .shared))
+    }
+
+    private var accessibilityText: String {
+        var parts = [
+            subscription.name,
+            Money.format(subscription.cost, code: subscription.currencyCode),
+            subscription.frequency.displayName,
+            nextBillingText
+        ]
+        if let left = subscription.trialDaysLeft {
+            parts.insert(L.t("Teste · %lld d", left), at: 1)
+        }
+        return parts.joined(separator: ", ")
     }
 
     private var nextBillingText: String {
