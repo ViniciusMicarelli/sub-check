@@ -101,6 +101,7 @@ export function Bento({ lang }) {
         <div className="lp-bento-grid" ref={ref}>
           {c.items.map((item) => (
             <article className={`lp-card b-${item.id}`} data-b="card" key={item.id} onPointerMove={spotlight}>
+              {item.pro && <span className="lp-protag">Pro</span>}
               <Art id={item.id} pay={home[lang].sim.pay} />
               <h3>{item.title}</h3>
               <p>{item.text}</p>

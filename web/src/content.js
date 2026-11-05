@@ -29,203 +29,6 @@ export const content = {
       privacy: "Privacidade",
       terms: "Termos",
     },
-    hero: {
-      badge: "Novo · contagem regressiva na Ilha Dinâmica",
-      title: "Todas as suas assinaturas.",
-      titleAccent: "Um único lugar.",
-      subtitle:
-        "O SubCheck organiza o que você paga todo mês, avisa antes de cada cobrança e mostra onde dá para economizar. Sem planilhas, sem sustos.",
-      ctaPrimary: "Baixar para iPhone",
-      ctaSecondary: "Ver recursos",
-      note: "7 dias grátis · sem assinatura · pagamento único",
-    },
-    mock: {
-      greetingPrefix: "Olá,",
-      totalLabel: "Total mensal",
-      total: "R$ 287,40",
-      yearly: "R$ 3.448,80 por ano",
-      active: "5 ativas",
-      nextPill: "Próxima: Streaming · em 3 dias",
-      island: { label: "Próxima cobrança", service: "Streaming", when: "em 3 dias" },
-      metrics: [
-        { icon: "grid", label: "Assinaturas ativas", value: "5" },
-        { icon: "calendar", label: "Custo por dia", value: "R$ 9,58" },
-        { icon: "bell", label: "Vencem em 7 dias", value: "2" },
-        { icon: "chart", label: "Custo anual", value: "R$ 3.448" },
-      ],
-      upcomingTitle: "Próximas cobranças",
-      upcomingPeriod: "30 dias",
-      upcoming: [
-        { icon: "play", name: "Streaming", when: "12 nov", price: "R$ 55,90", days: "em 3 dias", level: "warn" },
-        { icon: "music", name: "Música", when: "18 nov", price: "R$ 21,90", days: "em 9 dias", level: "ok" },
-        { icon: "cloud", name: "Nuvem", when: "24 nov", price: "R$ 34,90", days: "em 15 dias", level: "ok" },
-      ],
-      onboarding: {
-        skip: "Pular",
-        title: "Bem-vindo ao SubCheck",
-        body: "Veja todas as suas assinaturas num só lugar e descubra para onde vai o seu dinheiro.",
-        namePlaceholder: "Como podemos te chamar?",
-        nameHelper: "Serve só para personalizar o resumo. Você pode pular.",
-        next: "Continuar",
-      },
-      add: {
-        title: "Nova assinatura",
-        cancel: "Cancelar",
-        save: "Salvar",
-        details: "Detalhes",
-        iconTitle: "Ícone",
-        categoryTitle: "Categoria",
-        detected: "Detectado automaticamente",
-        nameLabel: "Nome",
-        nameValue: "Streaming",
-        valueLabel: "Valor",
-        valueValue: "R$ 55,90",
-        frequencyLabel: "Frequência",
-        frequencyValue: "Mensal",
-        dateLabel: "Primeira cobrança",
-        dateValue: "12 de novembro",
-        categoryValue: "Entretenimento",
-      },
-      chips: [
-        { icon: "calendar", label: "Custo por dia", value: "R$ 9,58" },
-        { icon: "target", label: "Orçamento do mês", value: "74%" },
-        { icon: "bell", label: "Próxima cobrança", value: "em 3 dias" },
-      ],
-      // Dados do gráfico do painel. As somas de cada período batem com o total
-      // mensal (1M), semestral (6M) e anual (12M) mostrados no card do topo.
-      chart: {
-        types: [
-          { id: "evolution", label: "Evolução" },
-          { id: "categories", label: "Categorias" },
-          { id: "forecast", label: "Previsão" },
-        ],
-        periods: ["1M", "6M", "12M"],
-        evolution: {
-          "1M": [58, 71, 63, 95.4],
-          "6M": [252, 268, 275, 289, 296, 344.4],
-          "12M": [252, 262, 271, 268, 279, 284, 276, 291, 298, 305, 312, 350.8],
-        },
-        forecast: {
-          "1M": [70, 72, 71, 74.4],
-          "6M": [287.4, 289, 285, 291, 288, 284],
-          "12M": [287.4, 289, 285, 291, 288, 284, 290, 292, 286, 293, 295, 268.4],
-        },
-        categories: [
-          { label: "Streaming", monthly: 55.9 },
-          { label: "Nuvem", monthly: 34.9 },
-          { label: "Música", monthly: 21.9 },
-          { label: "Outros", monthly: 174.7 },
-        ],
-      },
-    },
-    story: {
-      title: "Veja o SubCheck em ação",
-      subtitle: "Role a página: o app se monta na sua frente, do primeiro toque ao painel pronto.",
-      hint: "Role para começar",
-      phoneHint:
-        "Digite o seu nome dentro do iPhone e toque em Continuar. Nos gráficos, dá para tocar nas abas e nos períodos.",
-      scenes: [
-        {
-          title: "Boas-vindas",
-          text: "A apresentação anda conforme você rola. Digite o seu nome no aparelho para personalizar o resumo.",
-        },
-        {
-          title: "Nova assinatura",
-          text: "Digite o serviço e o ícone, a categoria e a próxima cobrança vêm preenchidos.",
-        },
-        {
-          title: "Painel pronto",
-          text: "Total mensal, custo por dia e gráficos que trocam com um toque: evolução, categorias e previsão.",
-        },
-      ],
-      finalNote: "Pronto. É assim que o SubCheck fica no seu iPhone.",
-    },
-    marqueeTitle: "Para todo tipo de assinatura",
-    marquee: [
-      "Streaming",
-      "Música",
-      "Nuvem",
-      "Academia",
-      "Apps",
-      "Notícias",
-      "Jogos",
-      "Educação",
-      "Produtividade",
-      "Saúde",
-    ],
-    features: {
-      title: "Tudo o que você precisa saber sobre o seu dinheiro recorrente",
-      subtitle: "Informação clara, no lugar certo e na hora certa.",
-      items: [
-        {
-          icon: "bolt",
-          title: "Cadastre em segundos",
-          text: "Digite o nome do serviço e o app preenche o ícone, a categoria e a próxima cobrança.",
-        },
-        {
-          icon: "calendar",
-          title: "Veja o que vem por aí",
-          text: "Total mensal, custo por dia e o que vence nos próximos 30 dias.",
-        },
-        {
-          icon: "bell",
-          title: "Nada de cobrança surpresa",
-          text: "Aviso antes de cada cobrança e na véspera do fim de um teste gratuito.",
-        },
-        {
-          icon: "chart",
-          title: "Análise completa",
-          text: "Evolução, mapa de calor das cobranças, previsão de 12 meses e comparativos.",
-        },
-        {
-          icon: "target",
-          title: "Orçamento com alertas",
-          text: "Defina um teto mensal e seja avisado assim que ultrapassar.",
-        },
-        {
-          icon: "scissors",
-          title: "Simulador de cancelamento",
-          text: "Veja exatamente quanto você economizaria cortando cada serviço.",
-        },
-      ],
-      extras: [
-        "Relatório em PDF",
-        "Exportação em CSV",
-        "Widgets",
-        "Face ID",
-        "Sincronização com iCloud",
-        "Multi-moeda",
-        "Atalhos e Siri",
-        "Português e inglês",
-      ],
-    },
-    showcase: {
-      title: "Números que fazem sentido",
-      subtitle: "Gráficos pensados para decidir, não para enfeitar.",
-      cards: [
-        { title: "Evolução dos gastos", text: "Mês a mês e ano a ano, no mesmo lugar." },
-        { title: "Custo por dia", text: "Quanto cada assinatura pesa no seu dia." },
-        { title: "Previsão de 12 meses", text: "O que você vai gastar até o fim do ano." },
-      ],
-    },
-    steps: {
-      title: "Como funciona",
-      subtitle: "Três toques e está pronto.",
-      items: [
-        {
-          title: "Adicione",
-          text: "Toque em + e escolha o serviço. O ícone e a categoria já vêm preenchidos.",
-        },
-        {
-          title: "Acompanhe",
-          text: "Veja o total mensal, o custo por dia e as próximas cobranças num painel só.",
-        },
-        {
-          title: "Economize",
-          text: "Receba avisos, analise os gráficos e corte o que não vale mais a pena.",
-        },
-      ],
-    },
     pricing: {
       title: "SubCheck Pro",
       subtitle: "Um pagamento único. Para sempre.",
@@ -255,11 +58,31 @@ export const content = {
         },
         {
           q: "Como funciona o teste de 7 dias?",
-          a: "Ao instalar, você tem 7 dias com todos os recursos liberados, sem cobrança. Quando o período termina, nada é cobrado e o plano gratuito continua funcionando.",
+          a: "Ao instalar, você tem 7 dias com todos os recursos do Pro liberados, sem cartão e sem cobrança. Quando o período termina, nada é cobrado e o plano gratuito continua funcionando.",
+        },
+        {
+          q: "O que é grátis e o que é Pro?",
+          a: "Grátis: até 5 assinaturas ativas, painel, widgets, avisos antes de cada cobrança, Siri e Atalhos, importar do extrato, cotação por pagamento, projeção com reajuste e guias de cancelamento. Pro: assinaturas ilimitadas, Análise com previsão de 12 meses, insights completos, Ilha Dinâmica, orçamento com alertas, simulador de cancelamento, relatório em PDF e exportação em CSV, Face ID e sincronização com iCloud.",
+        },
+        {
+          q: "Como a Siri funciona?",
+          a: "Diga “Ei Siri, registrar pagamento de Netflix no SubCheck” para marcar uma cobrança como paga. Também dá para adicionar uma assinatura, atualizar um valor ou perguntar a próxima cobrança. A fala é interpretada pela Apple; o SubCheck recebe só o nome e o valor e executa tudo no seu aparelho. Há um passo a passo em Ajustes › Siri e Atalhos.",
+        },
+        {
+          q: "Posso importar o extrato do meu banco? É seguro?",
+          a: "Sim. Exporte o extrato em CSV no app do banco e escolha o arquivo na aba Assinaturas. O arquivo é lido só no seu iPhone para achar cobranças que se repetem: não é enviado a nenhum servidor, não é guardado e o SubCheck nunca acessa a sua conta bancária.",
+        },
+        {
+          q: "Como funciona a cotação do dólar?",
+          a: "Cada pagamento em moeda estrangeira guarda a cotação do dia. Na assinatura, em Histórico e cotação, você vê quanto o câmbio mudou o custo desde então. Pagamentos de antes do app guardar cotações aparecem como “sem cotação”, em vez de um número inventado.",
+        },
+        {
+          q: "A Ilha Dinâmica fica sempre ativa?",
+          a: "O iOS encerra a atividade depois de cerca de 8 horas, e ela volta quando você abre o SubCheck. Precisa de iPhone 14 Pro ou mais novo e faz parte do Pro.",
         },
         {
           q: "Meus dados ficam sincronizados entre aparelhos?",
-          a: "Sim, se você ligar a sincronização com iCloud (Pro) e entrar na mesma conta nos dois aparelhos. Os dados ficam na sua base privada do iCloud.",
+          a: "Sim, se você ligar a sincronização com iCloud (Pro), na introdução ou em Ajustes, e entrar na mesma conta nos dois aparelhos. Os dados ficam na sua base privada do iCloud.",
         },
         {
           q: "Preciso criar conta?",
@@ -268,6 +91,10 @@ export const content = {
         {
           q: "Comprei o Pro e troquei de aparelho. Como recupero?",
           a: "Em Ajustes › SubCheck Pro › Ver opções, toque em Restaurar compra usando a mesma conta da App Store.",
+        },
+        {
+          q: "Funciona no iPad ou no Mac?",
+          a: "A versão 1.0 é só para iPhone. iPad e Mac ficam para uma próxima versão.",
         },
       ],
     },
@@ -553,6 +380,22 @@ export const content = {
           q: "Os valores e as cotações estão errados.",
           a: "Os totais e a conversão de moeda são estimativas com base no que você cadastrou e em fontes públicas de câmbio. Confira sempre na fatura do serviço. Você pode atualizar as cotações em Ajustes › Moeda e cotação › Atualizar cotação.",
         },
+        {
+          q: "Como uso a Siri?",
+          a: "Diga “Ei Siri, registrar pagamento de [nome] no SubCheck”. Se ela não responder, ligue o SubCheck em Ajustes do iPhone › Siri › Aplicativos e confira o idioma da Siri. O passo a passo está em Ajustes › Siri e Atalhos.",
+        },
+        {
+          q: "Como importo o extrato do banco?",
+          a: "Exporte o extrato em CSV no app do banco, abra a aba Assinaturas e toque no botão de importar. Se o formato não for reconhecido, ele precisa de colunas de data, descrição e valor. O arquivo é lido só no seu aparelho.",
+        },
+        {
+          q: "Por que um pagamento antigo está “sem cotação”?",
+          a: "O app guarda a cotação do dia a cada pagamento novo. Pagamentos de antes disso não têm cotação registrada, e preferimos mostrar isso a inventar um valor.",
+        },
+        {
+          q: "O app funciona no iPad?",
+          a: "A versão 1.0 é só para iPhone.",
+        },
       ],
       finalTitle: "Ainda com dúvida?",
       finalText: "Fale com a gente por e-mail e respondemos o quanto antes.",
@@ -574,203 +417,6 @@ export const content = {
       home: "Home",
       privacy: "Privacy",
       terms: "Terms",
-    },
-    hero: {
-      badge: "New · countdown in the Dynamic Island",
-      title: "All your subscriptions.",
-      titleAccent: "One single place.",
-      subtitle:
-        "SubCheck organizes what you pay every month, warns you before each charge and shows where you can save. No spreadsheets, no surprises.",
-      ctaPrimary: "Download for iPhone",
-      ctaSecondary: "See features",
-      note: "7 days free · no subscription · one-time payment",
-    },
-    mock: {
-      greetingPrefix: "Hi,",
-      totalLabel: "Monthly total",
-      total: "R$ 287.40",
-      yearly: "R$ 3,448.80 per year",
-      active: "5 active",
-      nextPill: "Next: Streaming · in 3 days",
-      island: { label: "Next charge", service: "Streaming", when: "in 3 days" },
-      metrics: [
-        { icon: "grid", label: "Active subscriptions", value: "5" },
-        { icon: "calendar", label: "Cost per day", value: "R$ 9.58" },
-        { icon: "bell", label: "Due in 7 days", value: "2" },
-        { icon: "chart", label: "Yearly cost", value: "R$ 3,448" },
-      ],
-      upcomingTitle: "Upcoming charges",
-      upcomingPeriod: "30 days",
-      upcoming: [
-        { icon: "play", name: "Streaming", when: "Nov 12", price: "R$ 55.90", days: "in 3 days", level: "warn" },
-        { icon: "music", name: "Music", when: "Nov 18", price: "R$ 21.90", days: "in 9 days", level: "ok" },
-        { icon: "cloud", name: "Cloud", when: "Nov 24", price: "R$ 34.90", days: "in 15 days", level: "ok" },
-      ],
-      onboarding: {
-        skip: "Skip",
-        title: "Welcome to SubCheck",
-        body: "See all your subscriptions in one place and find out where your money goes.",
-        namePlaceholder: "What should we call you?",
-        nameHelper: "It only personalises the summary. You can skip it.",
-        next: "Continue",
-      },
-      add: {
-        title: "New subscription",
-        cancel: "Cancel",
-        save: "Save",
-        details: "Details",
-        iconTitle: "Icon",
-        categoryTitle: "Category",
-        detected: "Detected automatically",
-        nameLabel: "Name",
-        nameValue: "Streaming",
-        valueLabel: "Amount",
-        valueValue: "R$ 55.90",
-        frequencyLabel: "Frequency",
-        frequencyValue: "Monthly",
-        dateLabel: "First charge",
-        dateValue: "November 12",
-        categoryValue: "Entertainment",
-      },
-      chips: [
-        { icon: "calendar", label: "Cost per day", value: "R$ 9.58" },
-        { icon: "target", label: "Monthly budget", value: "74%" },
-        { icon: "bell", label: "Next charge", value: "in 3 days" },
-      ],
-      // Dashboard chart data. The sum of each period matches the monthly (1M),
-      // half-year (6M) and yearly (12M) totals shown in the top card.
-      chart: {
-        types: [
-          { id: "evolution", label: "Trends" },
-          { id: "categories", label: "Categories" },
-          { id: "forecast", label: "Forecast" },
-        ],
-        periods: ["1M", "6M", "12M"],
-        evolution: {
-          "1M": [58, 71, 63, 95.4],
-          "6M": [252, 268, 275, 289, 296, 344.4],
-          "12M": [252, 262, 271, 268, 279, 284, 276, 291, 298, 305, 312, 350.8],
-        },
-        forecast: {
-          "1M": [70, 72, 71, 74.4],
-          "6M": [287.4, 289, 285, 291, 288, 284],
-          "12M": [287.4, 289, 285, 291, 288, 284, 290, 292, 286, 293, 295, 268.4],
-        },
-        categories: [
-          { label: "Streaming", monthly: 55.9 },
-          { label: "Cloud", monthly: 34.9 },
-          { label: "Music", monthly: 21.9 },
-          { label: "Other", monthly: 174.7 },
-        ],
-      },
-    },
-    story: {
-      title: "See SubCheck in action",
-      subtitle: "Scroll the page: the app builds itself in front of you, from the first tap to a ready dashboard.",
-      hint: "Scroll to start",
-      phoneHint:
-        "Type your name inside the iPhone and tap Continue. On the charts, you can tap the tabs and the periods.",
-      scenes: [
-        {
-          title: "Welcome",
-          text: "The intro moves as you scroll. Type your name on the device to personalise the summary.",
-        },
-        {
-          title: "New subscription",
-          text: "Type the service and the icon, the category and the next charge come filled in.",
-        },
-        {
-          title: "Dashboard ready",
-          text: "Monthly total, cost per day and charts you switch with a tap: trends, categories and forecast.",
-        },
-      ],
-      finalNote: "Done. That is what SubCheck looks like on your iPhone.",
-    },
-    marqueeTitle: "For every kind of subscription",
-    marquee: [
-      "Streaming",
-      "Music",
-      "Cloud",
-      "Gym",
-      "Apps",
-      "News",
-      "Games",
-      "Education",
-      "Productivity",
-      "Health",
-    ],
-    features: {
-      title: "Everything you need to know about your recurring spending",
-      subtitle: "Clear information, in the right place, at the right time.",
-      items: [
-        {
-          icon: "bolt",
-          title: "Add in seconds",
-          text: "Type the service name and the app fills in the icon, the category and the next charge.",
-        },
-        {
-          icon: "calendar",
-          title: "Know what's coming",
-          text: "Monthly total, cost per day and what is due in the next 30 days.",
-        },
-        {
-          icon: "bell",
-          title: "No surprise charges",
-          text: "A heads-up before every charge and the day before a free trial ends.",
-        },
-        {
-          icon: "chart",
-          title: "Full analysis",
-          text: "Trends, a charge heatmap, a 12-month forecast and comparisons.",
-        },
-        {
-          icon: "target",
-          title: "Budget with alerts",
-          text: "Set a monthly cap and get warned as soon as you go over it.",
-        },
-        {
-          icon: "scissors",
-          title: "Cancellation simulator",
-          text: "See exactly how much you would save by cutting each service.",
-        },
-      ],
-      extras: [
-        "PDF report",
-        "CSV export",
-        "Widgets",
-        "Face ID",
-        "iCloud sync",
-        "Multi-currency",
-        "Shortcuts and Siri",
-        "English and Portuguese",
-      ],
-    },
-    showcase: {
-      title: "Numbers that make sense",
-      subtitle: "Charts built to help you decide, not to decorate.",
-      cards: [
-        { title: "Spending trends", text: "Month over month and year over year, all in one place." },
-        { title: "Cost per day", text: "How much each subscription weighs on your day." },
-        { title: "12-month forecast", text: "What you will spend until the end of the year." },
-      ],
-    },
-    steps: {
-      title: "How it works",
-      subtitle: "Three taps and you're set.",
-      items: [
-        {
-          title: "Add",
-          text: "Tap + and pick the service. The icon and the category come filled in.",
-        },
-        {
-          title: "Track",
-          text: "See your monthly total, the cost per day and the next charges on one panel.",
-        },
-        {
-          title: "Save",
-          text: "Get alerts, read the charts and cut what is no longer worth it.",
-        },
-      ],
     },
     pricing: {
       title: "SubCheck Pro",
@@ -801,11 +447,31 @@ export const content = {
         },
         {
           q: "How does the 7-day trial work?",
-          a: "When you install the app you get 7 days with every feature unlocked, free of charge. When the period ends, nothing is charged and the free plan keeps working.",
+          a: "When you install, you get 7 days with every Pro feature unlocked, with no card and no charge. When the period ends, nothing is charged and the free plan keeps working.",
         },
         {
-          q: "Do my data sync between devices?",
-          a: "Yes, if you turn on iCloud sync (Pro) and sign in with the same account on both devices. Your data lives in your own private iCloud database.",
+          q: "What is free and what is Pro?",
+          a: "Free: up to 5 active subscriptions, dashboard, widgets, alerts before each charge, Siri and Shortcuts, statement import, rate per payment, forecast with price hikes and cancellation guides. Pro: unlimited subscriptions, Analysis with a 12-month forecast, full insights, Dynamic Island, budget with alerts, cancellation simulator, PDF report and CSV export, Face ID and iCloud sync.",
+        },
+        {
+          q: "How does Siri work?",
+          a: "Say “Hey Siri, register payment for Netflix in SubCheck” to mark a charge as paid. You can also add a subscription, update a price or ask for the next charge. Speech is interpreted by Apple; SubCheck only receives the name and amount and runs everything on your device. There is a walkthrough in Settings › Siri and Shortcuts.",
+        },
+        {
+          q: "Can I import my bank statement? Is it safe?",
+          a: "Yes. Export the statement as CSV from your bank app and pick the file in the Subscriptions tab. The file is read only on your iPhone to find repeating charges: it is not sent to any server, it is not stored, and SubCheck never accesses your bank account.",
+        },
+        {
+          q: "How does the dollar rate work?",
+          a: "Each foreign-currency payment keeps that day's rate. On the subscription, under History & exchange rate, you see how much the rate changed its cost since. Payments from before the app kept rates show as “no rate recorded” instead of an invented number.",
+        },
+        {
+          q: "Is the Dynamic Island always on?",
+          a: "iOS ends the activity after about 8 hours, and it comes back when you open SubCheck. It needs an iPhone 14 Pro or newer and is part of Pro.",
+        },
+        {
+          q: "Is my data synced between devices?",
+          a: "Yes, if you turn on iCloud sync (Pro), in the intro or in Settings, and sign in with the same account on both devices. Your data lives in your own private iCloud database.",
         },
         {
           q: "Do I need an account?",
@@ -813,7 +479,11 @@ export const content = {
         },
         {
           q: "I bought Pro and changed phones. How do I restore it?",
-          a: "In Settings › SubCheck Pro › See options, tap Restore purchase using the same App Store account.",
+          a: "In Settings › SubCheck Pro › See options, tap Restore Purchase using the same App Store account.",
+        },
+        {
+          q: "Does it work on iPad or Mac?",
+          a: "Version 1.0 is iPhone only. iPad and Mac are planned for a later version.",
         },
       ],
     },
@@ -1098,6 +768,22 @@ export const content = {
         {
           q: "The amounts and rates look wrong.",
           a: "Totals and currency conversion are estimates based on what you entered and on public exchange-rate sources. Always check the service's invoice. You can refresh rates in Settings › Currency & rates › Refresh rates.",
+        },
+        {
+          q: "How do I use Siri?",
+          a: "Say “Hey Siri, register payment for [name] in SubCheck”. If it does not respond, turn SubCheck on in iPhone Settings › Siri › Apps and check Siri's language. The walkthrough is in Settings › Siri and Shortcuts.",
+        },
+        {
+          q: "How do I import my bank statement?",
+          a: "Export the statement as CSV from your bank app, open the Subscriptions tab and tap the import button. If the format is not recognized, it needs date, description and amount columns. The file is read only on your device.",
+        },
+        {
+          q: "Why does an old payment say “no rate recorded”?",
+          a: "The app keeps the day's rate with each new payment. Payments from before that have no rate recorded, and we prefer to show that over inventing a number.",
+        },
+        {
+          q: "Does the app work on iPad?",
+          a: "Version 1.0 is iPhone only.",
         },
       ],
       finalTitle: "Still stuck?",

@@ -94,6 +94,7 @@ export function Tutorial({ lang }) {
                   <button type="button" onClick={() => goTo(i)} aria-current={i === active ? 'step' : undefined}>
                     <span className="n">{i < active ? <Icon name="check" size={12} strokeWidth={3} /> : i + 1}</span>
                     <span className="lab">{step.label}</span>
+                    {step.pro && <span className="lp-protag lp-protag-sm">Pro</span>}
                   </button>
                   <div className="body">
                     <div>
@@ -113,7 +114,7 @@ export function Tutorial({ lang }) {
             </div>
 
             <div className="lp-caption" aria-live="polite">
-              <b>{steps[active].title}</b>
+              <b>{steps[active].title}{steps[active].pro && <span className="lp-protag lp-protag-sm">Pro</span>}</b>
               <p>{steps[active].text}</p>
             </div>
 
