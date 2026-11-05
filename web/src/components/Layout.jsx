@@ -23,29 +23,10 @@ export function BrandMark({ size = 30 }) {
         </linearGradient>
       </defs>
       <rect width="64" height="64" rx="15" fill="url(#brandmark-g)" />
-      <path
-        d="M31 12.5a20 20 0 1 1-14.2 5.9"
-        fill="none"
-        stroke="#fff"
-        strokeWidth="4.6"
-        strokeLinecap="round"
-      />
-      <path
-        d="M15.4 11.4 16 22l10.6-.6"
-        fill="none"
-        stroke="#fff"
-        strokeWidth="4.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M24 32.5 30.3 39 41.5 26.5"
-        fill="none"
-        stroke="#fff"
-        strokeWidth="5.2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <path d="M32 11a21 21 0 1 1-18.2 10.5" fill="none" stroke="#4DE8AA" strokeWidth="7" strokeLinecap="round" />
+      <path d="M11 17.5 21.5 15l-2.5 10.5Z" fill="#4DE8AA" stroke="#4DE8AA" strokeWidth="2.4" strokeLinejoin="round" />
+      <circle cx="32" cy="32" r="12.5" fill="#fff" />
+      <path d="m26 32.5 4.4 4.4 7.6-8.8" fill="none" stroke="#5457DB" strokeWidth="3.6" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }
