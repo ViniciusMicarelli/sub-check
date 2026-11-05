@@ -1,6 +1,49 @@
 // Conjunto de ícones em SVG inline (sem dependências). Traço herdado de `currentColor`.
 
 const stroked = {
+  list: (
+    <>
+      <path d="M9 6h11M9 12h11M9 18h11" />
+      <path d="M4 6h.01M4 12h.01M4 18h.01" />
+    </>
+  ),
+  clock: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5l3 2" />
+    </>
+  ),
+  mic: (
+    <>
+      <rect x="9" y="3" width="6" height="12" rx="3" />
+      <path d="M5 11a7 7 0 0 0 14 0M12 18v3" />
+    </>
+  ),
+  dollar: (
+    <>
+      <path d="M12 3v18" />
+      <path d="M16.5 7.5C15.8 6.4 14.3 5.7 12.5 5.7c-2.4 0-4 1.2-4 2.9 0 4.2 8 2.1 8 6.3 0 1.8-1.7 3.2-4.3 3.2-2 0-3.7-.8-4.4-2.2" />
+    </>
+  ),
+  download: (
+    <>
+      <path d="M12 4v11M7.5 10.5 12 15l4.5-4.5" />
+      <path d="M5 19h14" />
+    </>
+  ),
+  face: (
+    <>
+      <path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2" />
+      <path d="M9 10v1M15 10v1M12 10v3h-.8M9.5 16c1.5 1.2 3.5 1.2 5 0" />
+    </>
+  ),
+  tag: (
+    <>
+      <path d="M3 12V4h8l9 9-8 8-9-9Z" />
+      <circle cx="7.5" cy="8.5" r="1" />
+    </>
+  ),
+  home: <path d="M4 11 12 4l8 7v9h-5v-6H9v6H4v-9Z" />,
   bolt: <path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" />,
   calendar: (
     <>
