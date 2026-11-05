@@ -3,7 +3,7 @@ import { Icon } from '../../components/Icons'
 /** iPhone desenhado em HTML/CSS. Tudo dentro usa `cqw` (1% da largura da tela). */
 export function Phone({ children, dark = false, island = null, className = '' }) {
   return (
-    <div className={`sim-phone ${className}`.trim()}>
+    <div className={`sim-phone ${className}`.trim()} aria-hidden="true">
       <span className="sim-btn sim-btn-a" aria-hidden="true" />
       <span className="sim-btn sim-btn-b" aria-hidden="true" />
       <span className="sim-btn sim-btn-c" aria-hidden="true" />
