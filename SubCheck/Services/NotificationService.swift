@@ -26,6 +26,46 @@ final class NotificationService {
         }
     }
 
+    // MARK: - Ações na notificação
+
+    static let chargeCategory = "subscription.charge"
+    static let markPaidAction = "subscription.markPaid"
+    static let snoozeAction = "subscription.snooze"
+    static let subscriptionIDKey = "subscriptionID"
+
+    /// Registra os botões "Marcar como pago" e "Lembrar amanhã" que aparecem
+    /// ao segurar a notificação de cobrança.
+    func registerCategories() {
+        let paid = UNNotificationAction(
+            identifier: Self.markPaidAction,
+            title: L.t("Marcar como pago"),
+            options: []
+        )
+        let snooze = UNNotificationAction(
+            identifier: Self.snoozeAction,
+            title: L.t("Lembrar amanhã"),
+            options: []
+        )
+        let category = UNNotificationCategory(
+            identifier: Self.chargeCategory,
+            actions: [paid, snooze],
+            intentIdentifiers: []
+        )
+        center.setNotificationCategories([category])
+    }
+
+    /// Repete a mesma notificação amanhã às 9h.
+    func snooze(_ original: UNNotificationContent, id: String, now: Date = Date()) {
+        let calendar = Calendar.current
+        guard let tomorrow = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: now)),
+              let content = original.mutableCopy() as? UNMutableNotificationContent else { return }
+
+        var components = calendar.dateComponents([.year, .month, .day], from: tomorrow)
+        components.hour = 9
+        let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+        center.add(UNNotificationRequest(identifier: "snooze-\(id)", content: content, trigger: trigger))
+    }
+
     /// Schedules (or reschedules) the reminder for a subscription.
     func scheduleNotification(for subscription: Subscription) {
         scheduleTrialAlert(for: subscription)
@@ -53,6 +93,8 @@ final class NotificationService {
             subscription.daysNoticeBefore
         )
         content.sound = .default
+        content.categoryIdentifier = Self.chargeCategory
+        content.userInfo = [Self.subscriptionIDKey: subscription.id.uuidString]
 
         var components = Calendar.current.dateComponents([.year, .month, .day], from: fireDate)
         components.hour = 9

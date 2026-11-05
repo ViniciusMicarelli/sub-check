@@ -12,6 +12,10 @@ import SwiftData
 @main
 struct SubCheckApp: App {
 
+    init() {
+        NotificationActionHandler.install()
+    }
+
     var body: some Scene {
         WindowGroup {
             RootView()
