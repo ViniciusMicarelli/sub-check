@@ -30,9 +30,9 @@ enum PaymentLedger {
 
             var iterations = 0
             while due <= now && iterations < maxIterations {
-                context.insert(
-                    PaymentRecord(from: subscription, paidAt: due, isEstimated: true)
-                )
+                let record = PaymentRecord(from: subscription, paidAt: due, isEstimated: true)
+                record.stampRate(using: .shared)
+                context.insert(record)
                 subscription.lastPaymentDate = due
                 due = subscription.advancing(due)
                 iterations += 1

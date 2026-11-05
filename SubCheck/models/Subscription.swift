@@ -154,6 +154,7 @@ extension Subscription {
         let due = nextBillingDate
 
         let record = PaymentRecord(from: self, paidAt: date, isEstimated: false)
+        record.stampRate(using: .shared)
         context.insert(record)
 
         lastPaymentDate = max(due, lastPaymentDate ?? due)

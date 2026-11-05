@@ -227,6 +227,14 @@ struct SubscriptionDetailView: View {
                     Text(last.formatted(date: .abbreviated, time: .omitted))
                 }
             }
+
+            if subscription.isForeignCurrency(base: CurrencyService.shared.baseCode) {
+                NavigationLink {
+                    PaymentRateHistoryView(subscription: subscription)
+                } label: {
+                    Label("Histórico e cotação", systemImage: "chart.line.uptrend.xyaxis")
+                }
+            }
         }
     }
 
