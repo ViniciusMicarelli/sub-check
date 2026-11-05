@@ -318,7 +318,7 @@ struct SettingsView: View {
     private var liveActivitySection: some View {
         Section {
             Toggle(isOn: liveActivityBinding) {
-                Label("Ilha Dinâmica", systemImage: "live.activity")
+                Label("Ilha Dinâmica", systemImage: "platter.filled.top.iphone")
             }
 
             Button {
@@ -486,12 +486,14 @@ struct SettingsView: View {
         Section {
             exportRow
 
+            #if DEBUG
             Button {
                 SampleDataSeeder.seed(in: context)
                 Haptics.success()
             } label: {
                 Label("Carregar dados de exemplo", systemImage: "wand.and.stars")
             }
+            #endif
 
             Button(role: .destructive) {
                 showEraseConfirmation = true

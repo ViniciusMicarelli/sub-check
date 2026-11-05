@@ -14,8 +14,8 @@ struct BudgetCard: View {
     let budget: Double
 
     private var fraction: Double {
-        guard budget > 0 else { return 0 }
-        return spent / budget
+        guard budget > 0, spent.isFinite, budget.isFinite else { return 0 }
+        return max(0, spent / budget)
     }
 
     private var remaining: Double { budget - spent }
@@ -46,7 +46,7 @@ struct BudgetCard: View {
 
                     Capsule()
                         .fill(tint.gradient)
-                        .frame(width: proxy.size.width * min(1, fraction))
+                        .frame(width: max(0, proxy.size.width * min(1, max(0, fraction.isFinite ? fraction : 0))))
                 }
             }
             .frame(height: 12)

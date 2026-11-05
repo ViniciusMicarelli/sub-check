@@ -9,6 +9,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct OnboardingView: View {
 
@@ -16,6 +17,10 @@ struct OnboardingView: View {
 
     @AppStorage(OnboardingView.doneKey) private var done = false
     @AppStorage(Profile.nameKey) private var name = ""
+    @AppStorage(L.languageKey) private var language: AppLanguage = .system
+    @AppStorage("appearance") private var appearance: AppearanceOption = .system
+    @Query private var subscriptions: [Subscription]
+    @State private var showAdd = false
 
     @State private var page = 0
     /// `true` depois de "Começar": mostra a espera e fecha.
@@ -40,6 +45,10 @@ struct OnboardingView: View {
             }
         }
         .animation(Motion.snappy, value: isPreparing)
+        .preferredColorScheme(appearance.colorScheme)
+        .environment(\.locale, language.locale ?? Locale.current)
+        .onChange(of: language) { _, newValue in L.store(newValue) }
+        .sheet(isPresented: $showAdd) { AddSubscriptionView() }
     }
 
     // MARK: - Estrutura
@@ -117,7 +126,11 @@ struct OnboardingView: View {
                     .multilineTextAlignment(.center)
             }
 
-            if step == .welcome { nameField }
+            if step == .welcome {
+                nameField
+                preferences
+            }
+            if step == .add { addNowButton }
 
             Spacer(minLength: 0)
         }
@@ -162,6 +175,48 @@ struct OnboardingView: View {
                 .multilineTextAlignment(.center)
         }
         .transition(.opacity.combined(with: .move(edge: .bottom)))
+    }
+
+    // MARK: - Idioma e tema
+
+    private var preferences: some View {
+        VStack(spacing: Spacing.sm) {
+            Picker(L.t("Idioma"), selection: $language) {
+                ForEach(AppLanguage.allCases) { Text($0.displayName).tag($0) }
+            }
+            .pickerStyle(.segmented)
+
+            Picker(L.t("Tema"), selection: $appearance) {
+                ForEach(AppearanceOption.allCases) { Text($0.label).tag($0) }
+            }
+            .pickerStyle(.segmented)
+        }
+        .frame(maxWidth: 320)
+    }
+
+    // MARK: - Primeira assinatura
+
+    @ViewBuilder
+    private var addNowButton: some View {
+        Button {
+            Haptics.impact(.light)
+            showAdd = true
+        } label: {
+            Label(
+                subscriptions.isEmpty ? L.t("Adicionar agora") : L.t("Adicionar outra"),
+                systemImage: subscriptions.isEmpty ? "plus.circle.fill" : "plus"
+            )
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(Color.brand)
+        }
+        .buttonStyle(PressableStyle())
+
+        if !subscriptions.isEmpty {
+            Label(L.t("Assinatura adicionada!"), systemImage: "checkmark.circle.fill")
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(Color.success)
+                .transition(.opacity)
+        }
     }
 
     // MARK: - Rodapé

@@ -19,7 +19,6 @@ struct SubCheckApp: App {
                     await NotificationService.shared.requestAuthorization()
 
                     let context = SharedModelContainer.shared.mainContext
-                    SampleDataSeeder.seedIfNeeded(in: context)
 
                     // Reconstrói o histórico de cobranças a partir do início de cada assinatura.
                     let subscriptions = (try? context.fetch(FetchDescriptor<Subscription>())) ?? []

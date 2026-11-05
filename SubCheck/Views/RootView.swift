@@ -49,6 +49,7 @@ struct RootView: View {
                 .tag(Tab.settings)
         }
         .tint(.brand)
+        .id(language)
         .fullScreenCover(isPresented: Binding(
             get: { !onboardingDone },
             set: { _ in }
@@ -58,7 +59,6 @@ struct RootView: View {
         .preferredColorScheme(appearance.colorScheme)
         // A troca de idioma reavalia as `LocalizedStringKey` sem reiniciar o app.
         .environment(\.locale, language.locale ?? Locale.current)
-        .id(language)
         .onOpenURL(perform: handle)
         .sheet(item: $linkedSubscription) { linked in
             LinkedSubscriptionView(link: linked)
@@ -73,6 +73,7 @@ struct RootView: View {
         .onAppear(perform: lockIfNeeded)
         .onChange(of: scenePhase) { _, phase in
             if phase == .background { lockIfNeeded() }
+            if phase == .active { store.refreshClock() }
         }
     }
 
