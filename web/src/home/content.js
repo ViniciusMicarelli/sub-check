@@ -39,6 +39,11 @@ export const home = {
       text: "Role a página ou toque em um passo. O celular ao lado mostra cada tela do jeito que ela é no app.",
       replay: "Repetir",
       hint: "Role para avançar",
+      badge: "Tour completo · 8 passos",
+      stepOf: "Passo {n} de {total}",
+      watching: "Assistindo…",
+      cue: "Role para o próximo passo",
+      finished: "Você viu o tour completo",
       steps: [
         { id: "dash", label: "Painel", title: "Tudo o que você paga, num lugar só", text: "Total do mês, custo por dia e as próximas cobranças logo na abertura." },
         { id: "add", label: "Adicionar", title: "Digite o nome e o resto se preenche", text: "Ícone, categoria e próxima cobrança aparecem sozinhos. Leva poucos segundos." },
@@ -172,6 +177,11 @@ export const home = {
       text: "Scroll the page or tap a step. The phone shows each screen the way it looks in the app.",
       replay: "Replay",
       hint: "Scroll to continue",
+      badge: "Full tour · 8 steps",
+      stepOf: "Step {n} of {total}",
+      watching: "Watching…",
+      cue: "Scroll for the next step",
+      finished: "You've seen the full tour",
       steps: [
         { id: "dash", label: "Overview", title: "Everything you pay, in one place", text: "Monthly total, cost per day and the next charges right when you open it." },
         { id: "add", label: "Add", title: "Type the name and the rest fills in", text: "Icon, category and next charge show up on their own. Takes a few seconds." },

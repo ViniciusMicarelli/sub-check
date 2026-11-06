@@ -1,6 +1,9 @@
-import { useLayoutEffect, useRef } from 'react'
+import { createContext, useContext, useLayoutEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { reduceMotion } from '../../motion'
+
+/** Velocidade e progresso da cena, vindos do `Simulator`. */
+export const SimContext = createContext({ speed: 1, onProgress: null })
 
 /**
  * Ferramentas para montar o "tutorial": um dedo que toca nos elementos,
@@ -94,6 +97,7 @@ export function createKit(screen, tl) {
  */
 export function useScene(build, onDone) {
   const ref = useRef(null)
+  const sim = useContext(SimContext)
 
   useLayoutEffect(() => {
     const root = ref.current
@@ -103,6 +107,8 @@ export function useScene(build, onDone) {
         defaults: { ease: 'power3.out' },
         onComplete: () => onDone?.(),
       })
+      tl.timeScale(sim.speed || 1)
+      tl.eventCallback('onUpdate', () => sim.onProgress?.(tl.progress()))
       const kit = createKit(screen, tl)
       const rect = screen.getBoundingClientRect()
       gsap.set(kit.cursor, { x: rect.width * 0.8, y: rect.height * 0.92, opacity: 0 })
