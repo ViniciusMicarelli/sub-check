@@ -26,19 +26,36 @@ struct BillBadge: View {
 
 // MARK: - Cartão do mês
 
+/// Setas de mês do cartão do resumo.
+struct MonthNavigation {
+    var canGoBack: Bool
+    var canGoForward: Bool
+    var isCurrent: Bool
+    var back: () -> Void
+    var forward: () -> Void
+    var today: () -> Void
+}
+
 /// "Quanto sobra": salário líquido contra assinaturas e contas.
 struct MonthSummaryCard: View {
 
     let plan: MonthPlan
     let salaryDay: Int
+    var month: Date = Date()
+    var navigation: MonthNavigation?
     let onEditSalary: () -> Void
 
     private var monthTitle: String {
-        Date().formatted(Date.FormatStyle().month(.wide).year().locale(L.current)).capitalizedFirst
+        month.formatted(Date.FormatStyle().month(.wide).year().locale(L.current)).capitalizedFirst
+    }
+
+    /// Só faz sentido contar até o salário no mês atual.
+    private var isCurrentMonth: Bool {
+        BillSchedule.monthStart(of: month) == BillSchedule.monthStart(of: Date())
     }
 
     private var daysToPayday: Int? {
-        guard plan.hasSalary, salaryDay > 0,
+        guard isCurrentMonth, plan.hasSalary, salaryDay > 0,
               let next = BillSchedule.upcomingDueDates(day: salaryDay, from: Date(), count: 1).first
         else { return nil }
         return BillMath.daysUntil(next)
@@ -46,10 +63,29 @@ struct MonthSummaryCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.md) {
-            HStack {
+            HStack(spacing: Spacing.xs) {
+                if let navigation {
+                    arrow("chevron.left", label: "Mês anterior", enabled: navigation.canGoBack, action: navigation.back)
+                }
                 Text(monthTitle)
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(.white.opacity(0.85))
+                    .foregroundStyle(.white.opacity(0.9))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                if let navigation {
+                    arrow("chevron.right", label: "Próximo mês", enabled: navigation.canGoForward, action: navigation.forward)
+                    if !navigation.isCurrent {
+                        Button(action: navigation.today) {
+                            Text("Hoje")
+                                .font(.caption.weight(.bold))
+                                .foregroundStyle(Color.brand)
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 4)
+                                .background(.white, in: Capsule())
+                        }
+                        .padding(.leading, Spacing.xs)
+                    }
+                }
                 Spacer(minLength: 0)
                 if plan.hasSalary {
                     Button(action: onEditSalary) {
@@ -75,6 +111,21 @@ struct MonthSummaryCard: View {
         .background(Color.brandGradient)
         .clipShape(RoundedRectangle(cornerRadius: Radius.lg, style: .continuous))
         .softShadow()
+    }
+
+    private func arrow(_ symbol: String, label: String, enabled: Bool, action: @escaping () -> Void) -> some View {
+        Button {
+            Haptics.impact(.light)
+            action()
+        } label: {
+            Image(systemName: symbol)
+                .font(.footnote.weight(.bold))
+                .foregroundStyle(.white.opacity(enabled ? 1 : 0.3))
+                .frame(width: 30, height: 30)
+                .background(.white.opacity(enabled ? 0.18 : 0.08), in: Circle())
+        }
+        .disabled(!enabled)
+        .accessibilityLabel(Text(LocalizedStringKey(label)))
     }
 
     private var empty: some View {
@@ -177,22 +228,51 @@ struct MonthSummaryCard: View {
 
 struct BillRow: View {
 
-    let entry: BillEntry
+    let name: String
+    let category: BillCategory
+    let dueDate: Date
+    let paidAt: Date?
+    let isPaid: Bool
+    /// Valor informado (0 = ainda não informou).
+    let amount: Double
     /// Estimativa mostrada enquanto a conta variável não tem valor.
     let estimate: Double
+    /// Previsão de mês futuro: ainda não existe linha para editar.
+    var isProjected = false
 
-    private var status: BillStatus {
-        BillMath.status(isPaid: entry.isPaid, dueDate: entry.dueDate)
+    init(entry: BillEntry, estimate: Double) {
+        name = entry.billName
+        category = entry.category
+        dueDate = entry.dueDate
+        paidAt = entry.paidAt
+        isPaid = entry.isPaid
+        amount = entry.amount
+        self.estimate = estimate
     }
 
-    private var days: Int { BillMath.daysUntil(entry.dueDate) }
+    init(occurrence item: BillOccurrence) {
+        name = item.name
+        category = item.category
+        dueDate = item.dueDate
+        paidAt = item.paidAt
+        isPaid = item.status == .paid
+        amount = item.isEstimate ? 0 : item.amount
+        estimate = item.isEstimate ? item.amount : 0
+        isProjected = item.isProjected
+    }
+
+    private var status: BillStatus {
+        BillMath.status(isPaid: isPaid, dueDate: dueDate)
+    }
+
+    private var days: Int { BillMath.daysUntil(dueDate) }
 
     var body: some View {
         HStack(spacing: Spacing.md) {
-            BillBadge(category: entry.category, size: 42)
+            BillBadge(category: category, size: 42)
 
             VStack(alignment: .leading, spacing: 3) {
-                Text(entry.billName)
+                Text(name)
                     .font(.body.weight(.semibold))
                     .foregroundStyle(Color.textPrimary)
                 Text(subtitle)
@@ -214,7 +294,7 @@ struct BillRow: View {
     private var subtitle: String {
         switch status {
         case .paid:
-            let date = (entry.paidAt ?? entry.dueDate)
+            let date = (paidAt ?? dueDate)
                 .formatted(Date.FormatStyle().day().month(.abbreviated).locale(L.current))
             return L.t("Paga em %@", date)
         case .dueToday:
@@ -222,7 +302,9 @@ struct BillRow: View {
         case .overdue:
             return L.t("Venceu há %lld dia(s)", abs(days))
         case .upcoming:
-            let day = Calendar.current.component(.day, from: entry.dueDate)
+            let day = Calendar.current.component(.day, from: dueDate)
+            // Em outro mês a contagem de dias não ajuda: só o dia.
+            if abs(days) > 40 || isProjected { return L.t("Vence dia %lld", day) }
             return L.t("Vence dia %lld · em %lld dia(s)", day, days)
         }
     }
@@ -237,14 +319,14 @@ struct BillRow: View {
 
     @ViewBuilder
     private var trailing: some View {
-        if entry.isPaid {
-            Text(Money.format(entry.amount))
+        if isPaid {
+            Text(Money.format(amount))
                 .font(.body.weight(.semibold))
                 .foregroundStyle(Color.textPrimary)
                 .monospacedDigit()
-        } else if entry.amount > 0 {
+        } else if amount > 0 {
             VStack(alignment: .trailing, spacing: 2) {
-                Text(Money.format(entry.amount))
+                Text(Money.format(amount))
                     .font(.body.weight(.semibold))
                     .foregroundStyle(Color.textPrimary)
                     .monospacedDigit()
@@ -254,7 +336,7 @@ struct BillRow: View {
                         .foregroundStyle(Color.brand)
                 }
             }
-        } else if status == .upcoming {
+        } else if status == .upcoming || isProjected {
             Text(estimate > 0 ? "~\(Money.format(estimate))" : "—")
                 .font(.subheadline)
                 .foregroundStyle(Color.textSecondary)
@@ -270,10 +352,10 @@ struct BillRow: View {
     }
 
     private var accessibilityText: String {
-        var parts = [entry.billName, subtitle]
-        if entry.amount > 0 {
-            parts.append(Money.format(entry.amount))
-        } else if status == .upcoming, estimate > 0 {
+        var parts = [name, subtitle]
+        if amount > 0 {
+            parts.append(Money.format(amount))
+        } else if (status == .upcoming || isProjected), estimate > 0 {
             parts.append(L.t("estimativa %@", Money.format(estimate)))
         } else if status != .paid {
             parts.append(L.t("Informar valor"))
@@ -281,7 +363,6 @@ struct BillRow: View {
         return parts.joined(separator: ", ")
     }
 }
-
 
 // MARK: - Card do painel
 

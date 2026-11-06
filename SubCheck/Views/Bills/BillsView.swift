@@ -4,7 +4,8 @@
 //
 //  Aba Contas: o salário líquido contra assinaturas e contas da casa. Cada
 //  conta (água, luz, aluguel…) vence num dia fixo; no vencimento a pessoa
-//  informa o valor e marca como paga.
+//  informa o valor e marca como paga. Dá para navegar pelos meses e ver tudo em
+//  lista, em calendário ou como evolução.
 //
 
 import SwiftData
@@ -14,6 +15,18 @@ import SwiftUI
 struct BillAddRequest: Identifiable {
     let id = UUID()
     let preset: BillCategory?
+}
+
+private enum BillsMode: String, CaseIterable, Identifiable {
+    case list, calendar, evolution
+    var id: String { rawValue }
+    var title: String {
+        switch self {
+        case .list: L.t("Lista")
+        case .calendar: L.t("Calendário")
+        case .evolution: L.t("Evolução")
+        }
+    }
 }
 
 struct BillsView: View {
@@ -32,47 +45,60 @@ struct BillsView: View {
 
     @State private var selectedEntry: BillEntry?
     @State private var editingBill: Bill?
-    /// Quem pede uma conta nova (com ou sem categoria sugerida). Por item, o
-    /// sheet sempre abre com o preset certo.
     @State private var addRequest: BillAddRequest?
     @State private var showSalary = false
+    @State private var showPaywall = false
+    @State private var monthOffset = 0
+    @State private var mode: BillsMode = .list
     #if DEBUG
     @State private var debugDetail: Bill?
     #endif
-    @State private var showPaywall = false
 
-    // MARK: - Dados do mês
+    /// Quantos meses à frente dá para olhar (previsão).
+    private let maxMonthsAhead = 3
 
-    private var month: Date { BillSchedule.monthStart(of: Date()) }
+    // MARK: - Mês selecionado
 
-    private var monthEntries: [BillEntry] {
-        allEntries.filter { $0.monthStart == month && !$0.isSkipped }
+    private var currentMonth: Date { BillSchedule.monthStart(of: Date()) }
+
+    private var month: Date {
+        Calendar.current.date(byAdding: .month, value: monthOffset, to: currentMonth) ?? currentMonth
     }
 
-    private var history: [UUID: [Double]] {
-        BillPlanning.history(of: allEntries, before: month)
+    /// O mês mais antigo com alguma conta registrada (limite do "voltar").
+    private var earliestMonth: Date {
+        let fromEntries = allEntries.map(\.monthStart).min()
+        let fromBills = bills.map { BillSchedule.monthStart(of: $0.createdAt) }.min()
+        return [fromEntries, fromBills, currentMonth].compactMap { $0 }.min() ?? currentMonth
+    }
+
+    private var canGoBack: Bool { month > earliestMonth }
+    private var canGoForward: Bool { monthOffset < maxMonthsAhead }
+
+    private var occurrences: [BillOccurrence] {
+        BillCalendar.occurrences(bills: bills, entries: allEntries, month: month)
     }
 
     private var plan: MonthPlan {
-        MonthPlan.make(salary: salary, subscriptions: subscriptions, bills: bills, entries: allEntries)
+        MonthPlan.make(salary: salary, subscriptions: subscriptions, bills: bills, entries: allEntries, month: month)
     }
 
-    private func status(_ entry: BillEntry) -> BillStatus {
-        BillMath.status(isPaid: entry.isPaid, dueDate: entry.dueDate)
+    private var navigation: MonthNavigation {
+        MonthNavigation(
+            canGoBack: canGoBack,
+            canGoForward: canGoForward,
+            isCurrent: monthOffset == 0,
+            back: { withAnimation(.snappy) { monthOffset -= 1 } },
+            forward: { withAnimation(.snappy) { monthOffset += 1 } },
+            today: { withAnimation(.snappy) { monthOffset = 0 } }
+        )
     }
 
-    private var toInform: [BillEntry] {
-        monthEntries
-            .filter { [.dueToday, .overdue].contains(status($0)) }
-            .sorted { $0.dueDate < $1.dueDate }
-    }
-
-    private var upcoming: [BillEntry] {
-        monthEntries.filter { status($0) == .upcoming }.sorted { $0.dueDate < $1.dueDate }
-    }
-
-    private var paid: [BillEntry] {
-        monthEntries.filter(\.isPaid).sorted { ($0.paidAt ?? $0.dueDate) > ($1.paidAt ?? $1.dueDate) }
+    private var toInform: [BillOccurrence] { occurrences.filter { [.dueToday, .overdue].contains($0.status) } }
+    private var upcoming: [BillOccurrence] { occurrences.filter { $0.status == .upcoming } }
+    private var paid: [BillOccurrence] {
+        occurrences.filter { $0.status == .paid }
+            .sorted { ($0.paidAt ?? $0.dueDate) > ($1.paidAt ?? $1.dueDate) }
     }
 
     private var activeBillCount: Int { bills.filter(\.isActive).count }
@@ -81,39 +107,28 @@ struct BillsView: View {
         store.hasProAccess || activeBillCount < StoreService.freeBillLimit
     }
 
-    private func estimate(for entry: BillEntry) -> Double {
-        BillMath.estimate(
-            expected: bills.first { $0.id == entry.billID }?.expectedAmount ?? 0,
-            previous: history[entry.billID] ?? []
-        )
-    }
-
     // MARK: - Tela
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: Spacing.lg) {
-                    MonthSummaryCard(plan: plan, salaryDay: salaryDay) { showSalary = true }
+                    MonthSummaryCard(plan: plan, salaryDay: salaryDay, month: month, navigation: navigation) {
+                        showSalary = true
+                    }
 
                     if bills.isEmpty {
                         emptyState
                     } else {
-                        if !toInform.isEmpty {
-                            section(L.t("Para informar"), entries: toInform, highlight: true)
+                        Picker("Visualização", selection: $mode) {
+                            ForEach(BillsMode.allCases) { Text($0.title).tag($0) }
                         }
-                        if !upcoming.isEmpty {
-                            section(L.t("Próximas"), entries: upcoming)
-                        }
-                        if !paid.isEmpty {
-                            section(L.t("Pagas este mês"), entries: paid)
-                        }
-                        if monthEntries.isEmpty {
-                            Text("Nenhuma conta neste mês.")
-                                .font(.subheadline)
-                                .foregroundStyle(Color.textSecondary)
-                                .frame(maxWidth: .infinity)
-                                .cardSurface()
+                        .pickerStyle(.segmented)
+
+                        switch mode {
+                        case .list: listContent
+                        case .calendar: calendarContent
+                        case .evolution: evolutionContent
                         }
                     }
                 }
@@ -156,16 +171,37 @@ struct BillsView: View {
         }
     }
 
-    // MARK: - Seções
+    // MARK: - Lista
 
-    private func section(_ title: String, entries: [BillEntry], highlight: Bool = false) -> some View {
+    @ViewBuilder
+    private var listContent: some View {
+        if occurrences.isEmpty {
+            Text("Nenhuma conta neste mês.")
+                .font(.subheadline)
+                .foregroundStyle(Color.textSecondary)
+                .frame(maxWidth: .infinity)
+                .cardSurface()
+        } else {
+            if !toInform.isEmpty {
+                section(L.t("Para informar"), items: toInform, highlight: true)
+            }
+            if !upcoming.isEmpty {
+                section(monthOffset > 0 ? L.t("Previstas") : L.t("Próximas"), items: upcoming)
+            }
+            if !paid.isEmpty {
+                section(monthOffset == 0 ? L.t("Pagas este mês") : L.t("Pagas"), items: paid)
+            }
+        }
+    }
+
+    private func section(_ title: String, items: [BillOccurrence], highlight: Bool = false) -> some View {
         VStack(alignment: .leading, spacing: Spacing.sm) {
             HStack(spacing: Spacing.sm) {
                 Text(title)
                     .font(.headline)
                     .foregroundStyle(Color.textPrimary)
                 if highlight {
-                    Text("\(entries.count)")
+                    Text("\(items.count)")
                         .font(.caption.weight(.bold))
                         .foregroundStyle(.white)
                         .padding(.horizontal, 8)
@@ -176,17 +212,17 @@ struct BillsView: View {
             .padding(.horizontal, Spacing.xs)
 
             VStack(spacing: 0) {
-                ForEach(Array(entries.enumerated()), id: \.element.id) { index, entry in
+                ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
                     Button {
                         Haptics.impact(.light)
-                        selectedEntry = entry
+                        select(item)
                     } label: {
-                        BillRow(entry: entry, estimate: estimate(for: entry))
+                        BillRow(occurrence: item)
                     }
                     .buttonStyle(.plain)
-                    .contextMenu { menu(for: entry) }
+                    .contextMenu { menu(for: item) }
 
-                    if index < entries.count - 1 {
+                    if index < items.count - 1 {
                         Divider().padding(.leading, 54)
                     }
                 }
@@ -201,35 +237,70 @@ struct BillsView: View {
         }
     }
 
-    @ViewBuilder
-    private func menu(for entry: BillEntry) -> some View {
-        Button {
+    /// Linha salva abre o valor; previsão (mês futuro) abre a conta para editar.
+    private func select(_ item: BillOccurrence) {
+        if let entry = item.entry {
             selectedEntry = entry
-        } label: {
-            Label(entry.isPaid ? L.t("Editar valor") : L.t("Informar valor"), systemImage: "pencil")
+        } else if let bill = bills.first(where: { $0.id == item.billID }) {
+            editingBill = bill
         }
-        if let bill = bills.first(where: { $0.id == entry.billID }) {
+    }
+
+    @ViewBuilder
+    private func menu(for item: BillOccurrence) -> some View {
+        if let entry = item.entry {
+            Button {
+                selectedEntry = entry
+            } label: {
+                Label(entry.isPaid ? "Editar valor" : "Informar valor", systemImage: "pencil")
+            }
+        }
+        if let bill = bills.first(where: { $0.id == item.billID }) {
             Button {
                 editingBill = bill
             } label: {
                 Label("Editar conta", systemImage: "slider.horizontal.3")
             }
         }
-        if entry.isPaid {
-            Button {
-                BillLedger.unpay(entry, in: context)
-                BillLedger.refreshSurfaces(in: context)
-            } label: {
-                Label("Desmarcar pagamento", systemImage: "arrow.uturn.backward")
-            }
-        } else {
-            Button(role: .destructive) {
-                BillLedger.skip(entry, in: context)
-                BillLedger.refreshSurfaces(in: context)
-            } label: {
-                Label("Pular este mês", systemImage: "forward.end")
+        if let entry = item.entry {
+            if entry.isPaid {
+                Button {
+                    BillLedger.unpay(entry, in: context)
+                    BillLedger.refreshSurfaces(in: context)
+                } label: {
+                    Label("Desmarcar pagamento", systemImage: "arrow.uturn.backward")
+                }
+            } else {
+                Button(role: .destructive) {
+                    BillLedger.skip(entry, in: context)
+                    BillLedger.refreshSurfaces(in: context)
+                } label: {
+                    Label("Pular este mês", systemImage: "forward.end")
+                }
             }
         }
+    }
+
+    // MARK: - Calendário e evolução
+
+    private var calendarContent: some View {
+        BillCalendarView(
+            month: month,
+            occurrences: occurrences,
+            charges: SubscriptionCalendar.charges(of: subscriptions, inMonth: month),
+            salary: salary,
+            salaryDay: salaryDay
+        ) { select($0) }
+    }
+
+    private var evolutionContent: some View {
+        let totals = BillEvolution.totals(bills: bills, entries: allEntries, endingAt: month)
+        return BillEvolutionView(
+            month: month,
+            totals: totals,
+            changes: BillEvolution.changes(occurrences: occurrences, entries: allEntries, month: month),
+            salary: salary
+        )
     }
 
     // MARK: - Vazio
@@ -277,14 +348,17 @@ struct BillsView: View {
         addRequest = BillAddRequest(preset: preset)
     }
 
-    /// `-debugSheet entry|add|salary` ao lançar no simulador abre a tela direto.
+    /// `-debugSheet entry|add|salary|detail` e `-debugMode calendar|evolution`
+    /// ao lançar no simulador abrem a tela direto.
     private func openDebugSheet() {
         #if DEBUG
+        if let raw = UserDefaults.standard.string(forKey: "debugMode"), let m = BillsMode(rawValue: raw) { mode = m }
+        if let raw = UserDefaults.standard.string(forKey: "debugMonthOffset"), let offset = Int(raw) { monthOffset = offset }
         guard let which = UserDefaults.standard.string(forKey: "debugSheet") else { return }
         Task { @MainActor in
             try? await Task.sleep(for: .seconds(2.5))
             switch which {
-            case "entry": selectedEntry = toInform.first ?? monthEntries.first
+            case "entry": selectedEntry = occurrences.first(where: { [.dueToday, .overdue].contains($0.status) })?.entry ?? occurrences.first?.entry
             case "add": addRequest = BillAddRequest(preset: .water)
             case "salary": showSalary = true
             case "detail": debugDetail = bills.first { $0.name == "Conta de luz" }
@@ -296,6 +370,9 @@ struct BillsView: View {
 
     private func openEntry(for billID: UUID) {
         defer { router.billToOpen = nil }
+        // Vindo de uma notificação: volta para o mês atual, em lista.
+        monthOffset = 0
+        mode = .list
         BillLedger.ensureEntries(for: bills, in: context)
 
         let descriptor = FetchDescriptor<BillEntry>(

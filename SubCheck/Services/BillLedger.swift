@@ -189,29 +189,22 @@ enum BillPlanning {
 
 extension MonthPlan {
 
-    /// Monta o plano do mês atual com o que está salvo.
+    /// Monta o plano de um mês (o atual por padrão) com o que está salvo.
+    /// Contas ainda sem linha em mês atual/futuro entram como previsão.
     static func make(
         salary: Double,
         subscriptions: [Subscription],
         bills: [Bill],
         entries: [BillEntry],
+        month: Date? = nil,
         now: Date = Date(),
         calendar: Calendar = .current
     ) -> MonthPlan {
-        let month = BillSchedule.monthStart(of: now, calendar: calendar)
-        let history = BillPlanning.history(of: entries, before: month)
-        let byID = Dictionary(bills.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
-        let thisMonth = entries.filter { $0.monthStart == month && !$0.isSkipped }
-
-        var paid = 0.0
-        var pending = 0.0
-        for entry in thisMonth {
-            if entry.isPaid {
-                paid += entry.amount
-            } else {
-                pending += BillPlanning.pendingAmount(entry, bill: byID[entry.billID], history: history)
-            }
-        }
+        let occurrences = BillCalendar.occurrences(
+            bills: bills, entries: entries, month: month ?? now, now: now, calendar: calendar
+        )
+        let paid = occurrences.filter { $0.status == .paid }.reduce(0) { $0 + $1.amount }
+        let pending = occurrences.filter { $0.status != .paid }.reduce(0) { $0 + $1.amount }
 
         return MonthPlan(
             salary: salary,
