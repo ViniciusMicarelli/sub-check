@@ -54,6 +54,12 @@ struct SubCheckApp: App {
                     PaymentLedger.removeDuplicates(in: context)
                     PaymentLedger.reconcile(subscriptions, in: context)
 
+                    // Contas da casa: dedupe do iCloud, linha do mês e avisos.
+                    BillLedger.removeDuplicates(in: context)
+                    let bills = (try? context.fetch(FetchDescriptor<Bill>())) ?? []
+                    BillLedger.ensureEntries(for: bills, in: context)
+                    BillLedger.rescheduleNotifications(in: context)
+
                     // Assinaturas vindas de outro aparelho (iCloud) ainda não
                     // têm lembrete neste; reagendar é idempotente.
                     for subscription in subscriptions where !subscription.isCancelled {

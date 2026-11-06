@@ -21,10 +21,22 @@ struct DashboardView: View {
     @State private var selectedCategory: CategoryType?
     /// Teto mensal definido nas Ajustes (ver `Budget`).
     @AppStorage(Budget.amountKey) private var monthlyBudget = 0.0
+    @AppStorage(SalaryStore.amountKey) private var salary = 0.0
+    @Query private var bills: [Bill]
+    @Query private var billEntries: [BillEntry]
 
     private var store = StoreService.shared
 
     private var active: [Subscription] { subscriptions.filter { !$0.isCancelled } }
+
+    /// Contas deste mês que já venceram (ou vencem hoje) e esperam o valor.
+    private var billsToInform: Int {
+        let month = BillSchedule.monthStart(of: Date())
+        return billEntries.filter {
+            $0.monthStart == month && !$0.isSkipped
+                && [.dueToday, .overdue].contains(BillMath.status(isPaid: $0.isPaid, dueDate: $0.dueDate))
+        }.count
+    }
 
     /// `true` quando a versão gratuita ainda permite cadastrar.
     private var canAddMore: Bool {
@@ -70,6 +82,17 @@ struct DashboardView: View {
                 VStack(spacing: Spacing.lg) {
                     heroCard
                         .staggeredAppear(0)
+
+                    if salary > 0 || !bills.isEmpty {
+                        MonthPlanCard(
+                            plan: MonthPlan.make(
+                                salary: salary, subscriptions: subscriptions,
+                                bills: bills, entries: billEntries
+                            ),
+                            toInform: billsToInform
+                        ) { AppRouter.shared.tab = .bills }
+                        .revealOnScroll()
+                    }
 
                     LazyVGrid(
                         columns: [GridItem(.flexible(), spacing: Spacing.md),

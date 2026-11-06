@@ -496,6 +496,12 @@ struct SettingsView: View {
 
     private var dataSection: some View {
         Section {
+            NavigationLink {
+                HistoryView(embedded: true)
+            } label: {
+                Label("Histórico de assinaturas", systemImage: "clock.arrow.circlepath")
+            }
+
             exportRow
 
             #if DEBUG

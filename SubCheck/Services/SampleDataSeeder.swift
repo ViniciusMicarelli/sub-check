@@ -9,6 +9,7 @@
 import Foundation
 import SwiftData
 
+@MainActor
 enum SampleDataSeeder {
 
     private struct Sample {
@@ -63,12 +64,64 @@ enum SampleDataSeeder {
             context.insert(subscription)
         }
         try? context.save()
+        seedBills(in: context)
+    }
+
+    /// Salário e contas de exemplo (só em desenvolvimento), com histórico para
+    /// as estimativas e o gráfico.
+    static func seedBills(in context: ModelContext) {
+        #if DEBUG
+        let calendar = Calendar.current
+        let today = calendar.component(.day, from: Date())
+        func day(_ offset: Int) -> Int { min(max(today + offset, 1), 28) }
+
+        UserDefaults.standard.set(6200.0, forKey: SalaryStore.amountKey)
+        UserDefaults.standard.set(5, forKey: SalaryStore.dayKey)
+
+        let specs: [(String, BillCategory, Int, Bool, Double, [Double])] = [
+            ("Aluguel", .rent, 1, true, 1800, [1800, 1800, 1800]),
+            ("Condomínio", .condo, day(-3), true, 540, [540, 540, 520]),
+            ("Conta de água", .water, day(0), false, 0, [171.2, 156.8, 142.3]),
+            ("Conta de luz", .electricity, day(7), false, 0, [236.1, 198.9, 212.4]),
+            ("Internet", .internet, day(4), true, 119.9, [119.9, 119.9, 119.9]),
+            ("Celular", .phone, day(10), true, 59.9, [59.9, 59.9, 59.9])
+        ]
+
+        var bills: [Bill] = []
+        for spec in specs {
+            let bill = Bill(name: spec.0, category: spec.1, dueDay: spec.2, isFixed: spec.3, expectedAmount: spec.4)
+            context.insert(bill)
+            bills.append(bill)
+            for (index, amount) in spec.5.enumerated() {
+                let reference = calendar.date(byAdding: .month, value: -(index + 1), to: Date()) ?? Date()
+                let due = BillSchedule.dueDate(day: spec.2, inMonthOf: reference)
+                context.insert(BillEntry(
+                    billID: bill.id, billName: bill.name, categoryRaw: bill.categoryRaw,
+                    monthStart: BillSchedule.monthStart(of: reference), dueDate: due,
+                    amount: amount, isPaid: true, paidAt: due
+                ))
+            }
+        }
+        try? context.save()
+        BillLedger.ensureEntries(for: bills, in: context)
+
+        // O aluguel deste mês já foi pago.
+        let month = BillSchedule.monthStart(of: Date())
+        let entries = (try? context.fetch(FetchDescriptor<BillEntry>(predicate: #Predicate { $0.monthStart == month }))) ?? []
+        if let rent = entries.first(where: { $0.billName == "Aluguel" }) {
+            BillLedger.record(rent, amount: 1800, paid: true, in: context)
+        }
+        #endif
     }
 
     static func eraseAll(in context: ModelContext) {
         try? context.delete(model: Subscription.self)
         try? context.delete(model: DeletedSubscription.self)
         try? context.delete(model: PaymentRecord.self)
+        try? context.delete(model: Bill.self)
+        try? context.delete(model: BillEntry.self)
+        UserDefaults.standard.removeObject(forKey: SalaryStore.amountKey)
+        UserDefaults.standard.removeObject(forKey: SalaryStore.dayKey)
         try? context.save()
     }
 }

@@ -810,12 +810,13 @@
 }
 .b-island { grid-column: span 7; }
 .b-siri { grid-column: span 5; }
-.b-import { grid-column: span 4; }
+.b-bills { grid-column: span 7; }
+.b-import { grid-column: span 5; }
 .b-fx { grid-column: span 4; }
 .b-alerts { grid-column: span 4; }
-.b-insights { grid-column: span 5; }
-.b-sync { grid-column: span 3; }
-.b-privacy { grid-column: span 4; }
+.b-insights { grid-column: span 4; }
+.b-sync { grid-column: span 6; }
+.b-privacy { grid-column: span 6; }
 
 .art {
   flex: 1;
@@ -1059,6 +1060,61 @@
 }
 @keyframes artFloat {
   50% { transform: translateY(-5px); }
+}
+
+/* contas da casa */
+.art-bills {
+  gap: 8px;
+}
+.art-bills .row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.07);
+  animation: artRow 7s ease-in-out infinite;
+}
+.art-bills .row.done {
+  animation-delay: 0.6s;
+}
+.art-bills .d {
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+}
+.art-bills .d.water { background: linear-gradient(135deg, #4aa8ff, #298cf5); }
+.art-bills .d.rent { background: linear-gradient(135deg, #34d399, #16a34a); }
+.art-bills .row em,
+.art-bills .row b {
+  margin-left: auto;
+  font-style: normal;
+}
+.art-bills .row em {
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--brand-grad);
+  animation: artPulse 2.4s ease-in-out infinite;
+}
+.art-bills .left {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 2px 4px 0;
+}
+.art-bills .left small {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.art-bills .left b {
+  font-size: 24px;
+  letter-spacing: -0.03em;
+  font-family: var(--font-rounded);
+  color: var(--mint);
 }
 
 /* privacidade */
@@ -1938,6 +1994,103 @@
   stroke-width: 2.2;
 }
 
+/* contas da casa (cena) */
+.sim-month {
+  gap: 0;
+  padding: 4.4cqw 5cqw 4cqw;
+}
+.sim-month > strong {
+  margin: 0.4cqw 0 0.2cqw;
+  font-size: 9.4cqw;
+}
+.sim-meter {
+  display: flex;
+  gap: 0.6cqw;
+  height: 2.4cqw;
+  margin: 2.6cqw 0 2.2cqw;
+  overflow: hidden;
+  border-radius: 2cqw;
+  background: rgba(255, 255, 255, 0.22);
+}
+.sim-meter i {
+  display: block;
+  height: 100%;
+  border-radius: 2cqw;
+}
+.sim-legend {
+  display: flex;
+  align-items: center;
+  gap: 2cqw;
+  margin-top: 0.8cqw;
+  font-size: 3cqw;
+  color: rgba(255, 255, 255, 0.92);
+}
+.sim-legend i {
+  width: 2.2cqw;
+  height: 2.2cqw;
+  border-radius: 50%;
+}
+.sim-legend b {
+  margin-left: auto;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+}
+.sim-row small.bad {
+  color: #e8424a;
+  font-weight: 700;
+}
+.sim-row small.link {
+  color: #5457db;
+  font-weight: 700;
+}
+.sim-cta-pill {
+  padding: 1.6cqw 3.2cqw;
+  border-radius: 99px;
+  font-size: 3cqw;
+  font-weight: 800;
+  color: #fff;
+  background: linear-gradient(135deg, #5457db, #9c4af0);
+}
+.sim-sheet-sub {
+  margin: -2cqw 0 3cqw;
+  font-size: 3.2cqw;
+  color: #8a8fa8;
+}
+.sim-sheet-hint {
+  margin: 0 0 2.6cqw;
+  font-size: 3cqw;
+  color: #8a8fa8;
+}
+.sim-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 3cqw;
+  padding: 2.8cqw 3.4cqw;
+  border-radius: 3.4cqw;
+  background: #f2f2f7;
+  font-size: 3.7cqw;
+  font-weight: 600;
+}
+.sim-switch {
+  position: relative;
+  width: 11cqw;
+  height: 6.4cqw;
+  border-radius: 99px;
+  background: #5457db;
+}
+.sim-switch::after {
+  content: "";
+  position: absolute;
+  top: 0.7cqw;
+  right: 0.7cqw;
+  width: 5cqw;
+  height: 5cqw;
+  border-radius: 50%;
+  background: #fff;
+}
+
 /* ilha / siri / notificação */
 .sim-wall {
   position: absolute;
@@ -2379,7 +2532,7 @@
     gap: 10px;
   }
 
-  .b-island, .b-siri, .b-import, .b-fx, .b-alerts, .b-insights, .b-sync, .b-privacy {
+  .b-island, .b-siri, .b-bills, .b-import, .b-fx, .b-alerts, .b-insights, .b-sync, .b-privacy {
     grid-column: span 6;
   }
   .lp-price-grid {
@@ -2391,7 +2544,7 @@
   .lp-container {
     width: min(1180px, 100% - 32px);
   }
-  .b-island, .b-siri, .b-import, .b-fx, .b-alerts, .b-insights, .b-sync, .b-privacy {
+  .b-island, .b-siri, .b-bills, .b-import, .b-fx, .b-alerts, .b-insights, .b-sync, .b-privacy {
     grid-column: span 12;
   }
   .lp-card {

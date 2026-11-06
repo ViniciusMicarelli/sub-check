@@ -252,6 +252,113 @@ export function SceneImport({ s, lang, onDone }) {
   )
 }
 
+/* ------------------------------- Contas da casa ------------------------------- */
+
+export function SceneBills({ s, lang, onDone }) {
+  const b = s.billsScene
+  const fmt = (v) => money(v, lang)
+  const ref = useScene(({ q, tl, kit }) => {
+    tl.set(q('[data-a=sheet]'), { yPercent: 104 })
+    tl.set(q('[data-a=dim]'), { opacity: 0 })
+    tl.set(q('[data-a=paidrow]'), { opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0 })
+    tl.from(q('[data-a=head]'), { y: -12, opacity: 0, duration: 0.5 }, 0)
+    tl.from(q('[data-a=card]'), { y: 30, opacity: 0, scale: 0.96, duration: 0.7 }, 0.1)
+    kit.count('[data-a=left]', 0, 2568.09, 0.35, 1.3, fmt)
+    tl.from(q('[data-a=seg]'), { scaleX: 0, transformOrigin: 'left', stagger: 0.15, duration: 0.8 }, 0.6)
+    tl.from(q('[data-a=sec]'), { y: 18, opacity: 0, stagger: 0.12, duration: 0.5 }, 1.0)
+    tl.from(q('[data-a~=row]'), { x: -24, opacity: 0, stagger: 0.1, duration: 0.5 }, 1.2)
+    tl.fromTo(q('[data-a=enter]'), { scale: 1 }, { scale: 1.1, yoyo: true, repeat: 3, duration: 0.35, ease: 'sine.inOut' }, 2.0)
+
+    let t = kit.tap('[data-a=enter]', 2.6)
+    tl.to(q('[data-a=dim]'), { opacity: 1, duration: 0.4 }, t)
+    tl.to(q('[data-a=sheet]'), { yPercent: 0, duration: 0.7, ease: 'power3.out' }, t)
+
+    t = kit.tap('[data-a=field]', t + 0.9)
+    t = kit.type('[data-a=amount]', '148,20', t + 0.1, 0.12)
+    t = kit.tap('[data-a=save]', t + 0.8)
+
+    tl.to(q('[data-a=sheet]'), { yPercent: 104, duration: 0.6, ease: 'power3.in' }, t + 0.1)
+    tl.to(q('[data-a=dim]'), { opacity: 0, duration: 0.4 }, t + 0.2)
+    kit.hideCursor(t + 0.3)
+    tl.to(q('[data-a~=waterrow]'), { opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0, duration: 0.5 }, t + 0.7)
+    tl.to(q('[data-a=paidrow]'), { opacity: 1, height: 'auto', paddingTop: '2.6cqw', paddingBottom: '2.6cqw', duration: 0.6 }, t + 1.0)
+    kit.count('[data-a=left]', 2568.09, 2576.66, t + 0.8, 1.0, fmt)
+    kit.count('[data-a=paidtotal]', 1800, 1948.2, t + 0.8, 1.0, fmt)
+    kit.count('[data-a=pendingtotal]', 1092.37, 935.6, t + 0.8, 1.0, fmt)
+    tl.to({}, { duration: 1.8 }, t + 1.6)
+  }, onDone)
+
+  return (
+    <div className="sim-scene" ref={ref}>
+      <div className="sim-head" data-a="head">
+        <div>
+          <small>{b.month}</small>
+          <h4 className="sim-h4-sm">{s.tabs[2]}</h4>
+        </div>
+        <span className="sim-plus"><Icon name="plus" size={16} strokeWidth={2.4} /></span>
+      </div>
+
+      <div className="sim-hero-card sim-month" data-a="card">
+        <small>{b.left}</small>
+        <strong data-a="left">{fmt(2568.09)}</strong>
+        <span>{b.of} {fmt(b.salary)} {b.salaryWord}</span>
+        <div className="sim-meter" aria-hidden="true">
+          <i data-a="seg" style={{ width: '11.9%', background: '#fff' }} />
+          <i data-a="seg" style={{ width: '29%', background: '#4de8aa' }} />
+          <i data-a="seg" style={{ width: '17.6%', background: 'rgba(255,255,255,.45)' }} />
+        </div>
+        <div className="sim-legend"><i style={{ background: '#fff' }} />{b.subs}<b>{fmt(739.54)}</b></div>
+        <div className="sim-legend"><i style={{ background: '#4de8aa' }} />{b.paid}<b data-a="paidtotal">{fmt(1800)}</b></div>
+        <div className="sim-legend"><i style={{ background: 'rgba(255,255,255,.5)' }} />{b.pending}<b data-a="pendingtotal">{fmt(1092.37)}</b></div>
+      </div>
+
+      <div className="sim-sec" data-a="sec">{b.toEnter}</div>
+      <div className="sim-list">
+        <div className="sim-row" data-a="row">
+          <Badge icon="home" tint={COLORS.violet} />
+          <div className="sim-row-main"><b>{b.condo}</b><small className="bad">{b.overdue}</small></div>
+          <div className="sim-row-end"><b>{fmt(540)}</b><small className="link">{b.mark}</small></div>
+        </div>
+        <div className="sim-row" data-a="row waterrow">
+          <Badge icon="drop" tint={COLORS.blue} />
+          <div className="sim-row-main"><b>{b.water}</b><small className="warn">{b.dueToday}</small></div>
+          <span className="sim-cta-pill" data-a="enter">{b.enter}</span>
+        </div>
+      </div>
+
+      <div className="sim-sec" data-a="sec">{b.paidMonth}</div>
+      <div className="sim-list">
+        <div className="sim-row" data-a="paidrow">
+          <Badge icon="drop" tint={COLORS.blue} />
+          <div className="sim-row-main"><b>{b.water}</b><small>{b.dueToday}</small></div>
+          <div className="sim-row-end"><b>{fmt(148.2)}</b></div>
+        </div>
+        <div className="sim-row" data-a="row">
+          <Badge icon="home" tint={COLORS.green} />
+          <div className="sim-row-main"><b>{b.rent}</b><small>{b.paidOn}</small></div>
+          <div className="sim-row-end"><b>{fmt(1800)}</b></div>
+        </div>
+      </div>
+
+      <TabBar labels={s.tabs} active={2} />
+
+      <div className="sim-dim" data-a="dim" />
+      <div className="sim-sheet" data-a="sheet">
+        <i className="sim-grab" />
+        <h5>{b.water}</h5>
+        <p className="sim-sheet-sub">{b.dueOn}</p>
+        <label className="sim-field" data-a="field">
+          <small>{b.amountLabel}</small>
+          <span><em>R$</em><b data-a="amount" /></span>
+        </label>
+        <p className="sim-sheet-hint">{b.avg}</p>
+        <div className="sim-toggle-row"><span>{b.already}</span><i className="sim-switch" /></div>
+        <button className="sim-cta" data-a="save" type="button" tabIndex={-1}>{b.save}</button>
+      </div>
+    </div>
+  )
+}
+
 /* ------------------------------ 4. Câmbio ------------------------------ */
 
 export function SceneFx({ s, lang, onDone }) {
@@ -524,6 +631,7 @@ export const SCENES = {
   dash: SceneDash,
   add: SceneAdd,
   import: SceneImport,
+  bills: SceneBills,
   fx: SceneFx,
   island: SceneIsland,
   siri: SceneSiri,

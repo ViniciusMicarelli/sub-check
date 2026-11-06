@@ -140,6 +140,63 @@ final class NotificationService {
         "trial-\(subscription.id.uuidString)"
     }
 
+    // MARK: - Contas do mês
+
+    static let billIDKey = "billID"
+    private static let billPrefix = "bill-"
+
+    /// Reagenda os avisos das contas: os próximos dois vencimentos de cada
+    /// conta com lembrete. Meses já pagos ou pulados não avisam. Idempotente.
+    func scheduleBills(
+        _ bills: [Bill],
+        entries: [BillEntry],
+        now: Date = Date(),
+        calendar: Calendar = .current
+    ) async {
+        let pending = await center.pendingNotificationRequests()
+        center.removePendingNotificationRequests(
+            withIdentifiers: pending.map(\.identifier).filter { $0.hasPrefix(Self.billPrefix) }
+        )
+
+        func monthKey(_ date: Date) -> String {
+            let c = calendar.dateComponents([.year, .month], from: date)
+            return "\(c.year ?? 0)-\(c.month ?? 0)"
+        }
+        let settled = Set(entries.filter { $0.isPaid || $0.isSkipped }.map { "\($0.billID.uuidString)-\(monthKey($0.monthStart))" })
+
+        for bill in bills where bill.isActive && bill.remindersEnabled {
+            for due in BillSchedule.upcomingDueDates(day: bill.dueDay, from: now, count: 2, calendar: calendar) {
+                if settled.contains("\(bill.id.uuidString)-\(monthKey(due))") { continue }
+
+                let fireDay = calendar.date(byAdding: .day, value: -bill.reminderDaysBefore, to: due) ?? due
+                var parts = calendar.dateComponents([.year, .month, .day], from: fireDay)
+                parts.hour = 9
+                guard let fire = calendar.date(from: parts), fire > now else { continue }
+
+                let content = UNMutableNotificationContent()
+                content.sound = .default
+                content.userInfo = [Self.billIDKey: bill.id.uuidString]
+                let amount = Money.format(bill.expectedAmount)
+                if bill.reminderDaysBefore == 0 {
+                    content.title = L.t("Conta vence hoje")
+                    content.body = (bill.isFixed && bill.expectedAmount > 0)
+                        ? L.t("%@ vence hoje: %@.", bill.name, amount)
+                        : L.t("%@ vence hoje. Toque para informar o valor.", bill.name)
+                } else {
+                    content.title = L.t("Conta próxima")
+                    content.body = (bill.isFixed && bill.expectedAmount > 0)
+                        ? L.t("%@ vence em %lld dia(s): %@.", bill.name, bill.reminderDaysBefore, amount)
+                        : L.t("%@ vence em %lld dia(s).", bill.name, bill.reminderDaysBefore)
+                }
+
+                let dayKey = calendar.dateComponents([.year, .month, .day], from: due)
+                let identifier = "\(Self.billPrefix)\(bill.id.uuidString)-\(dayKey.year ?? 0)\(dayKey.month ?? 0)\(dayKey.day ?? 0)"
+                let trigger = UNCalendarNotificationTrigger(dateMatching: parts, repeats: false)
+                try? await center.add(UNNotificationRequest(identifier: identifier, content: content, trigger: trigger))
+            }
+        }
+    }
+
     // MARK: - Orçamento
 
     /// Identificador único do aviso de orçamento estourado.
