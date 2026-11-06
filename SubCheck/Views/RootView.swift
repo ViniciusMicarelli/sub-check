@@ -26,22 +26,27 @@ struct RootView: View {
     var body: some View {
         TabView(selection: $router.tab) {
             DashboardView()
+                .readableWidth()
                 .tabItem { Label("Resumo", systemImage: "chart.pie.fill") }
                 .tag(AppTab.dashboard)
 
             SubscriptionsView()
+                .readableWidth()
                 .tabItem { Label("Assinaturas", systemImage: "list.bullet.rectangle.portrait.fill") }
                 .tag(AppTab.subscriptions)
 
             BillsView()
+                .readableWidth()
                 .tabItem { Label("Contas", systemImage: "wallet.pass.fill") }
                 .tag(AppTab.bills)
 
             CategoriesView()
+                .readableWidth()
                 .tabItem { Label("Categorias", systemImage: "square.grid.2x2.fill") }
                 .tag(AppTab.categories)
 
             SettingsView()
+                .readableWidth()
                 .tabItem { Label("Ajustes", systemImage: "gearshape.fill") }
                 .tag(AppTab.settings)
         }

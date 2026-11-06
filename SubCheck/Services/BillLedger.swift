@@ -103,6 +103,26 @@ enum BillLedger {
         context.saveReporting()
     }
 
+    /// A linha que a pessoa quer dizer ao falar "a conta de luz": a mais antiga
+    /// que já venceu e segue em aberto; senão a do mês atual. `nil` se a conta
+    /// não existe ou o mês já está pago.
+    static func openEntry(
+        for billID: UUID,
+        in context: ModelContext,
+        now: Date = Date(),
+        calendar: Calendar = .current
+    ) -> BillEntry? {
+        let bills = (try? context.fetch(FetchDescriptor<Bill>())) ?? []
+        ensureEntries(for: bills, in: context, now: now, calendar: calendar)
+        let entries = ((try? context.fetch(FetchDescriptor<BillEntry>())) ?? [])
+            .filter { $0.billID == billID }
+        if let overdue = BillPlanning.dueEntries(entries, now: now, calendar: calendar).first {
+            return overdue
+        }
+        let month = BillSchedule.monthStart(of: now, calendar: calendar)
+        return entries.first { $0.monthStart == month && !$0.isPaid }
+    }
+
     /// Volta a conta para "não paga" (o valor informado continua).
     static func unpay(_ entry: BillEntry, in context: ModelContext) {
         entry.isPaid = false

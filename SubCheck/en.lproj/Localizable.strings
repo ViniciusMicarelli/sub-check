@@ -781,3 +781,15 @@
 "Do seu salário" = "Of your salary";
 "O que mudou" = "What changed";
 "Média %@ → %@" = "Average %@ → %@";
+"Não encontrei essa conta." = "I couldn't find that bill.";
+"Essa conta já está paga neste mês." = "That bill is already paid this month.";
+"Registrar valor de conta" = "Record bill amount";
+"Informa o valor da conta do mês (luz, água, internet…) e, se quiser, marca como paga." = "Records this month's bill amount (power, water, internet…) and optionally marks it paid.";
+"Qual conta?" = "Which bill?";
+"Contas para pagar" = "Bills to pay";
+"Diz quais contas da casa vencem hoje ou já venceram e ainda não foram pagas." = "Tells which household bills are due today or overdue and still unpaid.";
+"%@ de %@ registrada e marcada como paga." = "%1$@ of %2$@ recorded and marked as paid.";
+"%@ de %@ registrada. Falta marcar como paga." = "%1$@ of %2$@ recorded. It still needs to be marked as paid.";
+"Nenhuma conta para pagar agora." = "No bills to pay right now.";
+"Contas para pagar: %@." = "Bills to pay: %@.";
+"Registrar conta" = "Record bill";

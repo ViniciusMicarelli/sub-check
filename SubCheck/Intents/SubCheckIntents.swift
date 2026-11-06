@@ -17,6 +17,8 @@ private enum IntentFailure: Error, CustomLocalizedStringResourceConvertible {
     case limitReached(Int)
     case invalidAmount
     case notFound
+    case billNotFound
+    case billAlreadyPaid
 
     var localizedStringResource: LocalizedStringResource {
         switch self {
@@ -26,6 +28,10 @@ private enum IntentFailure: Error, CustomLocalizedStringResourceConvertible {
             "\(L.t("Informe um valor maior que zero."))"
         case .notFound:
             "\(L.t("Não encontrei essa assinatura."))"
+        case .billNotFound:
+            "\(L.t("Não encontrei essa conta."))"
+        case .billAlreadyPaid:
+            "\(L.t("Essa conta já está paga neste mês."))"
         }
     }
 }
@@ -320,6 +326,122 @@ struct CancelSubscriptionIntent: AppIntent {
     }
 }
 
+// MARK: - Contas da casa
+
+struct BillEntity: AppEntity {
+
+    static var typeDisplayRepresentation: TypeDisplayRepresentation { "Conta" }
+    static var defaultQuery = BillEntityQuery()
+
+    var id: String
+    var name: String
+
+    var displayRepresentation: DisplayRepresentation {
+        DisplayRepresentation(title: "\(name)")
+    }
+
+    init(_ bill: Bill) {
+        id = bill.id.uuidString
+        name = bill.name
+    }
+}
+
+struct BillEntityQuery: EntityStringQuery {
+
+    @MainActor
+    private func activeBills() throws -> [Bill] {
+        try SharedModelContainer.shared.mainContext
+            .fetch(FetchDescriptor<Bill>())
+            .filter(\.isActive)
+    }
+
+    @MainActor
+    func entities(for identifiers: [String]) async throws -> [BillEntity] {
+        try activeBills().filter { identifiers.contains($0.id.uuidString) }.map(BillEntity.init)
+    }
+
+    /// "luz", "a conta de água": casa pelo nome sem diferenciar acento.
+    @MainActor
+    func entities(matching string: String) async throws -> [BillEntity] {
+        let all = try activeBills()
+        return SubscriptionNameMatcher
+            .rank(string, in: all.map(\.name))
+            .map { BillEntity(all[$0]) }
+    }
+
+    @MainActor
+    func suggestedEntities() async throws -> [BillEntity] {
+        try activeBills().sorted { $0.dueDay < $1.dueDay }.map(BillEntity.init)
+    }
+}
+
+struct RegisterBillAmountIntent: AppIntent {
+
+    static var title: LocalizedStringResource = "Registrar valor de conta"
+    static var description = IntentDescription("Informa o valor da conta do mês (luz, água, internet…) e, se quiser, marca como paga.")
+
+    @Parameter(title: "Conta", requestValueDialog: "Qual conta?")
+    var bill: BillEntity
+
+    @Parameter(title: "Valor", requestValueDialog: "Qual o valor?")
+    var amount: Double
+
+    @Parameter(title: "Marcar como paga", default: false)
+    var markPaid: Bool
+
+    static var parameterSummary: some ParameterSummary {
+        Summary("Registrar \(\.$bill) de \(\.$amount)") {
+            \.$markPaid
+        }
+    }
+
+    @MainActor
+    func perform() async throws -> some IntentResult & ProvidesDialog {
+        guard amount > 0 else { throw IntentFailure.invalidAmount }
+
+        let context = SharedModelContainer.shared.mainContext
+        guard let id = UUID(uuidString: bill.id) else { throw IntentFailure.billNotFound }
+        let bills = try context.fetch(FetchDescriptor<Bill>())
+        guard let target = bills.first(where: { $0.id == id }) else { throw IntentFailure.billNotFound }
+        guard let entry = BillLedger.openEntry(for: id, in: context) else {
+            throw IntentFailure.billAlreadyPaid
+        }
+
+        BillLedger.record(entry, amount: amount, paid: markPaid, in: context)
+        BillLedger.refreshSurfaces(in: context)
+
+        let money = Money.format(amount)
+        let text = markPaid
+            ? L.t("%@ de %@ registrada e marcada como paga.", target.name, money)
+            : L.t("%@ de %@ registrada. Falta marcar como paga.", target.name, money)
+        return .result(dialog: "\(text)")
+    }
+}
+
+struct BillsDueIntent: AppIntent {
+
+    static var title: LocalizedStringResource = "Contas para pagar"
+    static var description = IntentDescription("Diz quais contas da casa vencem hoje ou já venceram e ainda não foram pagas.")
+
+    @MainActor
+    func perform() async throws -> some IntentResult & ReturnsValue<String> & ProvidesDialog {
+        let context = SharedModelContainer.shared.mainContext
+        let bills = try context.fetch(FetchDescriptor<Bill>())
+        BillLedger.ensureEntries(for: bills, in: context)
+        let entries = try context.fetch(FetchDescriptor<BillEntry>())
+        let due = BillPlanning.dueEntries(entries)
+
+        let text: String
+        if due.isEmpty {
+            text = L.t("Nenhuma conta para pagar agora.")
+        } else {
+            let names = due.map(\.billName).formatted(.list(type: .and))
+            text = L.t("Contas para pagar: %@.", names)
+        }
+        return .result(value: text, dialog: "\(text)")
+    }
+}
+
 // MARK: - Atalhos prontos (Siri e app Atalhos)
 
 struct SubCheckShortcuts: AppShortcutsProvider {
@@ -386,6 +508,25 @@ struct SubCheckShortcuts: AppShortcutsProvider {
             ],
             shortTitle: "Cancelar assinatura",
             systemImageName: "xmark.circle"
+        )
+        AppShortcut(
+            intent: RegisterBillAmountIntent(),
+            phrases: [
+                "Registrar \(\.$bill) no \(.applicationName)",
+                "Registrar valor de \(\.$bill) no \(.applicationName)",
+                "Registrar conta no \(.applicationName)"
+            ],
+            shortTitle: "Registrar conta",
+            systemImageName: "wallet.pass"
+        )
+        AppShortcut(
+            intent: BillsDueIntent(),
+            phrases: [
+                "Quais contas vencem no \(.applicationName)",
+                "Contas para pagar no \(.applicationName)"
+            ],
+            shortTitle: "Contas para pagar",
+            systemImageName: "bell.badge.fill"
         )
     }
 }

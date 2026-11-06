@@ -167,4 +167,29 @@ final class BillCalendarTests: XCTestCase {
         XCTAssertEqual(changes.map(\.name), ["Luz"])
         XCTAssertEqual(changes[0].change, 0.18, accuracy: 0.001)
     }
+
+    // MARK: Siri: qual linha recebe o valor
+
+    func testOpenEntryPrefersOverdueMonthThenCurrent() throws {
+        let context = try makeContext()
+        let bill = Bill(name: "Luz", dueDay: 5)
+        context.insert(bill)
+        let now = date(2026, 11, 10)
+
+        // Sem linha antiga: cria e devolve a do mês atual.
+        let current = try XCTUnwrap(BillLedger.openEntry(for: bill.id, in: context, now: now, calendar: cal))
+        XCTAssertEqual(current.monthStart, month(2026, 11))
+
+        // Outubro ficou em aberto: é ele que a Siri preenche primeiro.
+        let october = BillEntry(billID: bill.id, billName: "Luz", categoryRaw: bill.categoryRaw,
+                                monthStart: month(2026, 10), dueDate: date(2026, 10, 5))
+        context.insert(october)
+        XCTAssertEqual(BillLedger.openEntry(for: bill.id, in: context, now: now, calendar: cal)?.monthStart,
+                       month(2026, 10))
+
+        // Tudo pago: nada a registrar.
+        october.isPaid = true
+        current.isPaid = true
+        XCTAssertNil(BillLedger.openEntry(for: bill.id, in: context, now: now, calendar: cal))
+    }
 }
