@@ -2718,7 +2718,34 @@
   .lp-tut-grid {
     grid-template-columns: 1fr;
     gap: 6px;
-    --phone-w: min(230px, calc((100svh - 68px - 350px) / 2.144));
+    /* O palco fixo tem a altura da tela: tudo (selo, barras, celular, aviso,
+       legenda e pontos) precisa caber nela. O celular recebe o que sobra. */
+    --phone-w: min(240px, calc((100svh - 68px - 262px) / 2.144));
+  }
+  .lp-tut-right {
+    gap: 10px;
+  }
+  /* Na tela pequena o título grande não cabe no palco; o selo "tour completo
+     · N passos" já diz o que é. O título segue lido por leitores de tela. */
+  .lp-tut-left .lp-eyebrow,
+  .lp-tut-left .lp-h2 {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .lp-caption b {
+    font-size: 17px;
+  }
+  .lp-caption p {
+    font-size: 13px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
   .lp-tut-left {
     text-align: center;

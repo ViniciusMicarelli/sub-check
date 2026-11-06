@@ -33,7 +33,7 @@ export const content = {
       title: "SubCheck Pro",
       subtitle: "Um pagamento único. Para sempre.",
       badge: "Sem assinatura",
-      price: "R$ 39,90",
+      price: "R$ 49,90",
       period: "uma vez",
       items: [
         "Assinaturas ilimitadas",
@@ -437,7 +437,7 @@ export const content = {
       title: "SubCheck Pro",
       subtitle: "One payment. Forever.",
       badge: "No subscription",
-      price: "R$ 39.90",
+      price: "R$ 49.90",
       period: "one time",
       items: [
         "Unlimited subscriptions",

@@ -176,7 +176,7 @@ Basta publicar a pasta: **Settings › Pages › Deploy from a branch › `main`
 - **Descrição (pt-BR):** `Libera todos os recursos para sempre, com um único pagamento.`
 - **Nome de exibição (en):** `SubCheck Pro`
 - **Descrição (en):** `Unlocks every feature for good with a single payment.`
-- **Preço:** definir no App Store Connect (o arquivo local usa R$ 39,90).
+- **Preço:** definir no App Store Connect (o arquivo local usa R$ 49,90).
 - **Screenshot de revisão:** captura do paywall (tela "SubCheck Pro").
 
 O paywall mostra preço, descrição, botão de **Restaurar compra** e o texto de
