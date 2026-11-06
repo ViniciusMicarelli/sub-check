@@ -31,6 +31,9 @@ struct SubCheckActivityAttributes: ActivityAttributes {
         /// `"bill"` quando o próximo item é uma conta da casa; `nil` = assinatura.
         /// Opcional para continuar lendo atividades criadas por versões antigas.
         var nextKind: String? = nil
+        /// Ícone da próxima cobrança (`SubscriptionIcon.rawValue`); `nil` usa o
+        /// símbolo da categoria. Opcional por compatibilidade.
+        var nextIcon: String? = nil
     }
 
     /// Uma cobrança futura listada na visão expandida.
@@ -42,6 +45,8 @@ struct SubCheckActivityAttributes: ActivityAttributes {
         var category: String
         /// `"bill"` para conta da casa; `nil` = assinatura.
         var kind: String? = nil
+        /// `SubscriptionIcon.rawValue` da assinatura; `nil` = símbolo da categoria.
+        var icon: String? = nil
     }
 
     /// Momento em que a atividade foi criada.

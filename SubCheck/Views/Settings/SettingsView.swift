@@ -370,7 +370,7 @@ struct SettingsView: View {
             showPaywall = true
             return
         }
-        let result = LiveActivityService.shared.start(with: subscriptions)
+        let result = LiveActivityService.shared.start(with: subscriptions, ignoringPolicy: true)
         let message: String
         switch result {
         case .started, .updated:
@@ -382,6 +382,13 @@ struct SettingsView: View {
         case .noSubscriptions:
             Haptics.warning()
             message = L.t("Adicione uma assinatura ativa para ver a ilha.")
+        case .nothingSoon:
+            Haptics.warning()
+            message = L.t("Nada vence nos próximos dias.")
+        case .requiresPro:
+            Haptics.impact(.light)
+            showPaywall = true
+            message = L.t("A Ilha Dinâmica faz parte do SubCheck Pro.")
         case .failed(let reason):
             Haptics.warning()
             message = L.t("Não foi possível iniciar: %@", reason)

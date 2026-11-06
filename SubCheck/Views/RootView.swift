@@ -63,6 +63,8 @@ struct RootView: View {
         // A troca de idioma reavalia as `LocalizedStringKey` sem reiniciar o app.
         .environment(\.locale, language.locale ?? Locale.current)
         .onOpenURL(perform: handle)
+        // Ativou ou perdeu o Pro (teste, compra, fim do teste): a ilha acompanha.
+        .onChange(of: store.hasProAccess) { _, _ in refreshLiveActivity() }
         .sheet(item: $linkedSubscription) { linked in
             LinkedSubscriptionView(link: linked)
         }
