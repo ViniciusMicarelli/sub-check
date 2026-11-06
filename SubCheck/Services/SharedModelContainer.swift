@@ -33,7 +33,8 @@ enum SharedModelContainer {
         PaymentRecord.self,
         DeletedSubscription.self,
         Bill.self,
-        BillEntry.self
+        BillEntry.self,
+        OneOffPayment.self
     ])
 
     static let shared: ModelContainer = makeContainer()

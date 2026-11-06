@@ -83,14 +83,22 @@ extension Subscription {
         service.convert(cost, from: currencyCode)
     }
 
-    /// Média mensal convertida para a moeda base.
+    /// Média mensal convertida para a moeda base: **a minha parte** (dividida
+    /// entre as pessoas) e zero para serviços incluídos num pacote. É o que
+    /// entra em todos os totais do app.
     func monthlyCost(in service: CurrencyService) -> Double {
+        guard !isIncludedInBundle else { return 0 }
+        return service.convert(monthlyCost, from: currencyCode) * shareFactor
+    }
+
+    /// Média mensal convertida, pelo preço cheio (sem dividir).
+    func fullMonthlyCost(in service: CurrencyService) -> Double {
         service.convert(monthlyCost, from: currencyCode)
     }
 
-    /// Custo anualizado convertido para a moeda base.
+    /// Custo anualizado (minha parte) convertido para a moeda base.
     func yearlyCost(in service: CurrencyService) -> Double {
-        service.convert(yearlyCost, from: currencyCode)
+        monthlyCost(in: service) * 12
     }
 
     /// `true` quando a assinatura está em uma moeda diferente da base.

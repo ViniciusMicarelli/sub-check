@@ -41,7 +41,7 @@ enum SpendHistory {
 
         for record in records {
             guard let existing = buckets[record.month] else { continue }
-            let value = service.convert(record.amount, from: record.currencyCode)
+            let value = service.convert(record.myAmount, from: record.currencyCode)
             buckets[record.month] = (existing.total + value, existing.count + 1)
         }
 
@@ -60,7 +60,7 @@ enum SpendHistory {
     ) -> Double {
         records
             .filter { interval.contains($0.paidAt) }
-            .reduce(0) { $0 + service.convert($1.amount, from: $1.currencyCode) }
+            .reduce(0) { $0 + service.convert($1.myAmount, from: $1.currencyCode) }
     }
 
     static func monthInterval(containing date: Date, calendar: Calendar = .current) -> DateInterval {
@@ -90,7 +90,7 @@ enum SpendHistory {
 
         for record in records where interval.contains(record.paidAt) {
             let month = calendar.component(.month, from: record.paidAt)
-            result[month, default: 0] += service.convert(record.amount, from: record.currencyCode)
+            result[month, default: 0] += service.convert(record.myAmount, from: record.currencyCode)
         }
         return result
     }
@@ -115,7 +115,7 @@ enum SpendHistory {
             .map { category, items in
                 CategoryTotal(
                     category: category,
-                    total: items.reduce(0) { $0 + service.convert($1.amount, from: $1.currencyCode) },
+                    total: items.reduce(0) { $0 + service.convert($1.myAmount, from: $1.currencyCode) },
                     count: items.count
                 )
             }
@@ -139,7 +139,7 @@ enum SpendHistory {
 
         var buckets: [Date: [CategoryType: Double]] = [:]
         for record in records where allowed.contains(record.month) {
-            let value = service.convert(record.amount, from: record.currencyCode)
+            let value = service.convert(record.myAmount, from: record.currencyCode)
             buckets[record.month, default: [:]][record.categoryType, default: 0] += value
         }
 
@@ -261,7 +261,7 @@ enum SpendHistory {
         for record in records {
             let day = calendar.startOfDay(for: record.paidAt)
             guard let existing = buckets[day] else { continue }
-            let value = service.convert(record.amount, from: record.currencyCode)
+            let value = service.convert(record.myAmount, from: record.currencyCode)
             buckets[day] = (existing.total + value, existing.count + 1)
         }
 

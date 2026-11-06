@@ -177,6 +177,7 @@ final class StoreService {
                 }
                 await transaction.finish()
                 setUnlocked(true)
+                await recordExpense(for: transaction)
                 Haptics.success()
                 return true
 
@@ -209,6 +210,20 @@ final class StoreService {
 
     // MARK: - Interno
 
+    /// O que a pessoa pagou pelo Pro vira uma despesa avulsa, com o valor e a
+    /// moeda reais da transação. Idempotente por id da transação.
+    @MainActor
+    private func recordExpense(for transaction: Transaction) {
+        let context = SharedModelContainer.shared.mainContext
+        OneOffPayments.recordProPurchase(
+            price: transaction.price ?? product?.price ?? 0,
+            currencyCode: transaction.currency?.identifier ?? product?.priceFormatStyle.currencyCode ?? "BRL",
+            date: transaction.purchaseDate,
+            transactionID: String(transaction.id),
+            in: context
+        )
+    }
+
     private func setUnlocked(_ unlocked: Bool) {
         isPro = unlocked
         UserDefaults.standard.set(unlocked, forKey: Self.unlockedKey)
@@ -221,6 +236,13 @@ final class StoreService {
             for await result in Transaction.updates {
                 guard case .verified(let transaction) = result else { continue }
                 await transaction.finish()
+                // Compra aprovada fora do app (Ask to Buy): também é uma despesa,
+                // mas restaurações antigas não são relançadas.
+                if transaction.productID == Self.proProductID,
+                   transaction.revocationDate == nil,
+                   Date().timeIntervalSince(transaction.purchaseDate) < 3 * 86_400 {
+                    await recordExpense(for: transaction)
+                }
                 await refreshEntitlements()
             }
         }

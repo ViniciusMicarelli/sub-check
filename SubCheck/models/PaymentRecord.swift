@@ -29,6 +29,11 @@ final class PaymentRecord {
     var rateToBase: Double = 0
     /// Moeda base em que `rateToBase` foi calculada.
     var baseCodeAtPayment: String = ""
+    /// Parte da pessoa no valor cobrado (1 = tudo; 0,5 = dividido em 2).
+    var shareFactor: Double = 1
+    /// `true` quando a cotação foi digitada pela pessoa (sem internet, ou para
+    /// usar a que realmente valeu no dia).
+    var rateIsManual: Bool = false
 
     init(
         id: UUID = UUID(),
@@ -40,7 +45,9 @@ final class PaymentRecord {
         paidAt: Date = Date(),
         isEstimated: Bool = false,
         rateToBase: Double = 0,
-        baseCodeAtPayment: String = ""
+        baseCodeAtPayment: String = "",
+        shareFactor: Double = 1,
+        rateIsManual: Bool = false
     ) {
         self.id = id
         self.subscriptionID = subscriptionID
@@ -52,6 +59,8 @@ final class PaymentRecord {
         self.isEstimated = isEstimated
         self.rateToBase = rateToBase
         self.baseCodeAtPayment = baseCodeAtPayment
+        self.shareFactor = shareFactor
+        self.rateIsManual = rateIsManual
     }
 }
 
@@ -65,9 +74,13 @@ extension PaymentRecord {
             currencyCode: subscription.currencyCode,
             categoryRaw: subscription.category,
             paidAt: paidAt,
-            isEstimated: isEstimated
+            isEstimated: isEstimated,
+            shareFactor: subscription.shareFactor
         )
     }
+
+    /// Quanto da cobrança é meu (já descontada a divisão), na moeda original.
+    var myAmount: Double { amount * shareFactor }
 
     var categoryType: CategoryType {
         CategoryType(rawValue: categoryRaw) ?? .miscellaneous

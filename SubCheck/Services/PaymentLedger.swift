@@ -30,13 +30,17 @@ enum PaymentLedger {
 
             var iterations = 0
             while due <= now && iterations < maxIterations {
-                let record = PaymentRecord(from: subscription, paidAt: due, isEstimated: true)
-                record.stampRate(using: .shared)
-                context.insert(record)
+                // Serviço incluído num pacote não é cobrado à parte: o ciclo
+                // anda, mas nenhum valor entra no histórico.
+                if !subscription.isIncludedInBundle {
+                    let record = PaymentRecord(from: subscription, paidAt: due, isEstimated: true)
+                    record.stampRate(using: .shared)
+                    context.insert(record)
+                    inserted += 1
+                }
                 subscription.lastPaymentDate = due
                 due = subscription.advancing(due)
                 iterations += 1
-                inserted += 1
             }
         }
 
