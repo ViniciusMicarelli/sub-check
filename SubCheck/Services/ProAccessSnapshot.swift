@@ -26,7 +26,8 @@ enum ProAccessSnapshot {
         lastSeen: Date?,
         now: Date
     ) -> Bool {
-        let start = TrialPolicy.startDate(from: trialStart, now: now)
+        // Sem teste ativado, só a compra libera o Pro.
+        guard let start = TrialPolicy.earliestStart(from: trialStart) else { return purchased }
         let effective = TrialPolicy.effectiveNow(now, lastSeen: lastSeen)
         return TrialPolicy(startDate: start, days: trialDays)
             .hasProAccess(isPurchased: purchased, now: effective)
