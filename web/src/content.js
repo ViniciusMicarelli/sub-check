@@ -62,7 +62,11 @@ export const content = {
         },
         {
           q: "O que é grátis e o que é Pro?",
-          a: "Grátis: até 5 assinaturas ativas, painel, widgets, avisos antes de cada cobrança, Siri e Atalhos, importar do extrato, cotação por pagamento, projeção com reajuste e guias de cancelamento. Pro: assinaturas ilimitadas, Análise com previsão de 12 meses, insights completos, Ilha Dinâmica, orçamento com alertas, simulador de cancelamento, relatório em PDF e exportação em CSV, Face ID e sincronização com iCloud.",
+          a: "Grátis: até 5 assinaturas ativas e 5 contas da casa, salário líquido e quanto sobra no mês, painel, widgets, avisos antes de cada cobrança, Siri e Atalhos, importar do extrato, cotação por pagamento, projeção com reajuste e guias de cancelamento. Pro: assinaturas e contas ilimitadas, Análise com previsão de 12 meses, insights completos, Ilha Dinâmica, orçamento com alertas, simulador de cancelamento, relatório em PDF e exportação em CSV, Face ID e sincronização com iCloud.",
+        },
+        {
+          q: "Como funcionam as contas da casa?",
+          a: "Informe seu salário líquido (já com os descontos) e cadastre contas como água, luz, internet e aluguel, com o dia do vencimento. As fixas já vêm com o valor; nas que variam, você digita o valor no dia em que vencem, e o SubCheck avisa nesse dia. O app mostra quanto sobra do salário depois das contas e das assinaturas e guarda o histórico de cada conta, para você ver quando ela subiu. Tudo fica no seu aparelho: o salário não é enviado nem sincronizado.",
         },
         {
           q: "Como a Siri funciona?",
@@ -136,6 +140,9 @@ export const content = {
                 p: "Você pode cadastrar assinaturas (nome do serviço, valor, moeda, frequência, datas, categoria, lembrete e um ícone) e, opcionalmente, um nome para a saudação do app. Esses dados ficam <strong>armazenados no seu aparelho</strong> e são usados apenas para exibir os seus gastos, gerar gráficos, previsões e lembretes.",
               },
               {
+                p: "Você também pode informar o seu <strong>salário líquido</strong> e cadastrar <strong>contas recorrentes</strong> (nome, dia do vencimento e os valores que você digitar). Esses dados ficam no seu aparelho e servem só para mostrar quanto sobra no mês. O salário não é enviado a ninguém nem sincronizado.",
+              },
+              {
                 p: "Cada pagamento registrado guarda também a <strong>cotação da moeda no dia</strong>, para mostrar quanto o câmbio mudou o custo desde então. Esse histórico fica no seu aparelho.",
               },
               {
@@ -162,7 +169,7 @@ export const content = {
             title: "iCloud (opcional)",
             blocks: [
               {
-                p: "Nas versões com o SubCheck Pro, você pode ligar “Sincronizar com iCloud”. Quando ligado, os seus dados de assinaturas são gravados na <strong>sua base privada do iCloud</strong> (Apple CloudKit), para ficarem iguais nos seus aparelhos. Essa base pertence a você e segue a política de privacidade da Apple; nós não conseguimos ler nem acessar o conteúdo. Você pode desligar a opção a qualquer momento em Ajustes › iCloud.",
+                p: "Nas versões com o SubCheck Pro, você pode ligar “Sincronizar com iCloud”. Quando ligado, os seus dados de assinaturas e contas são gravados na <strong>sua base privada do iCloud</strong> (Apple CloudKit), para ficarem iguais nos seus aparelhos. Essa base pertence a você e segue a política de privacidade da Apple; nós não conseguimos ler nem acessar o conteúdo. Você pode desligar a opção a qualquer momento em Ajustes › iCloud.",
               },
             ],
           },
@@ -381,6 +388,10 @@ export const content = {
           a: "Os totais e a conversão de moeda são estimativas com base no que você cadastrou e em fontes públicas de câmbio. Confira sempre na fatura do serviço. Você pode atualizar as cotações em Ajustes › Moeda e cotação › Atualizar cotação.",
         },
         {
+          q: "Como cadastro meu salário e minhas contas?",
+          a: "Abra a aba Contas. Toque em “Informar salário” e digite o valor líquido, já com os descontos. Depois toque em + para cadastrar uma conta: nome, dia do vencimento e se o valor é fixo ou varia. No dia do vencimento, toque na conta e digite o valor. O salário fica só neste aparelho.",
+        },
+        {
           q: "Como uso a Siri?",
           a: "Diga “Ei Siri, registrar pagamento de [nome] no SubCheck”. Se ela não responder, ligue o SubCheck em Ajustes do iPhone › Siri › Aplicativos e confira o idioma da Siri. O passo a passo está em Ajustes › Siri e Atalhos.",
         },
@@ -451,7 +462,11 @@ export const content = {
         },
         {
           q: "What is free and what is Pro?",
-          a: "Free: up to 5 active subscriptions, dashboard, widgets, alerts before each charge, Siri and Shortcuts, statement import, rate per payment, forecast with price hikes and cancellation guides. Pro: unlimited subscriptions, Analysis with a 12-month forecast, full insights, Dynamic Island, budget with alerts, cancellation simulator, PDF report and CSV export, Face ID and iCloud sync.",
+          a: "Free: up to 5 active subscriptions and 5 household bills, net salary and what's left each month, dashboard, widgets, alerts before each charge, Siri and Shortcuts, statement import, rate per payment, forecast with price hikes and cancellation guides. Pro: unlimited subscriptions and bills, Analysis with a 12-month forecast, full insights, Dynamic Island, budget with alerts, cancellation simulator, PDF report and CSV export, Face ID and iCloud sync.",
+        },
+        {
+          q: "How do household bills work?",
+          a: "Enter your net salary (after deductions) and add bills such as water, electricity, internet and rent, with their due day. Fixed ones come with the amount; for the ones that vary, you type the amount on the day they are due, and SubCheck reminds you that day. The app shows how much of your salary is left after bills and subscriptions and keeps each bill's history, so you can see when it went up. Everything stays on your device: your salary is never sent or synced.",
         },
         {
           q: "How does Siri work?",
@@ -525,6 +540,9 @@ export const content = {
                 p: "You can add subscriptions (service name, amount, currency, frequency, dates, category, reminder and an icon) and, optionally, a name used for the app greeting. This data is <strong>stored on your device</strong> and used only to show your spending, charts, forecasts and reminders.",
               },
               {
+                p: "You can also enter your <strong>net salary</strong> and add <strong>recurring bills</strong> (name, due day and the amounts you type). This data stays on your device and is used only to show how much is left in the month. Your salary is never sent to anyone or synced.",
+              },
+              {
                 p: "Each logged payment also keeps the <strong>currency rate of that day</strong>, to show how much the exchange rate changed its cost since. This history stays on your device.",
               },
               {
@@ -551,7 +569,7 @@ export const content = {
             title: "iCloud (optional)",
             blocks: [
               {
-                p: "In builds with SubCheck Pro you can turn on “Sync with iCloud”. When on, your subscription data is written to <strong>your own private iCloud database</strong> (Apple CloudKit) so it stays the same across your devices. That database belongs to you and is governed by Apple's privacy policy; we cannot read or access its contents. You can turn it off anytime in Settings › iCloud.",
+                p: "In builds with SubCheck Pro you can turn on “Sync with iCloud”. When on, your subscription and bill data is written to <strong>your own private iCloud database</strong> (Apple CloudKit) so it stays the same across your devices. That database belongs to you and is governed by Apple's privacy policy; we cannot read or access its contents. You can turn it off anytime in Settings › iCloud.",
               },
             ],
           },
@@ -768,6 +786,10 @@ export const content = {
         {
           q: "The amounts and rates look wrong.",
           a: "Totals and currency conversion are estimates based on what you entered and on public exchange-rate sources. Always check the service's invoice. You can refresh rates in Settings › Currency & rates › Refresh rates.",
+        },
+        {
+          q: "How do I add my salary and bills?",
+          a: "Open the Bills tab. Tap “Enter salary” and type the net amount, after deductions. Then tap + to add a bill: name, due day and whether the amount is fixed or varies. On the due date, tap the bill and type the amount. Your salary stays only on this device.",
         },
         {
           q: "How do I use Siri?",

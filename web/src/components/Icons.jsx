@@ -44,6 +44,14 @@ const stroked = {
     </>
   ),
   home: <path d="M4 11 12 4l8 7v9h-5v-6H9v6H4v-9Z" />,
+  wallet: (
+    <>
+      <path d="M3 8a3 3 0 0 1 3-3h11v3" />
+      <rect x="3" y="8" width="18" height="12" rx="3" />
+      <circle cx="16.5" cy="14" r="1.2" />
+    </>
+  ),
+  drop: <path d="M12 3s6 6.2 6 10.5A6 6 0 0 1 6 13.5C6 9.2 12 3 12 3Z" />,
   bolt: <path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" />,
   calendar: (
     <>

@@ -129,7 +129,7 @@ export function Tutorial({ lang }) {
           <div className="lp-tut-right">
             <div className="lp-stepper">
               <div className="lp-stepper-top">
-                <span className="lp-tour-badge">{c.badge}</span>
+                <span className="lp-tour-badge">{c.badge.replace('{total}', steps.length)}</span>
                 <b>{stepText}</b>
               </div>
               <div className="lp-segs" aria-hidden="true">

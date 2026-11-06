@@ -65,7 +65,7 @@ export function Badge({ icon, tint, size = '9.5cqw' }) {
 
 /** Barra de abas flutuante, como a do app. */
 export function TabBar({ labels, active = 0 }) {
-  const icons = ['chart', 'list', 'grid', 'clock', 'target']
+  const icons = ['chart', 'list', 'wallet', 'grid', 'target']
   return (
     <div className="sim-tabbar" data-a="tabbar" aria-hidden="true">
       {icons.map((name, i) => (

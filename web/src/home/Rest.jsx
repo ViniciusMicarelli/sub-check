@@ -14,7 +14,7 @@ gsap.registerPlugin(ScrollTrigger, SplitText)
 
 /* --------------------------------- Bento --------------------------------- */
 
-function Art({ id, pay }) {
+function Art({ id, pay, bills }) {
   switch (id) {
     case 'island':
       return (
@@ -31,6 +31,25 @@ function Art({ id, pay }) {
       return (
         <div className="art art-siri">
           {Array.from({ length: 15 }, (_, i) => <i key={i} style={{ animationDelay: `${(i % 7) * 0.11}s` }} />)}
+        </div>
+      )
+    case 'bills':
+      return (
+        <div className="art art-bills">
+          <div className="row">
+            <i className="d water" />
+            <span>{bills.water}</span>
+            <em>{bills.enter}</em>
+          </div>
+          <div className="row done">
+            <i className="d rent" />
+            <span>{bills.rent}</span>
+            <b>R$ 1.800</b>
+          </div>
+          <div className="left">
+            <small>{bills.left}</small>
+            <b>R$ 2.568</b>
+          </div>
         </div>
       )
     case 'import':
@@ -102,7 +121,7 @@ export function Bento({ lang }) {
           {c.items.map((item) => (
             <article className={`lp-card b-${item.id}`} data-b="card" key={item.id} onPointerMove={spotlight}>
               {item.pro && <span className="lp-protag">Pro</span>}
-              <Art id={item.id} pay={home[lang].sim.pay} />
+              <Art id={item.id} pay={home[lang].sim.pay} bills={home[lang].sim.billsScene} />
               <h3>{item.title}</h3>
               <p>{item.text}</p>
             </article>
