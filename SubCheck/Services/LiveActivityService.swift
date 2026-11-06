@@ -89,9 +89,13 @@ final class LiveActivityService {
     /// Começa a acompanhar a próxima cobrança. Se já existe uma atividade,
     /// apenas atualiza o conteúdo. Só funciona com o app em primeiro plano.
     @discardableResult
-    func start(with subscriptions: [Subscription], service: CurrencyService = .shared) -> StartResult {
+    func start(
+        with subscriptions: [Subscription],
+        service: CurrencyService = .shared,
+        bills: [SubCheckActivityAttributes.UpcomingCharge]? = nil
+    ) -> StartResult {
         guard areActivitiesEnabled else { return .disabledBySystem }
-        guard let state = Self.state(from: subscriptions, service: service, bills: Self.billCharges()) else {
+        guard let state = Self.state(from: subscriptions, service: service, bills: bills ?? Self.billCharges()) else {
             // Sem assinaturas ativas não sobra nada a mostrar: encerra a
             // atividade antiga em vez de deixá-la com dados apagados.
             stop()
