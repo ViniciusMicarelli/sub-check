@@ -123,6 +123,48 @@ enum BillLedger {
         return entries.first { $0.monthStart == month && !$0.isPaid }
     }
 
+    /// Contas que dá para marcar como pagas de uma vez: as que já venceram (ou
+    /// vencem hoje), têm linha no mês e algum valor (informado ou estimado).
+    static func bulkPayable(_ occurrences: [BillOccurrence]) -> [BillOccurrence] {
+        occurrences.filter {
+            $0.entry != nil && [.dueToday, .overdue].contains($0.status) && $0.amount > 0
+        }
+    }
+
+    /// Marca todas como pagas, cada uma com o valor que já tem. Devolve quantas
+    /// e o total, e pode ser desfeito com `unpay` em cada linha.
+    @discardableResult
+    static func markAllPaid(
+        _ items: [BillOccurrence],
+        at date: Date = Date(),
+        in context: ModelContext
+    ) -> (count: Int, total: Double) {
+        var count = 0
+        var total = 0.0
+        for item in bulkPayable(items) {
+            guard let entry = item.entry else { continue }
+            entry.amount = max(item.amount, 0)
+            entry.isPaid = true
+            entry.paidAt = date
+            entry.isSkipped = false
+            count += 1
+            total += item.amount
+        }
+        if count > 0 { context.saveReporting() }
+        return (count, total)
+    }
+
+    /// `true` no dia do salário (ajustado ao tamanho do mês: dia 31 em
+    /// fevereiro vale no último dia).
+    static func isSalaryDay(
+        _ salaryDay: Int, now: Date = Date(), calendar: Calendar = .current
+    ) -> Bool {
+        let due = BillSchedule.dueDate(
+            day: salaryDay, inMonthOf: BillSchedule.monthStart(of: now, calendar: calendar), calendar: calendar
+        )
+        return calendar.isDate(due, inSameDayAs: now)
+    }
+
     /// Volta a conta para "não paga" (o valor informado continua).
     static func unpay(_ entry: BillEntry, in context: ModelContext) {
         entry.isPaid = false

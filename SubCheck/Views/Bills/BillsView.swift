@@ -49,6 +49,7 @@ struct BillsView: View {
     @State private var showSalary = false
     @State private var showPaywall = false
     @State private var monthOffset = 0
+    @State private var confirmBulk = false
     @State private var mode: BillsMode = .list
     #if DEBUG
     @State private var debugDetail: Bill?
@@ -100,6 +101,12 @@ struct BillsView: View {
         occurrences.filter { $0.status == .paid }
             .sorted { ($0.paidAt ?? $0.dueDate) > ($1.paidAt ?? $1.dueDate) }
     }
+
+    /// Vencidas ou de hoje que dá para marcar como pagas de uma vez.
+    private var bulkPayable: [BillOccurrence] { BillLedger.bulkPayable(occurrences) }
+    private var bulkTotal: Double { bulkPayable.reduce(0) { $0 + $1.amount } }
+
+    private var isSalaryDay: Bool { salary > 0 && BillLedger.isSalaryDay(salaryDay) }
 
     private var activeBillCount: Int { bills.filter(\.isActive).count }
 
@@ -182,6 +189,9 @@ struct BillsView: View {
                 .frame(maxWidth: .infinity)
                 .cardSurface()
         } else {
+            if monthOffset == 0, !bulkPayable.isEmpty {
+                bulkCard
+            }
             if !toInform.isEmpty {
                 section(L.t("Para informar"), items: toInform, highlight: true)
             }
@@ -191,6 +201,57 @@ struct BillsView: View {
             if !paid.isEmpty {
                 section(monthOffset == 0 ? L.t("Pagas este mês") : L.t("Pagas"), items: paid)
             }
+        }
+    }
+
+    /// "Marcar tudo como pago": destaque no dia do salário, discreto nos outros.
+    private var bulkCard: some View {
+        VStack(alignment: .leading, spacing: Spacing.sm) {
+            Label(
+                isSalaryDay ? L.t("Hoje é dia do salário") : L.t("Contas vencidas sem baixa"),
+                systemImage: isSalaryDay ? "banknote.fill" : "checklist"
+            )
+            .font(.headline)
+            .foregroundStyle(Color.textPrimary)
+
+            Text(L.t("Marcar %lld conta(s) (%@) como pagas de uma vez? Cada uma usa o valor que já tem.",
+                     bulkPayable.count, Money.format(bulkTotal)))
+                .font(.subheadline)
+                .foregroundStyle(Color.textSecondary)
+
+            Button {
+                confirmBulk = true
+            } label: {
+                Text("Marcar todas como pagas")
+                    .font(.subheadline.weight(.semibold))
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 10)
+                    .background(Color.brandGradient, in: Capsule())
+                    .foregroundStyle(.white)
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(Spacing.lg)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            RoundedRectangle(cornerRadius: Radius.md, style: .continuous)
+                .fill(isSalaryDay ? Color.brand.opacity(0.10) : Color.elevatedBackground)
+        )
+        .confirmationDialog(
+            L.t("Marcar %lld conta(s) como pagas?", bulkPayable.count),
+            isPresented: $confirmBulk,
+            titleVisibility: .visible
+        ) {
+            Button("Marcar todas como pagas") {
+                let result = BillLedger.markAllPaid(bulkPayable, in: context)
+                if result.count > 0 {
+                    Haptics.success()
+                    BillLedger.refreshSurfaces(in: context)
+                }
+            }
+            Button("Cancelar", role: .cancel) {}
+        } message: {
+            Text("Dá para desfazer em cada conta.")
         }
     }
 

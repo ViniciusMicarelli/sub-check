@@ -856,3 +856,9 @@
 "Futuro" = "Futuro";
 "+ %@/mês quando os testes grátis acabarem" = "+ %@/mês quando os testes grátis acabarem";
 "Inclui %@/mês de testes grátis (hoje não cobram)" = "Inclui %@/mês de testes grátis (hoje não cobram)";
+"Hoje é dia do salário" = "Hoje é dia do salário";
+"Contas vencidas sem baixa" = "Contas vencidas sem baixa";
+"Marcar %lld conta(s) (%@) como pagas de uma vez? Cada uma usa o valor que já tem." = "Marcar %lld conta(s) (%@) como pagas de uma vez? Cada uma usa o valor que já tem.";
+"Marcar todas como pagas" = "Marcar todas como pagas";
+"Marcar %lld conta(s) como pagas?" = "Marcar %lld conta(s) como pagas?";
+"Dá para desfazer em cada conta." = "Dá para desfazer em cada conta.";

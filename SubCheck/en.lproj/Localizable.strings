@@ -855,3 +855,9 @@
 "Futuro" = "Future";
 "+ %@/mês quando os testes grátis acabarem" = "+ %@/month when the free trials end";
 "Inclui %@/mês de testes grátis (hoje não cobram)" = "Includes %@/month of free trials (not charged today)";
+"Hoje é dia do salário" = "Today is payday";
+"Contas vencidas sem baixa" = "Overdue bills not marked";
+"Marcar %lld conta(s) (%@) como pagas de uma vez? Cada uma usa o valor que já tem." = "Mark %1$lld bill(s) (%2$@) as paid at once? Each one uses the amount it already has.";
+"Marcar todas como pagas" = "Mark all as paid";
+"Marcar %lld conta(s) como pagas?" = "Mark %lld bill(s) as paid?";
+"Dá para desfazer em cada conta." = "You can undo each bill.";
