@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { Icon } from '../components/Icons'
@@ -22,6 +22,9 @@ export function Tutorial({ lang }) {
   const steps = c.steps
   const [active, setActive] = useState(0)
   const [playKey, setPlayKey] = useState(0)
+  // `true` quando a cena do passo atual terminou de rodar.
+  const [finished, setFinished] = useState(false)
+  const fills = useRef([])
   const root = useRef(null)
   const trigger = useRef(null)
   const current = useRef(0)
@@ -62,6 +65,20 @@ export function Tutorial({ lang }) {
     }
   }, [steps.length])
 
+  // Novo passo (ou repetição): a barra volta ao zero e o aviso some.
+  useLayoutEffect(() => {
+    setFinished(false)
+    fills.current.forEach((el, i) => {
+      if (el) el.style.transform = `scaleX(${i < active ? 1 : 0})`
+    })
+  }, [active, playKey])
+
+  // O progresso da cena vai direto para o DOM: evita renderizar a cada quadro.
+  const onProgress = (p) => {
+    const el = fills.current[active]
+    if (el) el.style.transform = `scaleX(${p})`
+  }
+
   const goTo = (i) => {
     const t = trigger.current
     if (i === active) {
@@ -77,6 +94,8 @@ export function Tutorial({ lang }) {
   }
 
   const progress = ((active + 1) / steps.length) * 100
+  const isLast = active === steps.length - 1
+  const stepText = c.stepOf.replace('{n}', active + 1).replace('{total}', steps.length)
 
   return (
     <section id="how" className="lp-tut" ref={root}>
@@ -108,9 +127,38 @@ export function Tutorial({ lang }) {
           </div>
 
           <div className="lp-tut-right">
+            <div className="lp-stepper">
+              <div className="lp-stepper-top">
+                <span className="lp-tour-badge">{c.badge}</span>
+                <b>{stepText}</b>
+              </div>
+              <div className="lp-segs" aria-hidden="true">
+                {steps.map((step, i) => (
+                  <i key={step.id} className={i < active ? 'past' : i === active ? 'now' : ''}>
+                    <u ref={(el) => { fills.current[i] = el }} />
+                  </i>
+                ))}
+              </div>
+            </div>
+
             <div className="lp-tut-phone" data-t="phone">
               <span className="lp-halo lp-halo-sm" aria-hidden="true" />
-              <Simulator sceneId={steps[active].id} lang={lang} playKey={playKey} loopDelay={4} className="lp-tut-sim" />
+              <Simulator
+                sceneId={steps[active].id}
+                lang={lang}
+                playKey={playKey}
+                loopDelay={5}
+                speed={1.3}
+                onProgress={onProgress}
+                onEnd={() => setFinished(true)}
+                className="lp-tut-sim"
+              />
+            </div>
+
+            <div className={`lp-cue${finished ? ' is-ready' : ''}${isLast && finished ? ' is-final' : ''}`} aria-live="polite">
+              {!finished && <span className="lp-cue-watch"><i /><i /><i />{c.watching}</span>}
+              {finished && !isLast && <span className="lp-cue-next">{c.cue}<Icon name="chevron" size={14} strokeWidth={2.6} /></span>}
+              {finished && isLast && <span className="lp-cue-done"><Icon name="check" size={14} strokeWidth={3} />{c.finished}</span>}
             </div>
 
             <div className="lp-caption" aria-live="polite">
