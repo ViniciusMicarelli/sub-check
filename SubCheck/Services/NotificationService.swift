@@ -51,7 +51,12 @@ final class NotificationService {
             actions: [paid, snooze],
             intentIdentifiers: []
         )
-        center.setNotificationCategories([category])
+        let billMark = UNNotificationAction(identifier: Self.billMarkPaidAction, title: L.t("Marcar como paga"), options: [])
+        let billEnter = UNNotificationAction(identifier: Self.billEnterAction, title: L.t("Informar valor"), options: [.foreground])
+        let billSnooze = UNNotificationAction(identifier: Self.billSnoozeAction, title: L.t("Lembrar em 3 h"), options: [])
+        let fixed = UNNotificationCategory(identifier: Self.billFixedCategory, actions: [billMark, billSnooze], intentIdentifiers: [])
+        let variable = UNNotificationCategory(identifier: Self.billVariableCategory, actions: [billEnter, billSnooze], intentIdentifiers: [])
+        center.setNotificationCategories([category, fixed, variable])
     }
 
     /// Repete a mesma notificação amanhã às 9h.
@@ -145,8 +150,20 @@ final class NotificationService {
     static let billIDKey = "billID"
     private static let billPrefix = "bill-"
 
-    /// Reagenda os avisos das contas: os próximos dois vencimentos de cada
-    /// conta com lembrete. Meses já pagos ou pulados não avisam. Idempotente.
+    /// Categorias dos avisos de conta: a de valor fixo tem "Marcar como paga";
+    /// a de valor variável tem "Informar valor" (abre o app para digitar).
+    static let billFixedCategory = "bill.fixed"
+    static let billVariableCategory = "bill.variable"
+    static let billMarkPaidAction = "bill.markPaid"
+    static let billEnterAction = "bill.enter"
+    static let billSnoozeAction = "bill.snooze"
+    private static let billSnoozePrefix = "billsnooze-"
+    /// O iOS guarda no máximo 64 avisos pendentes; deixamos folga para os demais.
+    private static let billReminderBudget = 36
+
+    /// Reagenda os avisos de todas as contas com lembrete. Meses já pagos ou
+    /// pulados não avisam. Idempotente: apaga os avisos de conta antigos e
+    /// recria a partir do que está salvo agora.
     func scheduleBills(
         _ bills: [Bill],
         entries: [BillEntry],
@@ -164,37 +181,69 @@ final class NotificationService {
         }
         let settled = Set(entries.filter { $0.isPaid || $0.isSkipped }.map { "\($0.billID.uuidString)-\(monthKey($0.monthStart))" })
 
+        var planned: [(bill: Bill, reminder: PlannedBillReminder)] = []
         for bill in bills where bill.isActive && bill.remindersEnabled {
-            for due in BillSchedule.upcomingDueDates(day: bill.dueDay, from: now, count: 2, calendar: calendar) {
+            let needsAmount = !bill.isFixed || bill.expectedAmount <= 0
+            // Mês passado (para o aviso de atraso), este e os dois próximos.
+            for offset in -1...2 {
+                guard let ref = calendar.date(byAdding: .month, value: offset, to: now) else { continue }
+                let due = BillSchedule.dueDate(day: bill.dueDay, inMonthOf: ref, calendar: calendar)
                 if settled.contains("\(bill.id.uuidString)-\(monthKey(due))") { continue }
-
-                let fireDay = calendar.date(byAdding: .day, value: -bill.reminderDaysBefore, to: due) ?? due
-                var parts = calendar.dateComponents([.year, .month, .day], from: fireDay)
-                parts.hour = 9
-                guard let fire = calendar.date(from: parts), fire > now else { continue }
-
-                let content = UNMutableNotificationContent()
-                content.sound = .default
-                content.userInfo = [Self.billIDKey: bill.id.uuidString]
-                let amount = Money.format(bill.expectedAmount)
-                if bill.reminderDaysBefore == 0 {
-                    content.title = L.t("Conta vence hoje")
-                    content.body = (bill.isFixed && bill.expectedAmount > 0)
-                        ? L.t("%@ vence hoje: %@.", bill.name, amount)
-                        : L.t("%@ vence hoje. Toque para informar o valor.", bill.name)
-                } else {
-                    content.title = L.t("Conta próxima")
-                    content.body = (bill.isFixed && bill.expectedAmount > 0)
-                        ? L.t("%@ vence em %lld dia(s): %@.", bill.name, bill.reminderDaysBefore, amount)
-                        : L.t("%@ vence em %lld dia(s).", bill.name, bill.reminderDaysBefore)
+                for reminder in BillReminderPlanner.plan(
+                    dueDate: due, advanceDays: bill.reminderDaysBefore,
+                    needsAmount: needsAmount, now: now, calendar: calendar
+                ) {
+                    planned.append((bill, reminder))
                 }
-
-                let dayKey = calendar.dateComponents([.year, .month, .day], from: due)
-                let identifier = "\(Self.billPrefix)\(bill.id.uuidString)-\(dayKey.year ?? 0)\(dayKey.month ?? 0)\(dayKey.day ?? 0)"
-                let trigger = UNCalendarNotificationTrigger(dateMatching: parts, repeats: false)
-                try? await center.add(UNNotificationRequest(identifier: identifier, content: content, trigger: trigger))
             }
         }
+
+        for item in planned.sorted(by: { $0.reminder.fireDate < $1.reminder.fireDate }).prefix(Self.billReminderBudget) {
+            let content = billContent(for: item.bill, kind: item.reminder.kind)
+            let parts = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: item.reminder.fireDate)
+            let due = calendar.dateComponents([.year, .month, .day], from: item.reminder.dueDate)
+            let identifier = "\(Self.billPrefix)\(item.bill.id.uuidString)-\(due.year ?? 0)\(due.month ?? 0)\(due.day ?? 0)-\(item.reminder.kind.rawValue)"
+            let trigger = UNCalendarNotificationTrigger(dateMatching: parts, repeats: false)
+            try? await center.add(UNNotificationRequest(identifier: identifier, content: content, trigger: trigger))
+        }
+    }
+
+    private func billContent(for bill: Bill, kind: PlannedBillReminder.Kind) -> UNMutableNotificationContent {
+        let content = UNMutableNotificationContent()
+        content.sound = .default
+        content.userInfo = [Self.billIDKey: bill.id.uuidString]
+        let fixedWithAmount = bill.isFixed && bill.expectedAmount > 0
+        content.categoryIdentifier = fixedWithAmount ? Self.billFixedCategory : Self.billVariableCategory
+        let amount = Money.format(bill.expectedAmount)
+
+        switch kind {
+        case .advance:
+            let days = bill.reminderDaysBefore
+            content.title = L.t("Conta próxima")
+            content.body = fixedWithAmount
+                ? L.t("%@ vence em %lld dia(s): %@.", bill.name, days, amount)
+                : L.t("%@ vence em %lld dia(s).", bill.name, days)
+        case .dueDay:
+            content.title = L.t("Conta vence hoje")
+            content.body = fixedWithAmount
+                ? L.t("%@ vence hoje: %@.", bill.name, amount)
+                : L.t("%@ vence hoje. Toque para informar o valor.", bill.name)
+        case .evening:
+            content.title = L.t("Falta informar o valor")
+            content.body = L.t("%@ venceu hoje. Quer informar o valor agora?", bill.name)
+        case .overdue:
+            content.title = L.t("Conta atrasada")
+            content.body = L.t("%@ venceu ontem. Informe o valor para manter o mês em dia.", bill.name)
+        }
+        return content
+    }
+
+    /// "Lembrar daqui a 3 horas": repete o mesmo aviso. Usa outro prefixo para
+    /// não ser apagado quando os avisos de conta são recriados.
+    func snoozeBill(_ original: UNNotificationContent, billID: String, hours: Double = 3) {
+        guard let content = original.mutableCopy() as? UNMutableNotificationContent else { return }
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: hours * 3600, repeats: false)
+        center.add(UNNotificationRequest(identifier: "\(Self.billSnoozePrefix)\(billID)", content: content, trigger: trigger))
     }
 
     // MARK: - Orçamento

@@ -151,7 +151,7 @@ struct AddBillView: View {
                 Button("Excluir", role: .destructive) {
                     if let bill {
                         BillLedger.delete(bill, in: context)
-                        BillLedger.rescheduleNotifications(in: context)
+                        BillLedger.refreshSurfaces(in: context)
                     }
                     Haptics.warning()
                     dismiss()
@@ -191,9 +191,19 @@ struct AddBillView: View {
             context.insert(new)
             context.saveReporting()
             BillLedger.ensureEntries(for: [new], in: context)
+
+            // Cadastrou uma conta que já vence hoje (ou venceu)? Pede o valor já.
+            let due = BillSchedule.dueDate(day: dueDay, inMonthOf: Date())
+            if BillMath.daysUntil(due) <= 0 {
+                let id = new.id
+                Task { @MainActor in
+                    try? await Task.sleep(for: .seconds(0.7))
+                    AppRouter.shared.openBill(id)
+                }
+            }
         }
 
-        BillLedger.rescheduleNotifications(in: context)
+        BillLedger.refreshSurfaces(in: context)
         Haptics.success()
         dismiss()
     }

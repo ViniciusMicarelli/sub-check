@@ -10,6 +10,7 @@
 import ActivityKit
 import Foundation
 import Observation
+import SwiftData
 import WidgetKit
 
 /// Regras de duração da atividade, sem depender do ActivityKit para poderem
@@ -90,7 +91,7 @@ final class LiveActivityService {
     @discardableResult
     func start(with subscriptions: [Subscription], service: CurrencyService = .shared) -> StartResult {
         guard areActivitiesEnabled else { return .disabledBySystem }
-        guard let state = Self.state(from: subscriptions, service: service) else {
+        guard let state = Self.state(from: subscriptions, service: service, bills: Self.billCharges()) else {
             // Sem assinaturas ativas não sobra nada a mostrar: encerra a
             // atividade antiga em vez de deixá-la com dados apagados.
             stop()
@@ -139,7 +140,7 @@ final class LiveActivityService {
     /// Recalcula o conteúdo da atividade em andamento, se houver.
     func refresh(with subscriptions: [Subscription], service: CurrencyService = .shared) {
         guard let running,
-              let state = Self.state(from: subscriptions, service: service) else { return }
+              let state = Self.state(from: subscriptions, service: service, bills: Self.billCharges()) else { return }
         let content = ActivityContent(
             state: state,
             staleDate: LiveActivityLifecycle.staleDate(forDue: state.nextDueDate)
@@ -162,15 +163,12 @@ final class LiveActivityService {
     /// próxima cobrança. Devolve `nil` quando não há nada a mostrar.
     static func state(
         from subscriptions: [Subscription],
-        service: CurrencyService = .shared
+        service: CurrencyService = .shared,
+        bills: [SubCheckActivityAttributes.UpcomingCharge] = []
     ) -> SubCheckActivityAttributes.ContentState? {
-        let active = subscriptions
-            .filter { !$0.isCancelled }
-            .sorted { $0.nextBillingDate < $1.nextBillingDate }
+        let active = subscriptions.filter { !$0.isCancelled }
 
-        guard let next = active.first else { return nil }
-
-        let upcoming = active.prefix(upcomingLimit).map {
+        let subscriptionCharges = active.map {
             SubCheckActivityAttributes.UpcomingCharge(
                 id: $0.id.uuidString,
                 name: $0.name,
@@ -180,14 +178,46 @@ final class LiveActivityService {
             )
         }
 
+        // Assinaturas e contas da casa na mesma fila, da mais próxima à mais distante.
+        let all = (subscriptionCharges + bills).sorted { $0.dueDate < $1.dueDate }
+        guard let next = all.first else { return nil }
+
         return SubCheckActivityAttributes.ContentState(
-            nextID: next.id.uuidString,
+            nextID: next.id,
             nextName: next.name,
-            nextAmount: next.cost(in: service),
-            nextDueDate: next.nextBillingDate,
+            nextAmount: next.amount,
+            nextDueDate: next.dueDate,
             nextCategory: next.category,
             monthlyTotal: active.monthlyTotal(in: service),
-            upcoming: Array(upcoming)
+            upcoming: Array(all.prefix(upcomingLimit)),
+            nextKind: next.kind
         )
+    }
+
+    /// Contas da casa que pedem atenção: vencidas ou vencendo nos próximos
+    /// dias e ainda sem pagamento. Lê do mesmo banco que o app e os widgets.
+    static func billCharges(
+        now: Date = Date(), calendar: Calendar = .current
+    ) -> [SubCheckActivityAttributes.UpcomingCharge] {
+        let context = ModelContext(SharedModelContainer.shared)
+        let entries = (try? context.fetch(FetchDescriptor<BillEntry>())) ?? []
+        let bills = (try? context.fetch(FetchDescriptor<Bill>())) ?? []
+        let expected = Dictionary(bills.map { ($0.id, $0.expectedAmount) }, uniquingKeysWith: { first, _ in first })
+
+        return entries
+            .filter { entry in
+                let days = BillMath.daysUntil(entry.dueDate, now: now, calendar: calendar)
+                return !entry.isPaid && !entry.isSkipped && days <= 3 && days >= -35
+            }
+            .map { entry in
+                SubCheckActivityAttributes.UpcomingCharge(
+                    id: entry.billID.uuidString,
+                    name: entry.billName,
+                    amount: entry.amount > 0 ? entry.amount : (expected[entry.billID] ?? 0),
+                    dueDate: entry.dueDate,
+                    category: entry.categoryRaw,
+                    kind: "bill"
+                )
+            }
     }
 }

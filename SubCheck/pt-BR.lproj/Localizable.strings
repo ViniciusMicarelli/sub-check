@@ -747,3 +747,16 @@
 "O teste só começa quando você ativar, sem cartão e sem cobrança. Depois dos %lld dias, o app continua grátis com até %lld assinaturas e %lld contas." = "O teste só começa quando você ativar, sem cartão e sem cobrança. Depois dos %lld dias, o app continua grátis com até %lld assinaturas e %lld contas.";
 "Teste tudo do SubCheck Pro de graça por %lld dias. Ou continue no grátis e ative quando quiser." = "Teste tudo do SubCheck Pro de graça por %lld dias. Ou continue no grátis e ative quando quiser.";
 "Com o iCloud, suas assinaturas e contas ficam iguais em todos os seus aparelhos. Quer ligar a sincronização?" = "Com o iCloud, suas assinaturas e contas ficam iguais em todos os seus aparelhos. Quer ligar a sincronização?";
+"Falta informar o valor" = "Falta informar o valor";
+"%@ venceu hoje. Quer informar o valor agora?" = "%@ venceu hoje. Quer informar o valor agora?";
+"Conta atrasada" = "Conta atrasada";
+"%@ venceu ontem. Informe o valor para manter o mês em dia." = "%@ venceu ontem. Informe o valor para manter o mês em dia.";
+"Lembrar em 3 h" = "Lembrar em 3 h";
+"Marcar como paga" = "Marcar como paga";
+"Conta da casa" = "Conta da casa";
+"Uma conta precisa de você" = "Uma conta precisa de você";
+"Contas para informar" = "Contas para informar";
+"O valor ainda não foi informado. Preencha agora ou deixe para mais tarde." = "O valor ainda não foi informado. Preencha agora ou deixe para mais tarde.";
+"Preencher agora" = "Preencher agora";
+"Depois" = "Depois";
+"Se escolher depois, o aviso volta amanhã." = "Se escolher depois, o aviso volta amanhã.";

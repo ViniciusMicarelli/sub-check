@@ -218,14 +218,14 @@ struct BillsView: View {
         if entry.isPaid {
             Button {
                 BillLedger.unpay(entry, in: context)
-                BillLedger.rescheduleNotifications(in: context)
+                BillLedger.refreshSurfaces(in: context)
             } label: {
                 Label("Desmarcar pagamento", systemImage: "arrow.uturn.backward")
             }
         } else {
             Button(role: .destructive) {
                 BillLedger.skip(entry, in: context)
-                BillLedger.rescheduleNotifications(in: context)
+                BillLedger.refreshSurfaces(in: context)
             } label: {
                 Label("Pular este mês", systemImage: "forward.end")
             }

@@ -746,3 +746,16 @@
 "O teste só começa quando você ativar, sem cartão e sem cobrança. Depois dos %lld dias, o app continua grátis com até %lld assinaturas e %lld contas." = "The trial only starts when you activate it, with no card and no charge. After %lld days, the app stays free with up to %lld subscriptions and %lld bills.";
 "Teste tudo do SubCheck Pro de graça por %lld dias. Ou continue no grátis e ative quando quiser." = "Try everything in SubCheck Pro free for %lld days. Or stay on Free and activate whenever you like.";
 "Com o iCloud, suas assinaturas e contas ficam iguais em todos os seus aparelhos. Quer ligar a sincronização?" = "With iCloud, your subscriptions and bills stay the same on all your devices. Turn on sync?";
+"Falta informar o valor" = "Amount still missing";
+"%@ venceu hoje. Quer informar o valor agora?" = "%@ was due today. Want to enter the amount now?";
+"Conta atrasada" = "Bill overdue";
+"%@ venceu ontem. Informe o valor para manter o mês em dia." = "%@ was due yesterday. Enter the amount to keep the month up to date.";
+"Lembrar em 3 h" = "Remind me in 3 h";
+"Marcar como paga" = "Mark as paid";
+"Conta da casa" = "Household bill";
+"Uma conta precisa de você" = "A bill needs you";
+"Contas para informar" = "Bills to enter";
+"O valor ainda não foi informado. Preencha agora ou deixe para mais tarde." = "The amount hasn't been entered yet. Fill it in now or leave it for later.";
+"Preencher agora" = "Fill in now";
+"Depois" = "Later";
+"Se escolher depois, o aviso volta amanhã." = "If you choose later, the reminder comes back tomorrow.";

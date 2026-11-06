@@ -80,6 +80,14 @@ enum BillLedger {
         Task { await NotificationService.shared.scheduleBills(bills, entries: entries) }
     }
 
+    /// Atualiza tudo que mostra as contas fora da tela: avisos, Ilha Dinâmica e
+    /// widgets. Chamar depois de criar, editar, pagar ou pular uma conta.
+    static func refreshSurfaces(in context: ModelContext) {
+        rescheduleNotifications(in: context)
+        let subscriptions = (try? context.fetch(FetchDescriptor<Subscription>())) ?? []
+        LiveActivityService.shared.syncAll(with: subscriptions)
+    }
+
     /// Registra o valor do mês. `paid` marca como paga na data `paidAt`.
     static func record(
         _ entry: BillEntry,
@@ -157,6 +165,18 @@ enum BillPlanning {
         var result: [UUID: [Double]] = [:]
         for entry in past { result[entry.billID, default: []].append(entry.amount) }
         return result
+    }
+
+    /// Linhas deste e do mês passado que já venceram (ou vencem hoje) e seguem
+    /// sem pagamento: são as que pedem uma ação da pessoa.
+    static func dueEntries(
+        _ entries: [BillEntry], now: Date = Date(), calendar: Calendar = .current
+    ) -> [BillEntry] {
+        guard let oldest = calendar.date(byAdding: .month, value: -1, to: BillSchedule.monthStart(of: now, calendar: calendar)) else { return [] }
+        return entries
+            .filter { !$0.isPaid && !$0.isSkipped && $0.monthStart >= oldest
+                && BillMath.daysUntil($0.dueDate, now: now, calendar: calendar) <= 0 }
+            .sorted { $0.dueDate < $1.dueDate }
     }
 
     /// Valor que uma linha ainda não paga deve custar: o informado ou, sem

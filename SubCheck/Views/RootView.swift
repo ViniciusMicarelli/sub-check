@@ -53,6 +53,7 @@ struct RootView: View {
         )) {
             OnboardingView()
         }
+        .sheet(isPresented: $router.showBillPrompt) { BillDuePromptSheet() }
         .preferredColorScheme(appearance.colorScheme)
         // A troca de idioma reavalia as `LocalizedStringKey` sem reiniciar o app.
         .environment(\.locale, language.locale ?? Locale.current)
@@ -118,6 +119,15 @@ struct RootView: View {
         let bills = (try? context.fetch(FetchDescriptor<Bill>())) ?? []
         BillLedger.ensureEntries(for: bills, in: context)
         BillLedger.rescheduleNotifications(in: context)
+
+        // Conta vencida ou vencendo hoje sem valor: avisa aqui dentro também,
+        // porque a notificação pode ter sido perdida ou desligada.
+        let entries = (try? context.fetch(FetchDescriptor<BillEntry>())) ?? []
+        let due = BillPlanning.dueEntries(entries).count
+        let snoozed = UserDefaults.standard.integer(forKey: BillPrompt.snoozeKey)
+        if BillPrompt.shouldShow(dueCount: due, snoozedDay: snoozed, now: Date()), !isLocked {
+            router.showBillPrompt = true
+        }
     }
 
     // MARK: - Bloqueio
@@ -138,6 +148,11 @@ struct RootView: View {
             guard let raw = url.pathComponents.dropFirst().first,
                   let id = UUID(uuidString: raw) else { return }
             linkedSubscription = LinkedSubscription(id: id)
+
+        case "bill":
+            guard let raw = url.pathComponents.dropFirst().first,
+                  let id = UUID(uuidString: raw) else { return }
+            router.openBill(id)
 
         case "subscriptions": router.tab = .subscriptions
         case "bills":         router.tab = .bills
