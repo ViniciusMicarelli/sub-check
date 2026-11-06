@@ -246,7 +246,7 @@ struct OnboardingView: View {
         VStack(spacing: Spacing.md) {
             VStack(alignment: .leading, spacing: Spacing.sm) {
                 perk(L.t("Assinaturas ilimitadas"))
-                perk(L.t("Ilha Dinâmica e iCloud"))
+                perk(LiveSurface.text(island: "Ilha Dinâmica e iCloud", noIsland: "Atividade ao Vivo e iCloud"))
                 perk(L.t("Relatório em PDF, exportação e Face ID"))
                 perk(L.t("Análise, previsão e simulador de cancelamento"))
             }
@@ -508,7 +508,7 @@ private enum Step: Int, CaseIterable, Identifiable {
         case .spending:
             L.t("O painel mostra o total mensal, o custo por dia e o que mais pesa no seu bolso.")
         case .alerts:
-            L.t("Avisamos antes de cada cobrança, na véspera do fim de um teste e na Ilha Dinâmica.")
+            LiveSurface.text(island: "Avisamos antes de cada cobrança, na véspera do fim de um teste e na Ilha Dinâmica.", noIsland: "Avisamos antes de cada cobrança, na véspera do fim de um teste e na tela de bloqueio.")
         case .savings:
             L.t("Insights, previsão de 12 meses e o simulador de cancelamento mostram onde cortar.")
         case .pro:

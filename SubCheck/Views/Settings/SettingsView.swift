@@ -45,7 +45,7 @@ struct SettingsView: View {
                 budgetSection
                 toolsSection
                 notificationsSection
-                liveActivitySection
+                if DeviceCapabilities.supportsLiveActivities { liveActivitySection }
                 iCloudSection
                 appearanceSection
                 languageSection
@@ -334,13 +334,13 @@ struct SettingsView: View {
     private var liveActivitySection: some View {
         Section {
             Toggle(isOn: liveActivityBinding) {
-                Label("Ilha Dinâmica", systemImage: "platter.filled.top.iphone")
+                Label(LiveSurface.name, systemImage: "platter.filled.top.iphone")
             }
 
             Button {
                 testLiveActivity()
             } label: {
-                Label("Testar Ilha Dinâmica", systemImage: "play.circle")
+                Label(L.t("Testar %@", LiveSurface.name), systemImage: "play.circle")
             }
 
             if let liveActivityTestMessage {
@@ -350,12 +350,13 @@ struct SettingsView: View {
                     .transition(.opacity)
             }
         } header: {
-            Text("Ilha Dinâmica")
+            Text(LiveSurface.name)
         } footer: {
             Text(
                 store.hasProAccess
                     ? L.t("live.footer")
-                    : L.t("A Ilha Dinâmica faz parte do SubCheck Pro.")
+                    : LiveSurface.text(island: "A Ilha Dinâmica faz parte do SubCheck Pro.",
+                                       noIsland: "A Atividade ao Vivo faz parte do SubCheck Pro.")
             )
         }
     }
@@ -373,20 +374,23 @@ struct SettingsView: View {
         switch result {
         case .started, .updated:
             Haptics.success()
-            message = L.t("Ativa. Volte para a tela de início agora para ver a ilha (iPhone com Ilha Dinâmica) ou bloqueie a tela.")
+            message = LiveSurface.text(
+                island: "Ativa. Volte para a tela de início agora para ver a ilha (iPhone com Ilha Dinâmica) ou bloqueie a tela.",
+                noIsland: "Ativa. Bloqueie a tela para ver a atividade ao vivo.")
         case .disabledBySystem:
             Haptics.warning()
             message = L.t("Atividades ao Vivo estão desligadas. Ative em Ajustes do iOS > SubCheck.")
         case .noSubscriptions:
             Haptics.warning()
-            message = L.t("Adicione uma assinatura ativa para ver a ilha.")
+            message = L.t("Adicione uma assinatura ativa para ver a atividade ao vivo.")
         case .nothingSoon:
             Haptics.warning()
             message = L.t("Nada vence nos próximos dias.")
         case .requiresPro:
             Haptics.impact(.light)
             showPaywall = true
-            message = L.t("A Ilha Dinâmica faz parte do SubCheck Pro.")
+            message = LiveSurface.text(island: "A Ilha Dinâmica faz parte do SubCheck Pro.",
+                                       noIsland: "A Atividade ao Vivo faz parte do SubCheck Pro.")
         case .failed(let reason):
             Haptics.warning()
             message = L.t("Não foi possível iniciar: %@", reason)

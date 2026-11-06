@@ -794,3 +794,14 @@
 "Contas para pagar: %@." = "Bills to pay: %@.";
 "Registrar conta" = "Record bill";
 "Nada vence nos próximos dias." = "Nothing is due in the next few days.";
+"Atividade ao Vivo" = "Live Activity";
+"Testar %@" = "Test %@";
+"A Atividade ao Vivo faz parte do SubCheck Pro." = "Live Activity is part of SubCheck Pro.";
+"Ativa. Bloqueie a tela para ver a atividade ao vivo." = "Active. Lock the screen to see the live activity.";
+"Adicione uma assinatura ativa para ver a atividade ao vivo." = "Add an active subscription to see the live activity.";
+"Atividade ao vivo" = "Live activity";
+"Contagem regressiva das próximas cobranças na tela de bloqueio." = "Countdown to your next charges on the lock screen.";
+"Contagem regressiva ao vivo da próxima cobrança na tela de bloqueio." = "Live countdown to the next charge on the lock screen.";
+"Sem cartão e sem cobrança. Veja a Análise, o orçamento, a atividade ao vivo e o iCloud funcionando." = "No card and no charge. See Analysis, the budget, the live activity and iCloud at work.";
+"Atividade ao Vivo e iCloud" = "Live Activity and iCloud";
+"Avisamos antes de cada cobrança, na véspera do fim de um teste e na tela de bloqueio." = "We alert you before every charge, the day before a trial ends and on the lock screen.";

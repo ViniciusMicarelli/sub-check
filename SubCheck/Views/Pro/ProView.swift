@@ -26,8 +26,10 @@ struct ProView: View {
              L.t("Dicas automáticas para cortar gastos e economizar."), .warning),
             ("chart.xyaxis.line", L.t("Análise completa"),
              L.t("Evolução, mapa de calor e previsão de 12 meses."), .info),
-            ("platter.filled.top.iphone", L.t("Ilha Dinâmica ao vivo"),
-             L.t("Contagem regressiva e próximas cobranças na tela."), .danger),
+            ("platter.filled.top.iphone",
+             LiveSurface.text(island: "Ilha Dinâmica ao vivo", noIsland: "Atividade ao vivo"),
+             LiveSurface.text(island: "Contagem regressiva e próximas cobranças na tela.",
+                              noIsland: "Contagem regressiva das próximas cobranças na tela de bloqueio."), .danger),
             ("chart.pie", L.t("Orçamento com alertas"),
              L.t("Defina um teto mensal e seja avisado ao ultrapassar."), .warning),
             ("scissors", L.t("Simulador de cancelamento"),
@@ -151,7 +153,7 @@ struct ProView: View {
             (L.t("Insights"), "1", L.t("Todos")),
             (L.t("Análise e previsão"), L.t("Não"), L.t("Sim")),
             (L.t("Orçamento e simulador"), L.t("Não"), L.t("Sim")),
-            (L.t("Ilha Dinâmica"), L.t("Não"), L.t("Sim")),
+            (LiveSurface.name, L.t("Não"), L.t("Sim")),
             (L.t("PDF, CSV e Face ID"), L.t("Não"), L.t("Sim")),
             (L.t("iCloud"), L.t("Não"), L.t("Sim"))
         ]
