@@ -876,3 +876,10 @@
 "Gráfico da economia ao longo dos anos" = "Gráfico da economia ao longo dos anos";
 "Avisos por dia" = "Avisos por dia";
 "Você já usou os avisos de hoje." = "Você já usou os avisos de hoje.";
+"siri.bill.title" = "Registrar valor de conta";
+"siri.bill.phrase" = "Registrar conta de luz no SubCheck";
+"siri.billsDue.title" = "Contas para pagar";
+"siri.billsDue.phrase" = "Quais contas vencem no SubCheck";
+"Atalhos prontos" = "Atalhos prontos";
+"Criar uma automação no app Atalhos" = "Criar uma automação no app Atalhos";
+"Toque em um deles para adicionar à Siri. O iOS não deixa um app criar automações sozinho: por horário ou local, você confirma no app Atalhos (veja as ideias abaixo)." = "Toque em um deles para adicionar à Siri. O iOS não deixa um app criar automações sozinho: por horário ou local, você confirma no app Atalhos (veja as ideias abaixo).";

@@ -875,3 +875,10 @@
 "Gráfico da economia ao longo dos anos" = "Chart of savings over the years";
 "Avisos por dia" = "Alerts per day";
 "Você já usou os avisos de hoje." = "You have used today's alerts.";
+"siri.bill.title" = "Record a bill amount";
+"siri.bill.phrase" = "Record electricity in SubCheck";
+"siri.billsDue.title" = "Bills to pay";
+"siri.billsDue.phrase" = "Which bills are due in SubCheck";
+"Atalhos prontos" = "Ready-made shortcuts";
+"Criar uma automação no app Atalhos" = "Create an automation in the Shortcuts app";
+"Toque em um deles para adicionar à Siri. O iOS não deixa um app criar automações sozinho: por horário ou local, você confirma no app Atalhos (veja as ideias abaixo)." = "Tap one to add it to Siri. iOS doesn't let an app create automations on its own: for time or location you confirm in the Shortcuts app (see the ideas below).";
