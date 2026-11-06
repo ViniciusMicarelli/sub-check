@@ -103,9 +103,7 @@ struct AddSubscriptionView: View {
                 .textInputAutocapitalization(.words)
 
             LabeledContent("Valor") {
-                TextField("0,00", value: $cost, format: .number)
-                    .keyboardType(.decimalPad)
-                    .multilineTextAlignment(.trailing)
+                CurrencyField("0,00", optional: $cost)
             }
 
             Picker("Moeda", selection: $currencyCode) {

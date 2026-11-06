@@ -812,6 +812,10 @@
 .b-siri { grid-column: span 5; }
 .b-bills { grid-column: span 7; }
 .b-calendar { grid-column: span 5; }
+.b-split { grid-column: span 6; }
+.b-oneoff { grid-column: span 6; }
+.b-future { grid-column: span 5; }
+.b-simulator { grid-column: span 7; }
 .b-import { grid-column: span 4; }
 .b-fx { grid-column: span 4; }
 .b-alerts { grid-column: span 4; }
@@ -939,6 +943,48 @@
 }
 
 /* câmbio */
+/* Dividida, avulso, hoje/futuro e simulador */
+.art-split { grid-auto-flow: column; justify-content: center; align-items: center; gap: 22px; }
+.art-split .faces { display: flex; }
+.art-split .faces i {
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 2px solid var(--bg, #0b0b14);
+  margin-left: -10px;
+  background: linear-gradient(135deg, var(--brand-1), var(--brand-2));
+}
+.art-split .faces i:first-child { margin-left: 0; }
+.art-split .faces i:nth-child(2) { background: linear-gradient(135deg, var(--mint), #1aa37a); }
+.art-split .faces i:nth-child(3) { background: linear-gradient(135deg, #ffb74d, #ef6c00); }
+.art-split .amounts { display: grid; gap: 2px; text-align: left; }
+.art-split s { font-size: 12px; color: var(--text-muted); }
+.art-split b { font-size: 22px; letter-spacing: -0.02em; }
+
+.art-oneoff { grid-auto-flow: column; justify-content: center; align-items: center; gap: 10px; }
+.art-oneoff span, .art-oneoff em, .art-oneoff u {
+  font-style: normal; text-decoration: none;
+  padding: 7px 13px; border-radius: 99px; font-size: 13px; font-weight: 600;
+  border: 1px solid var(--border); background: rgba(255, 255, 255, 0.05);
+}
+.art-oneoff em { color: var(--mint); border-color: rgba(77, 232, 170, 0.35); }
+.art-oneoff u { color: var(--text-muted); }
+
+.art-future { justify-items: center; gap: 12px; }
+.art-future .seg { display: inline-flex; padding: 3px; border-radius: 99px; border: 1px solid var(--border); background: rgba(255, 255, 255, 0.05); }
+.art-future .seg b { padding: 6px 16px; border-radius: 99px; font-size: 13px; color: var(--text-muted); }
+.art-future .seg b.on { background: linear-gradient(135deg, var(--brand-1), var(--brand-2)); color: #fff; }
+.art-future .trial {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 99px; font-size: 13px; font-weight: 600;
+  color: var(--mint); background: var(--mint-soft); border: 1px solid rgba(77, 232, 170, 0.3);
+}
+
+.art-sim { position: relative; justify-items: center; }
+.art-sim svg { width: min(100%, 220px); height: auto; overflow: visible; }
+.art-sim path { fill: none; stroke-width: 3; stroke-linecap: round; }
+.art-sim .up { stroke: #ef5a6f; }
+.art-sim .down { stroke: var(--mint); }
+.art-sim b { position: absolute; right: 12%; bottom: 8%; font-size: 12px; color: var(--text-muted); }
+
 .art-fx {
   position: relative;
 }
@@ -2718,7 +2764,34 @@
   .lp-tut-grid {
     grid-template-columns: 1fr;
     gap: 6px;
-    --phone-w: min(230px, calc((100svh - 68px - 350px) / 2.144));
+    /* O palco fixo tem a altura da tela: tudo (selo, barras, celular, aviso,
+       legenda e pontos) precisa caber nela. O celular recebe o que sobra. */
+    --phone-w: min(240px, calc((100svh - 68px - 262px) / 2.144));
+  }
+  .lp-tut-right {
+    gap: 10px;
+  }
+  /* Na tela pequena o título grande não cabe no palco; o selo "tour completo
+     · N passos" já diz o que é. O título segue lido por leitores de tela. */
+  .lp-tut-left .lp-eyebrow,
+  .lp-tut-left .lp-h2 {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .lp-caption b {
+    font-size: 17px;
+  }
+  .lp-caption p {
+    font-size: 13px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
   .lp-tut-left {
     text-align: center;
@@ -2741,7 +2814,7 @@
     gap: 10px;
   }
 
-  .b-island, .b-siri, .b-bills, .b-calendar, .b-import, .b-fx, .b-alerts, .b-insights, .b-sync, .b-privacy {
+  .b-island, .b-siri, .b-bills, .b-calendar, .b-split, .b-oneoff, .b-future, .b-simulator, .b-import, .b-fx, .b-alerts, .b-insights, .b-sync, .b-privacy {
     grid-column: span 6;
   }
   .lp-price-grid {
@@ -2753,7 +2826,7 @@
   .lp-container {
     width: min(1180px, 100% - 32px);
   }
-  .b-island, .b-siri, .b-bills, .b-calendar, .b-import, .b-fx, .b-alerts, .b-insights, .b-sync, .b-privacy {
+  .b-island, .b-siri, .b-bills, .b-calendar, .b-split, .b-oneoff, .b-future, .b-simulator, .b-import, .b-fx, .b-alerts, .b-insights, .b-sync, .b-privacy {
     grid-column: span 12;
   }
   .lp-card {

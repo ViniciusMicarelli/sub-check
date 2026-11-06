@@ -11,3 +11,8 @@
 "Atualizar valor de assinatura no ${applicationName}" = "Update subscription price in ${applicationName}";
 "Cancelar ${subscription} no ${applicationName}" = "Cancel ${subscription} in ${applicationName}";
 "Cancelar assinatura no ${applicationName}" = "Cancel subscription in ${applicationName}";
+"Registrar ${bill} no ${applicationName}" = "Record ${bill} in ${applicationName}";
+"Registrar valor de ${bill} no ${applicationName}" = "Record the amount of ${bill} in ${applicationName}";
+"Registrar conta no ${applicationName}" = "Record a bill in ${applicationName}";
+"Quais contas vencem no ${applicationName}" = "Which bills are due in ${applicationName}";
+"Contas para pagar no ${applicationName}" = "Bills to pay in ${applicationName}";

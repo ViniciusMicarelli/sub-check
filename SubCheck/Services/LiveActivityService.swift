@@ -49,10 +49,59 @@ enum LiveActivityLifecycle {
         return diff <= days
     }
 
+    /// Quanto tempo a atividade fica na tela. Passado isso, ela é encerrada.
+    static let visibleSeconds: TimeInterval = 60
+
+    static func isExpired(startedAt: Date, now: Date = Date()) -> Bool {
+        now.timeIntervalSince(startedAt) >= visibleSeconds
+    }
+
     /// Regra de exibição, pura para teste: Pro ativo, interruptor ligado e
     /// permissão do sistema.
     static func shouldRun(hasPro: Bool, enabled: Bool, systemAllows: Bool) -> Bool {
         hasPro && enabled && systemAllows
+    }
+}
+
+/// Cota diária: quantas vezes por dia a atividade pode aparecer. Só contam as
+/// que começam; atualizar uma em andamento não gasta cota.
+enum LiveActivityBudget {
+
+    static let defaultDailyLimit = 3
+    static let limitRange = 1...10
+    static let dailyLimitKey = "liveActivityDailyLimit"
+    private static let dayKey = "liveActivityBudgetDay"
+    private static let countKey = "liveActivityBudgetCount"
+
+    static func clamp(_ limit: Int) -> Int {
+        min(max(limit, limitRange.lowerBound), limitRange.upperBound)
+    }
+
+    /// Regra pura: ainda cabe mais uma hoje?
+    static func canStart(usedToday: Int, limit: Int) -> Bool {
+        usedToday < clamp(limit)
+    }
+
+    /// Identifica o dia (aaaammdd) para zerar a contagem à meia-noite.
+    static func dayNumber(_ date: Date = Date(), calendar: Calendar = .current) -> Int {
+        let c = calendar.dateComponents([.year, .month, .day], from: date)
+        return (c.year ?? 0) * 10_000 + (c.month ?? 0) * 100 + (c.day ?? 0)
+    }
+
+    static func usedToday(defaults: UserDefaults = .standard, now: Date = Date()) -> Int {
+        defaults.integer(forKey: dayKey) == dayNumber(now) ? defaults.integer(forKey: countKey) : 0
+    }
+
+    static func recordStart(defaults: UserDefaults = .standard, now: Date = Date()) {
+        let today = dayNumber(now)
+        let used = usedToday(defaults: defaults, now: now)
+        defaults.set(today, forKey: dayKey)
+        defaults.set(used + 1, forKey: countKey)
+    }
+
+    static var dailyLimit: Int {
+        let stored = UserDefaults.standard.object(forKey: dailyLimitKey) as? Int
+        return clamp(stored ?? defaultDailyLimit)
     }
 }
 
@@ -66,6 +115,10 @@ final class LiveActivityService {
     static let enabledKey = "liveActivityEnabled"
 
     private init() {}
+
+    /// O app define como encerrar a atividade depois de `visibleSeconds`
+    /// (precisa de UIKit, que a extensão de widgets não tem).
+    static var scheduleAutoEnd: ((Activity<SubCheckActivityAttributes>) -> Void)?
 
     /// `true` quando o usuário permitiu Live Activities nas Ajustes.
     var areActivitiesEnabled: Bool { ActivityAuthorizationInfo().areActivitiesEnabled }
@@ -120,6 +173,8 @@ final class LiveActivityService {
         case started, updated, disabledBySystem, noSubscriptions
         /// Nada vence nos próximos dias: a ilha fica desligada de propósito.
         case nothingSoon
+        /// A cota de avisos de hoje já foi usada.
+        case dailyLimitReached
         case requiresPro
         case failed(String)
     }
@@ -154,36 +209,57 @@ final class LiveActivityService {
         )
 
         if let running {
-            // Atividade velha: encerra e cria outra para zerar o limite de 8h.
-            if !isAppExtension,
-               LiveActivityLifecycle.shouldRecycle(startedAt: running.attributes.startedAt) {
+            // Passou de 1 minuto na tela: encerra. Só volta a aparecer se ainda
+            // houver cota hoje.
+            if !ignoringPolicy, !isAppExtension,
+               LiveActivityLifecycle.isExpired(startedAt: running.attributes.startedAt) {
                 let old = running
-                Task {
-                    await old.end(nil, dismissalPolicy: .immediate)
-                    _ = Self.request(content)
-                }
-                return .started
+                Task { await old.end(nil, dismissalPolicy: .immediate) }
+                return startNew(content, ignoringPolicy: ignoringPolicy)
             }
             Task { await running.update(content) }
             return .updated
         }
 
         guard !isAppExtension else { return .failed("extension") }
+        return startNew(content, ignoringPolicy: ignoringPolicy)
+    }
+
+    /// Começa uma atividade respeitando a cota diária.
+    private func startNew(
+        _ content: ActivityContent<SubCheckActivityAttributes.ContentState>,
+        ignoringPolicy: Bool
+    ) -> StartResult {
+        if !ignoringPolicy,
+           !LiveActivityBudget.canStart(usedToday: LiveActivityBudget.usedToday(), limit: LiveActivityBudget.dailyLimit) {
+            return .dailyLimitReached
+        }
         if let error = Self.request(content) { return .failed(error) }
+        if !ignoringPolicy { LiveActivityBudget.recordStart() }
         return .started
     }
 
     /// Cria a atividade. Devolve a mensagem de erro, se houver.
     private static func request(_ content: ActivityContent<SubCheckActivityAttributes.ContentState>) -> String? {
         do {
-            _ = try Activity.request(
+            let activity = try Activity.request(
                 attributes: SubCheckActivityAttributes(startedAt: Date()),
                 content: content
             )
+            scheduleAutoEnd?(activity)
             return nil
         } catch {
             // Sem permissão ou limite de atividades atingido: o app segue normal.
             return error.localizedDescription
+        }
+    }
+
+    /// Encerra o que já passou de `visibleSeconds` na tela. Chamado ao abrir e
+    /// ao sair do app, caso o encerramento agendado não tenha rodado.
+    func endExpired(now: Date = Date()) {
+        for activity in Activity<SubCheckActivityAttributes>.activities
+        where LiveActivityLifecycle.isExpired(startedAt: activity.attributes.startedAt, now: now) {
+            Task { await activity.end(nil, dismissalPolicy: .immediate) }
         }
     }
 
@@ -199,6 +275,21 @@ final class LiveActivityService {
             staleDate: LiveActivityLifecycle.staleDate(forDue: state.nextDueDate)
         )
         Task { await running.update(content) }
+    }
+
+    /// Mostra "Pago ✓" na atividade por alguns segundos depois do botão
+    /// "Registrar pagamento". Sem atividade em andamento não faz nada.
+    func confirmPaid(
+        name: String,
+        subscriptions: [Subscription],
+        service: CurrencyService = .shared,
+        showFor seconds: Double = 3
+    ) async {
+        guard let running else { return }
+        var state = running.content.state
+        state.confirmedName = name
+        await running.update(ActivityContent(state: state, staleDate: nil))
+        try? await Task.sleep(for: .seconds(seconds))
     }
 
     func stop() {

@@ -25,6 +25,18 @@ final class Subscription {
     var previousCost: Double? = nil
     var costChangedAt: Date? = nil
 
+    // MARK: v1.1 (todos com valor padrão: migração leve e compatível com iCloud)
+
+    /// Anotações livres: e-mail da conta, o que o serviço inclui, etc.
+    var notes: String = ""
+    /// `fixed` (padrão) ou `variable`: cobrança por uso, que muda todo mês.
+    var billingKindRaw: String = BillingKind.fixed.rawValue
+    /// Quantas pessoas dividem a conta, contando comigo. 1 = só eu.
+    var sharedPeople: Int = 1
+    /// Pacote ao qual este serviço pertence (ex.: Apple One contém iCloud+).
+    /// Um serviço incluído não soma duas vezes nos totais.
+    var bundleParentID: UUID? = nil
+
     init(
         id: UUID = UUID(),
         name: String,
@@ -54,6 +66,39 @@ final class Subscription {
         self.lastPaymentDate = lastPaymentDate
         self.trialEndsAt = trialEndsAt
     }
+}
+
+// MARK: - Cobrança por uso, divisão e pacotes
+
+/// Como o valor da assinatura se comporta.
+enum BillingKind: String, CaseIterable, Identifiable {
+    /// Mesmo valor todo ciclo (Netflix, Spotify).
+    case fixed
+    /// Muda a cada ciclo, conforme o uso (API, nuvem, créditos).
+    case variable
+
+    var id: String { rawValue }
+}
+
+extension Subscription {
+
+    var billingKind: BillingKind {
+        get { BillingKind(rawValue: billingKindRaw) ?? .fixed }
+        set { billingKindRaw = newValue.rawValue }
+    }
+
+    var isVariable: Bool { billingKind == .variable }
+
+    /// Quantas pessoas pagam (nunca menos que 1).
+    var splitCount: Int { max(sharedPeople, 1) }
+
+    var isShared: Bool { splitCount > 1 }
+
+    /// Parte de cada um no preço cheio: 1, 0,5, 0,33…
+    var shareFactor: Double { 1 / Double(splitCount) }
+
+    /// Serviço que já vem dentro de um pacote e por isso não é cobrado à parte.
+    var isIncludedInBundle: Bool { bundleParentID != nil }
 }
 
 // MARK: - Derived values

@@ -15,6 +15,7 @@ struct SubscriptionDetailView: View {
 
     @State private var showDeleteConfirmation = false
     @State private var showIconPicker = false
+    @State private var showAmountSheet = false
     /// Sobe a cada pagamento registrado e dispara o selo de sucesso.
     @State private var paidCount = 0
     /// Valor ao abrir a tela, para registrar o reajuste ao sair.
@@ -27,6 +28,7 @@ struct SubscriptionDetailView: View {
             detailsSection
             trialSection
             billingSection
+            SubscriptionExtrasSection(subscription: subscription)
             paymentsSection
             reminderSection
             actionsSection
@@ -39,6 +41,13 @@ struct SubscriptionDetailView: View {
         }
         .navigationTitle(subscription.name)
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showAmountSheet) {
+            PaymentAmountSheet(subscription: subscription) { amount, rate in
+                PaymentLedger.markPaid(subscription, actualAmount: amount, manualRate: rate, in: context)
+                Haptics.success()
+                paidCount += 1
+            }
+        }
         .sheet(isPresented: $showIconPicker) {
             IconPickerView(
                 serviceName: subscription.name,
@@ -96,6 +105,18 @@ struct SubscriptionDetailView: View {
                              Money.compact(subscription.yearlyCost(in: .shared))))
                         .font(.caption)
                         .foregroundStyle(Color.textSecondary)
+
+                    if subscription.isIncludedInBundle {
+                        Label(L.t("Incluído em um pacote"), systemImage: "shippingbox.fill")
+                            .font(.caption2)
+                            .foregroundStyle(Color.info)
+                    } else if subscription.isShared {
+                        Label(L.t("Dividida por %lld: sua parte %@", subscription.splitCount,
+                                  Money.format(subscription.monthlyCost(in: .shared))),
+                              systemImage: "person.2.fill")
+                            .font(.caption2)
+                            .foregroundStyle(Color.brand)
+                    }
 
                     if subscription.isForeignCurrency(base: CurrencyService.shared.baseCode) {
                         Text(L.t("Convertido para %@", CurrencyService.shared.baseCode))
@@ -159,9 +180,7 @@ struct SubscriptionDetailView: View {
             DatePicker("Início", selection: $subscription.startDate, displayedComponents: .date)
 
             LabeledContent("Valor") {
-                TextField("0,00", value: $subscription.cost, format: .number)
-                    .keyboardType(.decimalPad)
-                    .multilineTextAlignment(.trailing)
+                CurrencyField("0,00", value: $subscription.cost)
             }
 
             Picker("Moeda", selection: $subscription.currencyCode) {
@@ -215,9 +234,13 @@ struct SubscriptionDetailView: View {
     private var paymentsSection: some View {
         Section("Pagamentos") {
             Button {
-                PaymentLedger.markPaid(subscription, in: context)
-                Haptics.success()
-                paidCount += 1
+                if subscription.isVariable {
+                    showAmountSheet = true
+                } else {
+                    PaymentLedger.markPaid(subscription, in: context)
+                    Haptics.success()
+                    paidCount += 1
+                }
             } label: {
                 Label("Registrar pagamento", systemImage: "checkmark.circle")
             }

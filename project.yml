@@ -12,7 +12,7 @@ settings:
   base:
     SWIFT_VERSION: "5.0"
     MARKETING_VERSION: "1.0"
-    CURRENT_PROJECT_VERSION: "2"
+    CURRENT_PROJECT_VERSION: "3"
     CODE_SIGN_STYLE: Automatic
     DEVELOPMENT_TEAM: RFPNJ4GYU5
     ENABLE_USER_SCRIPT_SANDBOXING: "YES"
@@ -98,6 +98,7 @@ targets:
       - path: SubCheck/Services/BillRules.swift
       - path: SubCheck/Services/WidgetLink.swift
       - path: SubCheck/Services/LiveActivityService.swift
+      - path: SubCheck/Intents/MarkPaidIntent.swift
       - path: SubCheck/DesignSystem/Theme.swift
       - path: SubCheck/DesignSystem/CategoryStyle.swift
       - path: SubCheck/DesignSystem/Formatters.swift

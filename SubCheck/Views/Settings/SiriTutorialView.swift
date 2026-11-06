@@ -30,13 +30,16 @@ struct SiriTutorialView: View {
             Phrase(id: "cancel", symbol: "xmark.circle", title: L.t("siri.cancel.title"), phrase: L.t("siri.cancel.phrase")),
             Phrase(id: "next", symbol: "calendar.badge.clock", title: L.t("siri.next.title"), phrase: L.t("siri.next.phrase")),
             Phrase(id: "total", symbol: "creditcard", title: L.t("siri.total.title"), phrase: L.t("siri.total.phrase")),
-            Phrase(id: "soon", symbol: "bell.badge", title: L.t("siri.soon.title"), phrase: L.t("siri.soon.phrase"))
+            Phrase(id: "soon", symbol: "bell.badge", title: L.t("siri.soon.title"), phrase: L.t("siri.soon.phrase")),
+            Phrase(id: "bill", symbol: "wallet.pass", title: L.t("siri.bill.title"), phrase: L.t("siri.bill.phrase")),
+            Phrase(id: "billsDue", symbol: "bell.badge.fill", title: L.t("siri.billsDue.title"), phrase: L.t("siri.billsDue.phrase"))
         ]
     }
 
     var body: some View {
         List {
             introSection
+            readySection
             phrasesSection
             stepsSection
             automationSection
@@ -64,6 +67,29 @@ struct SiriTutorialView: View {
         } footer: {
             Text("O botão acima abre o app Atalhos já nos atalhos do SubCheck.")
         }
+    }
+
+    /// Atalhos prontos: um toque mostra a frase e adiciona ao Siri/Atalhos.
+    @State private var showTips = [true, true, true, true]
+
+    private var readySection: some View {
+        Section {
+            SiriTipView(intent: NextChargeIntent(), isVisible: $showTips[0])
+            SiriTipView(intent: MonthlyTotalIntent(), isVisible: $showTips[1])
+            SiriTipView(intent: BillsDueIntent(), isVisible: $showTips[2])
+            SiriTipView(intent: UpcomingChargesIntent(), isVisible: $showTips[3])
+
+            Button {
+                if let url = URL(string: "shortcuts://") { openURL(url) }
+            } label: {
+                Label("Criar uma automação no app Atalhos", systemImage: "wand.and.stars")
+            }
+        } header: {
+            Text("Atalhos prontos")
+        } footer: {
+            Text("Toque em um deles para adicionar à Siri. O iOS não deixa um app criar automações sozinho: por horário ou local, você confirma no app Atalhos (veja as ideias abaixo).")
+        }
+        .listRowBackground(Color.clear)
     }
 
     private var phrasesSection: some View {

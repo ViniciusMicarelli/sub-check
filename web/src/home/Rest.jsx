@@ -14,7 +14,8 @@ gsap.registerPlugin(ScrollTrigger, SplitText)
 
 /* --------------------------------- Bento --------------------------------- */
 
-function Art({ id, pay, bills }) {
+function Art({ id, pay, bills, lang }) {
+  const en = lang === 'en'
   switch (id) {
     case 'island':
       return (
@@ -63,6 +64,36 @@ function Art({ id, pay, bills }) {
               </span>
             )
           })}
+        </div>
+      )
+    case 'split':
+      return (
+        <div className="art art-split">
+          <div className="faces"><i /><i /><i /></div>
+          <div className="amounts"><s>R$ 39,90</s><b>R$ 13,30</b></div>
+        </div>
+      )
+    case 'oneoff':
+      return (
+        <div className="art art-oneoff">
+          <span>Trae</span><em>US$ 8</em><u>×1</u>
+        </div>
+      )
+    case 'future':
+      return (
+        <div className="art art-future">
+          <div className="seg"><b className="on">{en ? 'Today' : 'Hoje'}</b><b>{en ? 'Future' : 'Futuro'}</b></div>
+          <div className="trial"><Icon name="check" size={11} strokeWidth={3} /><span>+ R$ 100</span></div>
+        </div>
+      )
+    case 'simulator':
+      return (
+        <div className="art art-sim">
+          <svg viewBox="0 0 160 60" aria-hidden="true">
+            <path className="up" d="M4 54 C 40 46, 80 30, 156 8" pathLength="1" />
+            <path className="down" d="M4 54 C 50 50, 90 42, 156 34" pathLength="1" />
+          </svg>
+          <b>{en ? '10y' : '10a'}</b>
         </div>
       )
     case 'import':
@@ -134,7 +165,7 @@ export function Bento({ lang }) {
           {c.items.map((item) => (
             <article className={`lp-card b-${item.id}`} data-b="card" key={item.id} onPointerMove={spotlight}>
               {item.pro && <span className="lp-protag">Pro</span>}
-              <Art id={item.id} pay={home[lang].sim.pay} bills={home[lang].sim.billsScene} />
+              <Art id={item.id} pay={home[lang].sim.pay} bills={home[lang].sim.billsScene} lang={lang} />
               <h3>{item.title}</h3>
               <p>{item.text}</p>
             </article>

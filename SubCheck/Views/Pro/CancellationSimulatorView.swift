@@ -50,6 +50,9 @@ struct CancellationSimulatorView: View {
                         .cardSurface()
                     } else {
                         selectionCard
+                        if savedMonthly > 0 {
+                            SavingsChartCard(monthlyTotal: monthlyTotal, monthlySaved: savedMonthly)
+                        }
                     }
                 } else {
                     lockedCard

@@ -42,7 +42,7 @@ struct SubCheckLiveActivity: Widget {
                 }
 
                 DynamicIslandExpandedRegion(.center) {
-                    Text(context.state.nextName)
+                    Text(context.state.confirmedName.map { "\(L.t("Pago")) · \($0)" } ?? context.state.nextName)
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(.white)
                         .lineLimit(1)
@@ -50,7 +50,9 @@ struct SubCheckLiveActivity: Widget {
                 }
 
                 DynamicIslandExpandedRegion(.bottom) {
-                    islandBottom(context.state)
+                    if context.state.confirmedName == nil {
+                        islandBottom(context.state)
+                    }
                 }
             } compactLeading: {
                 ChargeIcon(iconRaw: context.state.nextIcon, kind: context.state.nextKind,
@@ -72,7 +74,11 @@ struct SubCheckLiveActivity: Widget {
     private func lockScreen(_ context: ActivityViewContext<SubCheckActivityAttributes>) -> some View {
         let state = context.state
 
-        return VStack(alignment: .leading, spacing: Spacing.md) {
+        if let name = state.confirmedName {
+            return AnyView(paidConfirmation(name: name))
+        }
+
+        return AnyView(VStack(alignment: .leading, spacing: Spacing.md) {
             HStack(spacing: Spacing.md) {
                 ChargeIcon(iconRaw: state.nextIcon, kind: state.nextKind,
                            category: state.nextCategory, size: 38)
@@ -127,6 +133,26 @@ struct SubCheckLiveActivity: Widget {
                 .buttonStyle(.plain)
                 .foregroundStyle(Color.brand)
             }
+        }
+        .padding(Spacing.lg))
+    }
+
+    /// Resposta imediata ao toque em "Registrar pagamento".
+    private func paidConfirmation(name: String) -> some View {
+        HStack(spacing: Spacing.md) {
+            Image(systemName: "checkmark.circle.fill")
+                .font(.title2)
+                .foregroundStyle(Color.success)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(L.t("Pago"))
+                    .font(.subheadline.weight(.bold))
+                    .foregroundStyle(Color.textPrimary)
+                Text(name)
+                    .font(.caption)
+                    .foregroundStyle(Color.textSecondary)
+                    .lineLimit(1)
+            }
+            Spacer(minLength: 0)
         }
         .padding(Spacing.lg)
     }

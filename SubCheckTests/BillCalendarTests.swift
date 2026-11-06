@@ -193,3 +193,66 @@ final class BillCalendarTests: XCTestCase {
         XCTAssertNil(BillLedger.openEntry(for: bill.id, in: context, now: now, calendar: cal))
     }
 }
+
+// MARK: - Marcar tudo como pago
+
+@MainActor
+final class BillBulkPayTests: XCTestCase {
+
+    private var cal: Calendar = {
+        var c = Calendar(identifier: .gregorian)
+        c.timeZone = TimeZone(identifier: "UTC")!
+        return c
+    }()
+
+    private func date(_ d: Int) -> Date { cal.date(from: DateComponents(year: 2026, month: 11, day: d, hour: 12))! }
+
+    private func makeContext() throws -> ModelContext {
+        let container = try ModelContainer(
+            for: SharedModelContainer.schema,
+            configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none)
+        )
+        return ModelContext(container)
+    }
+
+    func testBulkPayOnlyTakesDueBillsThatHaveAnAmount() throws {
+        let context = try makeContext()
+        let now = date(10)
+        let month = BillSchedule.monthStart(of: now, calendar: cal)
+
+        func bill(_ name: String, day: Int, amount: Double, fixed: Bool = true) -> Bill {
+            let b = Bill(name: name, dueDay: day, isFixed: fixed, expectedAmount: amount)
+            context.insert(b)
+            context.insert(BillEntry(billID: b.id, billName: name, categoryRaw: b.categoryRaw,
+                                     monthStart: month, dueDate: date(day), amount: fixed ? amount : 0))
+            return b
+        }
+        let rent = bill("Aluguel", day: 5, amount: 1500)          // venceu, com valor
+        _ = bill("Luz", day: 8, amount: 200, fixed: false)         // venceu, sem valor
+        _ = bill("Internet", day: 25, amount: 100)                 // ainda não venceu
+
+        let bills = try context.fetch(FetchDescriptor<Bill>())
+        let entries = try context.fetch(FetchDescriptor<BillEntry>())
+        let occ = BillCalendar.occurrences(bills: bills, entries: entries, month: now, now: now, calendar: cal)
+
+        let payable = BillLedger.bulkPayable(occ)
+        // "Luz" é variável sem valor: entra pela estimativa (200). Internet não venceu.
+        XCTAssertEqual(Set(payable.map(\.name)), ["Aluguel", "Luz"])
+
+        let result = BillLedger.markAllPaid(occ, at: now, in: context)
+        XCTAssertEqual(result.count, 2)
+        XCTAssertEqual(result.total, 1700, accuracy: 0.001)
+
+        let after = try context.fetch(FetchDescriptor<BillEntry>())
+        XCTAssertTrue(after.first { $0.billID == rent.id }!.isPaid)
+        XCTAssertEqual(after.filter(\.isPaid).count, 2)
+        XCTAssertFalse(after.first { $0.billName == "Internet" }!.isPaid)
+    }
+
+    func testSalaryDayClampsToShortMonths() {
+        let feb28 = cal.date(from: DateComponents(year: 2026, month: 2, day: 28, hour: 9))!
+        XCTAssertTrue(BillLedger.isSalaryDay(31, now: feb28, calendar: cal))
+        XCTAssertFalse(BillLedger.isSalaryDay(5, now: feb28, calendar: cal))
+        XCTAssertTrue(BillLedger.isSalaryDay(5, now: cal.date(from: DateComponents(year: 2026, month: 11, day: 5))!, calendar: cal))
+    }
+}

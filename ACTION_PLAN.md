@@ -1,5 +1,7 @@
 # SubCheck — Plano de ação v1.1
 
+> **Status (build 3):** Fases 0, 1, 2 e 3 implementadas; Fase 4 na opção A (ilha curta com o app aberto) e atalhos prontos por dica da Siri. Pendente: preço R$ 49,90 no App Store Connect, validação em aparelho real, link de atalho do iCloud (precisa ser criado no app Atalhos) e servidor de push (opção B).
+
 Norte do produto: **controle financeiro completo, mas com as assinaturas como diferencial.**
 Cada item abaixo precisa responder "isso ajuda a entender o que as assinaturas custam, hoje e no futuro?".
 

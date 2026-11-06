@@ -33,8 +33,10 @@ struct ProTrialCard: View {
             }
 
             Text(expired
-                 ? "Você continua no plano grátis. Um pagamento único libera tudo para sempre."
-                 : "Sem cartão e sem cobrança. Veja a Ilha Dinâmica, a Análise, o orçamento e o iCloud funcionando.")
+                 ? L.t("Você continua no plano grátis. Um pagamento único libera tudo para sempre.")
+                 : LiveSurface.text(
+                    island: "Sem cartão e sem cobrança. Veja a Ilha Dinâmica, a Análise, o orçamento e o iCloud funcionando.",
+                    noIsland: "Sem cartão e sem cobrança. Veja a Análise, o orçamento, a atividade ao vivo e o iCloud funcionando."))
                 .font(.subheadline)
                 .foregroundStyle(Color.textSecondary)
 

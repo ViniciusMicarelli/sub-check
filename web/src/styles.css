@@ -2363,6 +2363,29 @@ main {
   }
 }
 
+/* Telas bem estreitas (iPhone): o cabeçalho precisa caber sem rolar para o lado. */
+@media (max-width: 520px) {
+  .nav-inner {
+    gap: 10px;
+  }
+  .nav-actions {
+    gap: 8px;
+    min-width: 0;
+  }
+  .brand {
+    font-size: 16px;
+    gap: 8px;
+  }
+  .nav-actions .btn.btn-sm {
+    padding: 9px 14px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  .nav-actions .soon-pill {
+    display: none;
+  }
+}
+
 /* ---------------------------- Reduzir movimento ---------------------------- */
 
 @media (prefers-reduced-motion: reduce) {

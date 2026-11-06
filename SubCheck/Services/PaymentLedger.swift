@@ -30,13 +30,17 @@ enum PaymentLedger {
 
             var iterations = 0
             while due <= now && iterations < maxIterations {
-                let record = PaymentRecord(from: subscription, paidAt: due, isEstimated: true)
-                record.stampRate(using: .shared)
-                context.insert(record)
+                // Serviço incluído num pacote não é cobrado à parte: o ciclo
+                // anda, mas nenhum valor entra no histórico.
+                if !subscription.isIncludedInBundle {
+                    let record = PaymentRecord(from: subscription, paidAt: due, isEstimated: true)
+                    record.stampRate(using: .shared)
+                    context.insert(record)
+                    inserted += 1
+                }
                 subscription.lastPaymentDate = due
                 due = subscription.advancing(due)
                 iterations += 1
-                inserted += 1
             }
         }
 
@@ -85,6 +89,31 @@ enum PaymentLedger {
         let all = (try? context.fetch(FetchDescriptor<Subscription>())) ?? []
         LiveActivityService.shared.syncAll(with: all)
         BudgetService.evaluate(all)
+        return record
+    }
+
+    /// Registra a cobrança com o valor real do mês (assinatura por uso) e,
+    /// opcionalmente, a cotação que valeu no dia. O valor passa a ser a
+    /// estimativa da próxima cobrança.
+    @discardableResult
+    static func markPaid(
+        _ subscription: Subscription,
+        actualAmount: Double,
+        manualRate: Double? = nil,
+        in context: ModelContext,
+        at date: Date = Date()
+    ) -> PaymentRecord {
+        let record = markPaid(subscription, in: context, at: date)
+        if actualAmount > 0 {
+            record.amount = actualAmount
+            subscription.cost = actualAmount
+        }
+        if let manualRate, manualRate > 0 {
+            record.rateToBase = manualRate
+            record.baseCodeAtPayment = CurrencyService.shared.baseCode
+            record.rateIsManual = true
+        }
+        context.saveReporting()
         return record
     }
 

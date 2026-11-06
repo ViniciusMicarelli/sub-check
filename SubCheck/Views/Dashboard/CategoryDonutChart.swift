@@ -26,6 +26,9 @@ struct CategoryDonutChart: View {
         self._selection = selection
     }
 
+    /// Valor (na escala dos totais) sob o toque na rosquinha; vira categoria.
+    @State private var angleValue: Double?
+
     private var breakdown: [CategoryTotal] {
         Dictionary(grouping: subscriptions, by: \.categoryType)
             .map { category, subs in
@@ -74,6 +77,16 @@ struct CategoryDonutChart: View {
             .opacity(selection == nil || selection == item.category ? 1 : 0.28)
         }
         .frame(height: 210)
+        .chartAngleSelection(value: $angleValue)
+        .onChange(of: angleValue) { _, newValue in
+            // Tocar numa fatia seleciona; tocar de novo na mesma limpa.
+            guard let newValue,
+                  let tapped = DonutSelection.category(atAngleValue: newValue, in: breakdown) else { return }
+            withAnimation(.snappy) {
+                selection = (selection == tapped) ? nil : tapped
+            }
+            Haptics.impact(.light)
+        }
         .chartLegend(.hidden)
         .chartBackground { proxy in
             GeometryReader { geo in
@@ -158,5 +171,21 @@ struct CategoryDonutChart: View {
     private func percent(for item: CategoryTotal) -> String {
         guard grandTotal > 0 else { return "0%" }
         return (item.total / grandTotal).formatted(.percent.precision(.fractionLength(0)))
+    }
+}
+
+
+/// Converte o ponto tocado na rosquinha (um valor ao longo da soma dos totais)
+/// na categoria correspondente. As fatias seguem a ordem do `breakdown`.
+enum DonutSelection {
+
+    static func category(atAngleValue value: Double, in breakdown: [CategoryTotal]) -> CategoryType? {
+        guard value >= 0 else { return nil }
+        var running = 0.0
+        for item in breakdown {
+            running += item.total
+            if value <= running { return item.category }
+        }
+        return breakdown.last?.category
     }
 }

@@ -41,9 +41,11 @@ struct ProTourView: View {
                  free: L.t("Não incluso."),
                  pro: L.t("Defina um teto mensal com alerta e simule quanto economiza cancelando serviços.")),
             Item(id: 4, icon: "platter.filled.top.iphone", tint: .danger,
-                 title: L.t("Ilha Dinâmica"),
+                 title: LiveSurface.name,
                  free: L.t("Widgets na tela inicial."),
-                 pro: L.t("Contagem regressiva ao vivo da próxima cobrança na Ilha Dinâmica e na tela de bloqueio.")),
+                 pro: LiveSurface.text(
+                    island: "Contagem regressiva ao vivo da próxima cobrança na Ilha Dinâmica e na tela de bloqueio.",
+                    noIsland: "Contagem regressiva ao vivo da próxima cobrança na tela de bloqueio.")),
             Item(id: 5, icon: "icloud", tint: .info,
                  title: L.t("iCloud, PDF, CSV e Face ID"),
                  free: L.t("Dados só neste aparelho, sem exportar."),

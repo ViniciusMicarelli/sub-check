@@ -22,7 +22,6 @@ struct BillEntrySheet: View {
     @State private var amount: Double?
     @State private var paid: Bool
     @State private var paidAt: Date
-    @FocusState private var amountFocused: Bool
 
     init(entry: BillEntry) {
         self.entry = entry
@@ -90,7 +89,6 @@ struct BillEntrySheet: View {
                         .disabled(!canSave)
                 }
             }
-            .onAppear { amountFocused = (entry.amount == 0) }
         }
         .presentationDetents([.large])
     }
@@ -118,14 +116,11 @@ struct BillEntrySheet: View {
             HStack {
                 Text(Money.symbol)
                     .foregroundStyle(Color.textSecondary)
-                TextField(
-                    estimate > 0 ? Money.plain(estimate) : "0,00",
-                    value: $amount,
-                    format: .number.precision(.fractionLength(0...2))
+                CurrencyField(
+                    estimate > 0 ? Money.plain(estimate) : "0,00", optional: $amount,
+                    textStyle: .title2, weight: .semibold, alignment: .left,
+                    autoFocus: entry.amount == 0
                 )
-                .keyboardType(.decimalPad)
-                .font(.title2.weight(.semibold))
-                .focused($amountFocused)
             }
 
             if let change, abs(change) >= 0.03 {
