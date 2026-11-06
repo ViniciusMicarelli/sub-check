@@ -52,6 +52,19 @@ function Art({ id, pay, bills }) {
           </div>
         </div>
       )
+    case 'calendar':
+      return (
+        <div className="art art-calendar">
+          {Array.from({ length: 21 }, (_, i) => {
+            const hot = { 2: 'g', 5: 'r', 8: 'o', 11: 'b', 15: 'p', 18: 'b' }[i]
+            return (
+              <span key={i} className={hot ? `hot ${hot}` : ''} style={{ animationDelay: `${(i % 7) * 0.12}s` }}>
+                {i + 1}
+              </span>
+            )
+          })}
+        </div>
+      )
     case 'import':
       return (
         <div className="art art-import">

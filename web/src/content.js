@@ -45,7 +45,7 @@ export const content = {
         "Bloqueio por Face ID",
         "Sincronização com iCloud",
       ],
-      note: "Comece com 7 dias com todos os recursos liberados. Depois, o plano gratuito continua funcionando.",
+      note: "Ative 7 dias com todos os recursos liberados quando quiser. Depois, o plano gratuito continua funcionando.",
       cta: "Baixar na App Store",
     },
     faq: {
@@ -58,7 +58,7 @@ export const content = {
         },
         {
           q: "Como funciona o teste de 7 dias?",
-          a: "Ao instalar, você tem 7 dias com todos os recursos do Pro liberados, sem cartão e sem cobrança. Quando o período termina, nada é cobrado e o plano gratuito continua funcionando.",
+          a: "O teste não começa sozinho. Na introdução (ou depois, em Ajustes) você escolhe entre “Ativar 7 dias grátis” e “Continuar no grátis”. Ao ativar, todos os recursos do Pro ficam liberados por 7 dias, sem cartão e sem cobrança. Quando termina, nada é cobrado e o plano gratuito continua funcionando.",
         },
         {
           q: "O que é grátis e o que é Pro?",
@@ -66,7 +66,7 @@ export const content = {
         },
         {
           q: "Como funcionam as contas da casa?",
-          a: "Informe seu salário líquido (já com os descontos) e cadastre contas como água, luz, internet e aluguel, com o dia do vencimento. As fixas já vêm com o valor; nas que variam, você digita o valor no dia em que vencem, e o SubCheck avisa nesse dia. O app mostra quanto sobra do salário depois das contas e das assinaturas e guarda o histórico de cada conta, para você ver quando ela subiu. Tudo fica no seu aparelho: o salário não é enviado nem sincronizado.",
+          a: "Informe seu salário líquido (já com os descontos) e cadastre contas como água, luz, internet e aluguel, com o dia do vencimento. As fixas já vêm com o valor; nas que variam, você digita o valor no dia em que vencem, e o SubCheck avisa nesse dia (às 9h, e à noite se ainda faltar o valor). O app mostra quanto sobra do salário depois das contas e das assinaturas, tem calendário, navegação por meses com previsão e a evolução de cada conta, para você ver quando ela subiu. Tudo fica no seu aparelho: o salário não é enviado nem sincronizado.",
         },
         {
           q: "Como a Siri funciona?",
@@ -104,7 +104,7 @@ export const content = {
     },
     cta: {
       title: "Comece a controlar suas assinaturas hoje",
-      text: "Grátis para começar. 7 dias com todos os recursos liberados.",
+      text: "Grátis para começar. Ative 7 dias com todos os recursos liberados quando quiser.",
       button: "Baixar para iPhone",
     },
     footer: {
@@ -271,7 +271,7 @@ export const content = {
               {
                 ul: [
                   "O <strong>SubCheck Pro</strong> é uma <strong>compra única</strong> (não consumível). Não é uma assinatura: não há renovação automática e nada é cobrado de novo.",
-                  "Ao instalar, você tem <strong>7 dias</strong> com todos os recursos liberados, sem cobrança. É uma liberação temporária e <strong>não</strong> gera nenhuma assinatura nem cobrança automática ao terminar.",
+                  "Você pode ativar um teste de <strong>7 dias</strong> com todos os recursos liberados, sem cobrança. O teste <strong>só começa quando você o ativa</strong>. É uma liberação temporária e <strong>não</strong> gera nenhuma assinatura nem cobrança automática ao terminar.",
                   "Depois do período, o app continua funcionando no plano gratuito (com limites, como número de assinaturas e recursos avançados). A compra única libera tudo para sempre.",
                   "Pagamentos, impostos e reembolsos são processados pela Apple. Pedidos de reembolso seguem as políticas da App Store.",
                 ],
@@ -365,7 +365,7 @@ export const content = {
         },
         {
           q: "Como funciona o teste de 7 dias?",
-          a: "Ao instalar, você tem 7 dias com tudo liberado, sem cobrança. Não é uma assinatura: quando o período termina, nada é cobrado. O app continua funcionando no plano gratuito.",
+          a: "O teste começa quando você ativa (na introdução, em Ajustes ou no card do Resumo), com tudo liberado por 7 dias e sem cobrança. Não é uma assinatura: quando termina, nada é cobrado e o app continua no plano gratuito.",
         },
         {
           q: "Comprei o Pro e troquei de aparelho. Como recupero?",
@@ -386,6 +386,10 @@ export const content = {
         {
           q: "Os valores e as cotações estão errados.",
           a: "Os totais e a conversão de moeda são estimativas com base no que você cadastrou e em fontes públicas de câmbio. Confira sempre na fatura do serviço. Você pode atualizar as cotações em Ajustes › Moeda e cotação › Atualizar cotação.",
+        },
+        {
+          q: "Não recebi o aviso da minha conta. O que fazer?",
+          a: "O aviso chega às 9h do dia do vencimento (e às 19h se você ainda não informou o valor). Confira em Ajustes do iPhone › Notificações › SubCheck se as notificações estão permitidas. Mesmo sem notificação, ao abrir o app uma folha “Contas para informar” aparece quando há conta vencida ou vencendo hoje. “Depois” adia o recado até amanhã.",
         },
         {
           q: "Como cadastro meu salário e minhas contas?",
@@ -445,7 +449,7 @@ export const content = {
         "Face ID lock",
         "iCloud sync",
       ],
-      note: "Start with 7 days with every feature unlocked. After that, the free plan keeps working.",
+      note: "Activate 7 days with every feature unlocked whenever you like. After that, the free plan keeps working.",
       cta: "Download on the App Store",
     },
     faq: {
@@ -458,7 +462,7 @@ export const content = {
         },
         {
           q: "How does the 7-day trial work?",
-          a: "When you install, you get 7 days with every Pro feature unlocked, with no card and no charge. When the period ends, nothing is charged and the free plan keeps working.",
+          a: "The trial never starts by itself. In the intro (or later, in Settings) you choose between “Activate 7 free days” and “Continue on Free”. When you activate it, every Pro feature is unlocked for 7 days, with no card and no charge. When it ends, nothing is charged and the free plan keeps working.",
         },
         {
           q: "What is free and what is Pro?",
@@ -466,7 +470,7 @@ export const content = {
         },
         {
           q: "How do household bills work?",
-          a: "Enter your net salary (after deductions) and add bills such as water, electricity, internet and rent, with their due day. Fixed ones come with the amount; for the ones that vary, you type the amount on the day they are due, and SubCheck reminds you that day. The app shows how much of your salary is left after bills and subscriptions and keeps each bill's history, so you can see when it went up. Everything stays on your device: your salary is never sent or synced.",
+          a: "Enter your net salary (after deductions) and add bills such as water, electricity, internet and rent, with their due day. Fixed ones come with the amount; for the ones that vary, you type the amount on the day they are due, and SubCheck reminds you that day (at 9 am, and in the evening if the amount is still missing). The app shows how much of your salary is left after bills and subscriptions, has a calendar, month browsing with a forecast and each bill's evolution, so you can see when it went up. Everything stays on your device: your salary is never sent or synced.",
         },
         {
           q: "How does Siri work?",
@@ -504,7 +508,7 @@ export const content = {
     },
     cta: {
       title: "Start tracking your subscriptions today",
-      text: "Free to start. 7 days with every feature unlocked.",
+      text: "Free to start. Activate 7 days with every feature unlocked whenever you like.",
       button: "Download for iPhone",
     },
     footer: {
@@ -671,7 +675,7 @@ export const content = {
               {
                 ul: [
                   "<strong>SubCheck Pro</strong> is a <strong>one-time purchase</strong> (non-consumable). It is not a subscription: there is no auto-renewal and you are never charged again.",
-                  "When you install the app you get <strong>7 days</strong> with every feature unlocked, free of charge. It is a temporary unlock and does <strong>not</strong> create a subscription or any automatic charge when it ends.",
+                  "You can activate a <strong>7-day</strong> trial with every feature unlocked, free of charge. The trial <strong>only starts when you activate it</strong>. It is a temporary unlock and does <strong>not</strong> create a subscription or any automatic charge when it ends.",
                   "After that period the app keeps working on the free plan (with limits such as the number of subscriptions and advanced features). The one-time purchase unlocks everything for good.",
                   "Payments, taxes and refunds are handled by Apple. Refund requests follow App Store policies.",
                 ],
@@ -765,7 +769,7 @@ export const content = {
         },
         {
           q: "How does the 7-day trial work?",
-          a: "When you install the app you get 7 days with everything unlocked, free of charge. It is not a subscription: when the period ends, nothing is charged. The app keeps working on the free plan.",
+          a: "The trial starts when you activate it (in the intro, in Settings or on the Overview card), with everything unlocked for 7 days and free of charge. It is not a subscription: when it ends, nothing is charged and the app stays on the free plan.",
         },
         {
           q: "I bought Pro and changed phones. How do I restore it?",
@@ -786,6 +790,10 @@ export const content = {
         {
           q: "The amounts and rates look wrong.",
           a: "Totals and currency conversion are estimates based on what you entered and on public exchange-rate sources. Always check the service's invoice. You can refresh rates in Settings › Currency & rates › Refresh rates.",
+        },
+        {
+          q: "I didn't get my bill reminder. What now?",
+          a: "The reminder arrives at 9 am on the due date (and at 7 pm if you haven't entered the amount yet). Check iPhone Settings › Notifications › SubCheck to make sure notifications are allowed. Even without a notification, opening the app shows a “Bills to enter” sheet when a bill is overdue or due today. “Later” snoozes it until tomorrow.",
         },
         {
           q: "How do I add my salary and bills?",

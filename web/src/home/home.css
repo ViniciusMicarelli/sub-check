@@ -811,12 +811,13 @@
 .b-island { grid-column: span 7; }
 .b-siri { grid-column: span 5; }
 .b-bills { grid-column: span 7; }
-.b-import { grid-column: span 5; }
+.b-calendar { grid-column: span 5; }
+.b-import { grid-column: span 4; }
 .b-fx { grid-column: span 4; }
 .b-alerts { grid-column: span 4; }
 .b-insights { grid-column: span 4; }
-.b-sync { grid-column: span 6; }
-.b-privacy { grid-column: span 6; }
+.b-sync { grid-column: span 4; }
+.b-privacy { grid-column: span 4; }
 
 .art {
   flex: 1;
@@ -1061,6 +1062,40 @@
 @keyframes artFloat {
   50% { transform: translateY(-5px); }
 }
+
+/* calendário */
+.art-calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  align-content: center;
+}
+.art-calendar span {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 24px;
+  border-radius: 8px;
+  font-size: 11px;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.05);
+}
+.art-calendar span.hot::after {
+  content: "";
+  position: absolute;
+  bottom: 3px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--c);
+  animation: artPulse 2.2s ease-in-out infinite;
+  animation-delay: inherit;
+}
+.art-calendar .g { --c: #4de8aa; }
+.art-calendar .r { --c: #e8424a; }
+.art-calendar .o { --c: #f5a621; }
+.art-calendar .b { --c: #4aa8ff; }
+.art-calendar .p { --c: #9c7bff; }
 
 /* contas da casa */
 .art-bills {
@@ -2091,6 +2126,180 @@
   background: #fff;
 }
 
+/* calendário e evolução (cena) */
+.sim-segmented {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6cqw;
+  padding: 0.8cqw;
+  margin-bottom: 3cqw;
+  border-radius: 3cqw;
+  background: #e4e6f0;
+  font-size: 3.2cqw;
+  font-weight: 600;
+  text-align: center;
+  color: #6b7090;
+}
+.sim-segmented span {
+  padding: 1.6cqw 0;
+  border-radius: 2.4cqw;
+  transition: background 0.3s, color 0.3s;
+}
+.sim-segmented span.on {
+  background: #fff;
+  color: #0f1020;
+  box-shadow: 0 0.4cqw 1.6cqw rgba(0, 0, 0, 0.12);
+}
+.sim-calwrap,
+.sim-evo {
+  position: relative;
+}
+.sim-evo {
+  position: absolute;
+  left: 5cqw;
+  right: 5cqw;
+  top: 41cqw;
+}
+.sim-cal {
+  padding: 3cqw 2.4cqw 2.4cqw;
+}
+.sim-cal-week,
+.sim-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+}
+.sim-cal-week i {
+  font-size: 2.8cqw;
+  font-style: normal;
+  font-weight: 700;
+  color: #a2a6bd;
+  padding-bottom: 1.4cqw;
+}
+.sim-cd {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  height: 10.6cqw;
+  font-weight: 400;
+}
+.sim-cd > span {
+  display: grid;
+  place-items: center;
+  width: 7.4cqw;
+  height: 7.4cqw;
+  border-radius: 50%;
+  font-size: 3.3cqw;
+  transition: background 0.3s, color 0.3s;
+}
+.sim-cd.is-sel > span {
+  background: linear-gradient(135deg, #5457db, #9c4af0);
+  color: #fff;
+  font-weight: 800;
+}
+.sim-cd > em {
+  display: flex;
+  gap: 0.6cqw;
+  height: 1.4cqw;
+  margin-top: 0.4cqw;
+}
+.sim-cd u {
+  width: 1.4cqw;
+  height: 1.4cqw;
+  border-radius: 50%;
+}
+.sim-cd .dot-g { background: #24b873; }
+.sim-cd .dot-r { background: #e8424a; }
+.sim-cd .dot-o { background: #f5a621; }
+.sim-cd .dot-b { background: #4aa8ff; }
+.sim-cd .dot-p { background: #5457db; }
+.sim-cd .dot-m { background: #4de8aa; }
+.sim-detail {
+  margin-top: 2.6cqw;
+  padding: 3cqw 3.4cqw;
+}
+.sim-detail-title {
+  display: block;
+  margin-bottom: 1.6cqw;
+  font-size: 3.6cqw;
+}
+.sim-detail-row {
+  display: flex;
+  align-items: center;
+  gap: 2.6cqw;
+  padding: 1.2cqw 0;
+  font-size: 3.5cqw;
+  font-weight: 600;
+}
+.sim-detail-row em {
+  margin-left: auto;
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
+}
+.sim-detail-row em.warn {
+  color: #d98200;
+  font-weight: 800;
+}
+.sim-evo-title {
+  display: block;
+  margin-bottom: 2.6cqw;
+  font-size: 3.6cqw;
+}
+.sim-evo-bars {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3cqw;
+  align-items: end;
+  height: 46cqw;
+}
+.sim-evo-col {
+  display: grid;
+  justify-items: center;
+  gap: 1.2cqw;
+}
+.sim-evo-col small {
+  font-size: 2.8cqw;
+  color: #8a8fa8;
+}
+.sim-evo-stack {
+  display: flex;
+  flex-direction: column-reverse;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 1.4cqw;
+}
+.sim-evo-stack i {
+  display: block;
+}
+.sim-chg {
+  margin-top: 2.6cqw;
+  padding: 3cqw 3.4cqw;
+}
+.sim-chg > b {
+  display: block;
+  margin-bottom: 0.8cqw;
+  font-size: 3.4cqw;
+}
+
+/* teste grátis: a escolha */
+.sim-choice {
+  position: absolute;
+  left: 5cqw;
+  right: 5cqw;
+  bottom: 8cqw;
+  display: grid;
+  gap: 2.4cqw;
+}
+.sim-cta-ghost {
+  width: 100%;
+  padding: 3.4cqw;
+  border: 0;
+  border-radius: 4cqw;
+  font: 700 3.8cqw var(--font);
+  color: #5457db;
+  background: rgba(84, 87, 219, 0.1);
+}
+
 /* ilha / siri / notificação */
 .sim-wall {
   position: absolute;
@@ -2532,7 +2741,7 @@
     gap: 10px;
   }
 
-  .b-island, .b-siri, .b-bills, .b-import, .b-fx, .b-alerts, .b-insights, .b-sync, .b-privacy {
+  .b-island, .b-siri, .b-bills, .b-calendar, .b-import, .b-fx, .b-alerts, .b-insights, .b-sync, .b-privacy {
     grid-column: span 6;
   }
   .lp-price-grid {
@@ -2544,7 +2753,7 @@
   .lp-container {
     width: min(1180px, 100% - 32px);
   }
-  .b-island, .b-siri, .b-bills, .b-import, .b-fx, .b-alerts, .b-insights, .b-sync, .b-privacy {
+  .b-island, .b-siri, .b-bills, .b-calendar, .b-import, .b-fx, .b-alerts, .b-insights, .b-sync, .b-privacy {
     grid-column: span 12;
   }
   .lp-card {
