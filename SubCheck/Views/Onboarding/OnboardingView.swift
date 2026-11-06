@@ -127,8 +127,10 @@ struct OnboardingView: View {
         VStack(spacing: Spacing.xl) {
             Spacer(minLength: 0)
 
-            illustration(for: step)
-                .accessibilityHidden(true)
+            if step != .personalize {
+                illustration(for: step)
+                    .accessibilityHidden(true)
+            }
 
             VStack(spacing: Spacing.md) {
                 Text(step.title)
@@ -141,10 +143,8 @@ struct OnboardingView: View {
                     .multilineTextAlignment(.center)
             }
 
-            if step == .welcome {
-                nameField
-                preferences
-            }
+            if step == .welcome { nameField }
+            if step == .personalize { PersonalizeChoices(language: $language, appearance: $appearance) }
             if step == .add { addNowButton }
             if step == .pro { proOffer }
             if step == .sync { syncChoice }
@@ -158,6 +158,7 @@ struct OnboardingView: View {
     private func illustration(for step: Step) -> some View {
         switch step {
         case .welcome:  WelcomeArt()
+        case .personalize: EmptyView()
         case .add:      AddArt()
         case .spending: SpendingArt()
         case .alerts:   AlertArt()
@@ -194,23 +195,6 @@ struct OnboardingView: View {
                 .multilineTextAlignment(.center)
         }
         .transition(.opacity.combined(with: .move(edge: .bottom)))
-    }
-
-    // MARK: - Idioma e tema
-
-    private var preferences: some View {
-        VStack(spacing: Spacing.sm) {
-            Picker(L.t("Idioma"), selection: $language) {
-                ForEach(AppLanguage.allCases) { Text($0.displayName).tag($0) }
-            }
-            .pickerStyle(.segmented)
-
-            Picker(L.t("Tema"), selection: $appearance) {
-                ForEach(AppearanceOption.allCases) { Text($0.label).tag($0) }
-            }
-            .pickerStyle(.segmented)
-        }
-        .frame(maxWidth: 320)
     }
 
     // MARK: - Primeira assinatura
@@ -483,13 +467,14 @@ struct OnboardingView: View {
 
 private enum Step: Int, CaseIterable, Identifiable {
 
-    case welcome, add, spending, alerts, savings, pro, sync
+    case welcome, personalize, add, spending, alerts, savings, pro, sync
 
     var id: Int { rawValue }
 
     var title: String {
         switch self {
         case .welcome:  L.t("Bem-vindo ao SubCheck")
+        case .personalize: L.t("Do seu jeito")
         case .add:      L.t("Adicione suas assinaturas")
         case .spending: L.t("Entenda seus gastos")
         case .alerts:   L.t("Nada de cobrança surpresa")
@@ -503,6 +488,8 @@ private enum Step: Int, CaseIterable, Identifiable {
         switch self {
         case .welcome:
             L.t("Veja todas as suas assinaturas num só lugar e descubra para onde vai o seu dinheiro.")
+        case .personalize:
+            L.t("Escolha o idioma e a aparência. Você muda quando quiser nos Ajustes.")
         case .add:
             L.t("Toque em + e escolha o serviço. O ícone, a categoria e a próxima cobrança são preenchidos para você.")
         case .spending:
