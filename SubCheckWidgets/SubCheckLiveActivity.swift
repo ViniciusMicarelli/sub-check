@@ -53,14 +53,14 @@ struct SubCheckLiveActivity: Widget {
                     islandBottom(context.state)
                 }
             } compactLeading: {
-                Image(systemName: symbol(kind: context.state.nextKind, category: context.state.nextCategory))
-                    .foregroundStyle(color(kind: context.state.nextKind, category: context.state.nextCategory))
+                ChargeIcon(iconRaw: context.state.nextIcon, kind: context.state.nextKind,
+                           category: context.state.nextCategory, size: 22)
             } compactTrailing: {
                 // Só o dia: um cronômetro de semanas estoura a largura compacta.
                 CompactCountdown(until: context.state.nextDueDate)
             } minimal: {
-                Image(systemName: symbol(kind: context.state.nextKind, category: context.state.nextCategory))
-                    .foregroundStyle(color(kind: context.state.nextKind, category: context.state.nextCategory))
+                ChargeIcon(iconRaw: context.state.nextIcon, kind: context.state.nextKind,
+                           category: context.state.nextCategory, size: 22)
             }
             .widgetURL(deepLink(context.state))
             .keylineTint(color(kind: context.state.nextKind, category: context.state.nextCategory))
@@ -74,14 +74,11 @@ struct SubCheckLiveActivity: Widget {
 
         return VStack(alignment: .leading, spacing: Spacing.md) {
             HStack(spacing: Spacing.md) {
-                Image(systemName: symbol(kind: state.nextKind, category: state.nextCategory))
-                    .font(.headline)
-                    .foregroundStyle(.white)
-                    .frame(width: 34, height: 34)
-                    .background(color(kind: state.nextKind, category: state.nextCategory).gradient, in: RoundedRectangle(cornerRadius: Radius.sm, style: .continuous))
+                ChargeIcon(iconRaw: state.nextIcon, kind: state.nextKind,
+                           category: state.nextCategory, size: 38)
 
                 VStack(alignment: .leading, spacing: 1) {
-                    Text(state.nextKind == "bill" ? L.t("Conta da casa") : L.t("widget.nextLine"))
+                    Text(state.nextKind == "bill" ? L.t("Conta da casa") : L.t("Próxima cobrança"))
                         .font(.caption2)
                         .foregroundStyle(Color.textSecondary)
                     Text(state.nextName)
@@ -138,10 +135,8 @@ struct SubCheckLiveActivity: Widget {
         VStack(spacing: Spacing.sm) {
             ForEach(state.upcoming.dropFirst()) { charge in
                 HStack(spacing: Spacing.sm) {
-                    Image(systemName: symbol(kind: charge.kind, category: charge.category))
-                        .font(.caption2)
-                        .foregroundStyle(color(kind: charge.kind, category: charge.category))
-                        .frame(width: 16)
+                    ChargeIcon(iconRaw: charge.icon, kind: charge.kind,
+                               category: charge.category, size: 20)
 
                     Text(charge.name)
                         .font(.caption)
@@ -166,14 +161,8 @@ struct SubCheckLiveActivity: Widget {
     // MARK: - Ilha dinâmica
 
     private func islandBadge(_ state: SubCheckActivityAttributes.ContentState) -> some View {
-        Image(systemName: symbol(kind: state.nextKind, category: state.nextCategory))
-            .font(.subheadline)
-            .foregroundStyle(.white)
-            .frame(width: 28, height: 28)
-            .background(
-                color(kind: state.nextKind, category: state.nextCategory).gradient,
-                in: RoundedRectangle(cornerRadius: 8, style: .continuous)
-            )
+        ChargeIcon(iconRaw: state.nextIcon, kind: state.nextKind,
+                   category: state.nextCategory, size: 30)
     }
 
     /// Área inferior enxuta: a ilha expandida tem pouca altura, então só
@@ -216,6 +205,39 @@ struct SubCheckLiveActivity: Widget {
 
     // MARK: - Auxiliares
 
+    /// Ícone da cobrança: o logo da marca (ou o escolhido pelo usuário) para
+    /// assinaturas e o símbolo da categoria para contas da casa.
+    private struct ChargeIcon: View {
+        let iconRaw: String?
+        let kind: String?
+        let category: String
+        let size: CGFloat
+
+        var body: some View {
+            if kind != "bill", let iconRaw, let icon = SubscriptionIcon(rawValue: iconRaw) {
+                SubscriptionIconView(icon: icon, fallbackColor: tint, size: size)
+            } else {
+                Image(systemName: symbolName)
+                    .font(.system(size: size * 0.45, weight: .semibold))
+                    .foregroundStyle(.white)
+                    .frame(width: size, height: size)
+                    .background(tint.gradient, in: Circle())
+            }
+        }
+
+        private var tint: Color {
+            kind == "bill"
+                ? (BillCategory(rawValue: category)?.color ?? .brand)
+                : (CategoryType(rawValue: category)?.color ?? .brand)
+        }
+
+        private var symbolName: String {
+            kind == "bill"
+                ? (BillCategory(rawValue: category)?.icon ?? "doc.text.fill")
+                : (CategoryType(rawValue: category)?.icon ?? "creditcard.fill")
+        }
+    }
+
     /// Ao vivo: mostra hh:mm:ss quando a cobrança é hoje e "amanhã"/"3d"
     /// quando falta mais tempo. Nenhum dos dois precisa de atualização.
     private struct CountdownText: View {
@@ -225,8 +247,12 @@ struct SubCheckLiveActivity: Widget {
             if until <= Date() {
                 Text(L.t("widget.today"))
             } else if daysBetween(until) == 0 {
+                // `Text(timerInterval:)` ocupa toda a largura disponível; sem
+                // limite ele empurra o resto da linha e o texto sai torto.
                 Text(timerInterval: countdownRange(until), countsDown: true)
                     .monospacedDigit()
+                    .multilineTextAlignment(.trailing)
+                    .frame(maxWidth: 64, alignment: .trailing)
             } else {
                 Text(daysLabel(until))
             }

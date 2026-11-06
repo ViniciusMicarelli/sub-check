@@ -34,6 +34,26 @@ enum LiveActivityLifecycle {
     static func staleDate(forDue due: Date, now: Date = Date()) -> Date? {
         due > now ? due : nil
     }
+
+    /// A ilha só aparece quando há algo perto de vencer. Uma cobrança a 20
+    /// dias deixaria a ilha fixa o tempo todo, sem dizer nada de útil.
+    static let windowDays = 3
+
+    /// `true` se o vencimento é hoje, já passou ou cai nos próximos `days` dias.
+    static func isWithinWindow(
+        due: Date, days: Int = windowDays, now: Date = Date(), calendar: Calendar = .current
+    ) -> Bool {
+        let start = calendar.startOfDay(for: now)
+        let target = calendar.startOfDay(for: due)
+        let diff = calendar.dateComponents([.day], from: start, to: target).day ?? 0
+        return diff <= days
+    }
+
+    /// Regra de exibição, pura para teste: Pro ativo, interruptor ligado e
+    /// permissão do sistema.
+    static func shouldRun(hasPro: Bool, enabled: Bool, systemAllows: Bool) -> Bool {
+        hasPro && enabled && systemAllows
+    }
 }
 
 @Observable
@@ -55,6 +75,19 @@ final class LiveActivityService {
         UserDefaults.standard.object(forKey: Self.enabledKey) as? Bool ?? true
     }
 
+    /// Acesso Pro compartilhado com a extensão de widgets, que não enxerga o
+    /// Keychain do app. O app grava a cada sincronização.
+    static let sharedProKey = "liveActivityProAccess"
+
+    /// A Ilha Dinâmica é um recurso Pro (compra ou teste ativo).
+    var hasProAccess: Bool {
+        let shared = UserDefaults(suiteName: SharedModelContainer.appGroupID)
+        if isAppExtension { return shared?.bool(forKey: Self.sharedProKey) ?? false }
+        let value = ProAccessSnapshot.current()
+        shared?.set(value, forKey: Self.sharedProKey)
+        return value
+    }
+
     /// Maior número de cobranças listadas na visão expandida.
     private static let upcomingLimit = 3
 
@@ -72,7 +105,9 @@ final class LiveActivityService {
     func syncAll(with subscriptions: [Subscription], service: CurrencyService = .shared) {
         WidgetCenter.shared.reloadAllTimelines()
 
-        guard isEnabled, areActivitiesEnabled else {
+        guard LiveActivityLifecycle.shouldRun(
+            hasPro: hasProAccess, enabled: isEnabled, systemAllows: areActivitiesEnabled
+        ) else {
             stop()
             return
         }
@@ -83,6 +118,9 @@ final class LiveActivityService {
     /// poderem explicar por que a ilha não apareceu.
     enum StartResult: Equatable {
         case started, updated, disabledBySystem, noSubscriptions
+        /// Nada vence nos próximos dias: a ilha fica desligada de propósito.
+        case nothingSoon
+        case requiresPro
         case failed(String)
     }
 
@@ -92,14 +130,22 @@ final class LiveActivityService {
     func start(
         with subscriptions: [Subscription],
         service: CurrencyService = .shared,
-        bills: [SubCheckActivityAttributes.UpcomingCharge]? = nil
+        bills: [SubCheckActivityAttributes.UpcomingCharge]? = nil,
+        ignoringPolicy: Bool = false
     ) -> StartResult {
         guard areActivitiesEnabled else { return .disabledBySystem }
-        guard let state = Self.state(from: subscriptions, service: service, bills: bills ?? Self.billCharges()) else {
-            // Sem assinaturas ativas não sobra nada a mostrar: encerra a
-            // atividade antiga em vez de deixá-la com dados apagados.
+        if !ignoringPolicy, !hasProAccess {
             stop()
-            return .noSubscriptions
+            return .requiresPro
+        }
+        let window = ignoringPolicy ? nil : LiveActivityLifecycle.windowDays
+        let all = bills ?? Self.billCharges()
+        guard let state = Self.state(from: subscriptions, service: service, bills: all, windowDays: window) else {
+            // Nada a mostrar (sem assinaturas, ou nada vence em breve):
+            // encerra a atividade em vez de deixá-la fixa na ilha.
+            stop()
+            let hasAny = subscriptions.contains { !$0.isCancelled } || !all.isEmpty
+            return hasAny ? .nothingSoon : .noSubscriptions
         }
 
         let content = ActivityContent(
@@ -144,7 +190,10 @@ final class LiveActivityService {
     /// Recalcula o conteúdo da atividade em andamento, se houver.
     func refresh(with subscriptions: [Subscription], service: CurrencyService = .shared) {
         guard let running,
-              let state = Self.state(from: subscriptions, service: service, bills: Self.billCharges()) else { return }
+              let state = Self.state(
+                from: subscriptions, service: service, bills: Self.billCharges(),
+                windowDays: LiveActivityLifecycle.windowDays
+              ) else { return }
         let content = ActivityContent(
             state: state,
             staleDate: LiveActivityLifecycle.staleDate(forDue: state.nextDueDate)
@@ -168,7 +217,9 @@ final class LiveActivityService {
     static func state(
         from subscriptions: [Subscription],
         service: CurrencyService = .shared,
-        bills: [SubCheckActivityAttributes.UpcomingCharge] = []
+        bills: [SubCheckActivityAttributes.UpcomingCharge] = [],
+        windowDays: Int? = nil,
+        now: Date = Date()
     ) -> SubCheckActivityAttributes.ContentState? {
         let active = subscriptions.filter { !$0.isCancelled }
 
@@ -178,12 +229,16 @@ final class LiveActivityService {
                 name: $0.name,
                 amount: $0.cost(in: service),
                 dueDate: $0.nextBillingDate,
-                category: $0.category
+                category: $0.category,
+                icon: Self.iconRaw(for: $0)
             )
         }
 
         // Assinaturas e contas da casa na mesma fila, da mais próxima à mais distante.
-        let all = (subscriptionCharges + bills).sorted { $0.dueDate < $1.dueDate }
+        var all = (subscriptionCharges + bills).sorted { $0.dueDate < $1.dueDate }
+        if let windowDays {
+            all = all.filter { LiveActivityLifecycle.isWithinWindow(due: $0.dueDate, days: windowDays, now: now) }
+        }
         guard let next = all.first else { return nil }
 
         return SubCheckActivityAttributes.ContentState(
@@ -194,8 +249,16 @@ final class LiveActivityService {
             nextCategory: next.category,
             monthlyTotal: active.monthlyTotal(in: service),
             upcoming: Array(all.prefix(upcomingLimit)),
-            nextKind: next.kind
+            nextKind: next.kind,
+            nextIcon: next.icon
         )
+    }
+
+    /// Ícone da assinatura como texto. Endereços muito longos ficam de fora
+    /// para a atividade respeitar o limite de tamanho do ActivityKit.
+    private static func iconRaw(for subscription: Subscription) -> String? {
+        let raw = subscription.resolvedIcon.rawValue
+        return raw.count <= 120 ? raw : nil
     }
 
     /// Contas da casa que pedem atenção: vencidas ou vencendo nos próximos
