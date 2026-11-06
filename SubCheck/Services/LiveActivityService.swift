@@ -201,6 +201,21 @@ final class LiveActivityService {
         Task { await running.update(content) }
     }
 
+    /// Mostra "Pago ✓" na atividade por alguns segundos depois do botão
+    /// "Registrar pagamento". Sem atividade em andamento não faz nada.
+    func confirmPaid(
+        name: String,
+        subscriptions: [Subscription],
+        service: CurrencyService = .shared,
+        showFor seconds: Double = 3
+    ) async {
+        guard let running else { return }
+        var state = running.content.state
+        state.confirmedName = name
+        await running.update(ActivityContent(state: state, staleDate: nil))
+        try? await Task.sleep(for: .seconds(seconds))
+    }
+
     func stop() {
         let activities = Activity<SubCheckActivityAttributes>.activities
         Task {

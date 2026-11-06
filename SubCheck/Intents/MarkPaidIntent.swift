@@ -2,15 +2,17 @@
 //  MarkPaidIntent.swift
 //  SubCheckWidgets
 //
-//  Ação do widget: registra a próxima cobrança como paga sem abrir o app.
-//  Roda dentro da extensão e grava no mesmo banco do App Group.
+//  Ação do widget e da Live Activity: registra a próxima cobrança como paga
+//  sem abrir o app. É um `LiveActivityIntent`: o iOS executa no processo do
+//  APP (e não da extensão), que enxerga o Pro, o banco e a Live Activity e
+//  consegue atualizá-la. Compilado nos dois alvos, como o iOS exige.
 //
 
 import AppIntents
 import SwiftData
 import Foundation
 
-struct MarkPaidIntent: AppIntent {
+struct MarkPaidIntent: LiveActivityIntent {
 
     static var title: LocalizedStringResource = "Registrar pagamento"
     static var description = IntentDescription("Marca a próxima cobrança desta assinatura como paga.")
@@ -45,6 +47,9 @@ struct MarkPaidIntent: AppIntent {
 
         // Widgets e Live Activity precisam da nova próxima cobrança.
         let all = (try? context.fetch(FetchDescriptor<Subscription>())) ?? []
+        // Primeiro mostra "Pago ✓" na própria atividade, para a pessoa ver que
+        // o toque funcionou; alguns segundos depois ela passa para a próxima.
+        await LiveActivityService.shared.confirmPaid(name: subscription.name, subscriptions: all)
         LiveActivityService.shared.syncAll(with: all)
 
         return .result()

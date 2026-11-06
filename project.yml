@@ -98,6 +98,7 @@ targets:
       - path: SubCheck/Services/BillRules.swift
       - path: SubCheck/Services/WidgetLink.swift
       - path: SubCheck/Services/LiveActivityService.swift
+      - path: SubCheck/Intents/MarkPaidIntent.swift
       - path: SubCheck/DesignSystem/Theme.swift
       - path: SubCheck/DesignSystem/CategoryStyle.swift
       - path: SubCheck/DesignSystem/Formatters.swift

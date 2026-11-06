@@ -34,6 +34,9 @@ struct SubCheckActivityAttributes: ActivityAttributes {
         /// Ícone da próxima cobrança (`SubscriptionIcon.rawValue`); `nil` usa o
         /// símbolo da categoria. Opcional por compatibilidade.
         var nextIcon: String? = nil
+        /// Nome da assinatura que acabou de ser paga pelo botão da atividade.
+        /// Enquanto existir, a tela mostra "Pago ✓" no lugar da cobrança.
+        var confirmedName: String? = nil
     }
 
     /// Uma cobrança futura listada na visão expandida.
