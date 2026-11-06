@@ -29,3 +29,25 @@ final class CostProjectionTests: XCTestCase {
         XCTAssertEqual(CostProjection.total(monthly: 100, years: 0, annualRate: 0.1), 0)
     }
 }
+
+final class DonutSelectionTests: XCTestCase {
+
+    private let breakdown = [
+        CategoryTotal(category: .entertainment, total: 100, count: 3),
+        CategoryTotal(category: .productivity, total: 50, count: 2),
+        CategoryTotal(category: .health, total: 50, count: 1)
+    ]
+
+    func testAngleValueMapsToTheSliceUnderTheTap() {
+        XCTAssertEqual(DonutSelection.category(atAngleValue: 10, in: breakdown), .entertainment)
+        XCTAssertEqual(DonutSelection.category(atAngleValue: 100, in: breakdown), .entertainment) // borda
+        XCTAssertEqual(DonutSelection.category(atAngleValue: 120, in: breakdown), .productivity)
+        XCTAssertEqual(DonutSelection.category(atAngleValue: 199, in: breakdown), .health)
+    }
+
+    func testBeyondTheEndFallsOnTheLastSliceAndNegativeIsNil() {
+        XCTAssertEqual(DonutSelection.category(atAngleValue: 9_999, in: breakdown), .health)
+        XCTAssertNil(DonutSelection.category(atAngleValue: -1, in: breakdown))
+        XCTAssertNil(DonutSelection.category(atAngleValue: 1, in: []))
+    }
+}
