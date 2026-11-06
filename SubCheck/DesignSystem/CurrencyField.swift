@@ -24,21 +24,21 @@ enum CurrencyMask {
         return String(trimmed.prefix(maxDigits))
     }
 
-    static func value(fromDigits digits: String) -> Double {
-        (Double(digits) ?? 0) / 100
+    static func value(fromDigits digits: String, fractionDigits: Int = 2) -> Double {
+        (Double(digits) ?? 0) / pow(10, Double(fractionDigits))
     }
 
-    static func digits(from value: Double) -> String {
+    static func digits(from value: Double, fractionDigits: Int = 2) -> String {
         guard value > 0 else { return "" }
-        return String(Int((value * 100).rounded()))
+        return String(Int((value * pow(10, Double(fractionDigits))).rounded()))
     }
 
     /// "12345" → "123,45" (ou "123.45" em inglês). Vazio fica vazio, para o
     /// texto de exemplo aparecer.
-    static func display(digits: String, locale: Locale = L.current) -> String {
+    static func display(digits: String, fractionDigits: Int = 2, locale: Locale = L.current) -> String {
         guard !digits.isEmpty else { return "" }
-        return value(fromDigits: digits)
-            .formatted(.number.precision(.fractionLength(2)).locale(locale))
+        return value(fromDigits: digits, fractionDigits: fractionDigits)
+            .formatted(.number.precision(.fractionLength(fractionDigits)).locale(locale))
     }
 }
 
@@ -50,6 +50,8 @@ struct CurrencyField: UIViewRepresentable {
     var weight: UIFont.Weight = .regular
     var alignment: NSTextAlignment = .right
     var autoFocus = false
+    /// 2 para dinheiro; 4 para cotações (5,3412).
+    var fractionDigits = 2
 
     init(
         _ placeholder: String = "0,00",
@@ -57,8 +59,10 @@ struct CurrencyField: UIViewRepresentable {
         textStyle: UIFont.TextStyle = .body,
         weight: UIFont.Weight = .regular,
         alignment: NSTextAlignment = .right,
-        autoFocus: Bool = false
+        autoFocus: Bool = false,
+        fractionDigits: Int = 2
     ) {
+        self.fractionDigits = fractionDigits
         self.placeholder = placeholder
         self._value = value
         self.textStyle = textStyle
@@ -74,7 +78,8 @@ struct CurrencyField: UIViewRepresentable {
         textStyle: UIFont.TextStyle = .body,
         weight: UIFont.Weight = .regular,
         alignment: NSTextAlignment = .right,
-        autoFocus: Bool = false
+        autoFocus: Bool = false,
+        fractionDigits: Int = 2
     ) {
         self.init(
             placeholder,
@@ -82,7 +87,8 @@ struct CurrencyField: UIViewRepresentable {
                 get: { value.wrappedValue ?? 0 },
                 set: { value.wrappedValue = $0 > 0 ? $0 : nil }
             ),
-            textStyle: textStyle, weight: weight, alignment: alignment, autoFocus: autoFocus
+            textStyle: textStyle, weight: weight, alignment: alignment, autoFocus: autoFocus,
+            fractionDigits: fractionDigits
         )
     }
 
@@ -113,11 +119,11 @@ struct CurrencyField: UIViewRepresentable {
 
         // Só reescreve o texto quando o valor mudou por fora, para não
         // atrapalhar a digitação.
-        let current = CurrencyMask.value(fromDigits: context.coordinator.digits)
-        if abs(current - value) > 0.0001 {
-            context.coordinator.digits = CurrencyMask.digits(from: value)
+        let current = CurrencyMask.value(fromDigits: context.coordinator.digits, fractionDigits: fractionDigits)
+        if abs(current - value) > pow(10, -Double(fractionDigits)) / 2 {
+            context.coordinator.digits = CurrencyMask.digits(from: value, fractionDigits: fractionDigits)
         }
-        let shown = CurrencyMask.display(digits: context.coordinator.digits)
+        let shown = CurrencyMask.display(digits: context.coordinator.digits, fractionDigits: fractionDigits)
         if field.text != shown { field.text = shown }
     }
 
@@ -129,7 +135,7 @@ struct CurrencyField: UIViewRepresentable {
 
         init(_ parent: CurrencyField) {
             self.parent = parent
-            self.digits = CurrencyMask.digits(from: parent.value)
+            self.digits = CurrencyMask.digits(from: parent.value, fractionDigits: parent.fractionDigits)
         }
 
         func makeToolbar(for field: UITextField) -> UIToolbar {
@@ -151,8 +157,8 @@ struct CurrencyField: UIViewRepresentable {
         /// Cada toque no teclado vira só dígitos, e o texto é refeito com a máscara.
         @objc func changed(_ field: UITextField) {
             digits = CurrencyMask.digits(from: field.text ?? "")
-            field.text = CurrencyMask.display(digits: digits)
-            parent.value = CurrencyMask.value(fromDigits: digits)
+            field.text = CurrencyMask.display(digits: digits, fractionDigits: parent.fractionDigits)
+            parent.value = CurrencyMask.value(fromDigits: digits, fractionDigits: parent.fractionDigits)
         }
     }
 }

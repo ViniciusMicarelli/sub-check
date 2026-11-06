@@ -36,6 +36,12 @@ final class CurrencyMaskTests: XCTestCase {
         XCTAssertEqual(CurrencyMask.value(fromDigits: ""), 0)
     }
 
+    func testRatesUseFourDecimals() {
+        XCTAssertEqual(CurrencyMask.display(digits: "53412", fractionDigits: 4, locale: pt), "5,3412")
+        XCTAssertEqual(CurrencyMask.value(fromDigits: "53412", fractionDigits: 4), 5.3412, accuracy: 0.00001)
+        XCTAssertEqual(CurrencyMask.digits(from: 5.3412, fractionDigits: 4), "53412")
+    }
+
     func testDigitCountIsCapped() {
         XCTAssertEqual(CurrencyMask.digits(from: String(repeating: "9", count: 30)).count, CurrencyMask.maxDigits)
     }

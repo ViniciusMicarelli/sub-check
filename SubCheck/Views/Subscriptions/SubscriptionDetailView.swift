@@ -27,6 +27,7 @@ struct SubscriptionDetailView: View {
             detailsSection
             trialSection
             billingSection
+            SubscriptionExtrasSection(subscription: subscription)
             paymentsSection
             reminderSection
             actionsSection
@@ -96,6 +97,18 @@ struct SubscriptionDetailView: View {
                              Money.compact(subscription.yearlyCost(in: .shared))))
                         .font(.caption)
                         .foregroundStyle(Color.textSecondary)
+
+                    if subscription.isIncludedInBundle {
+                        Label(L.t("Incluído em um pacote"), systemImage: "shippingbox.fill")
+                            .font(.caption2)
+                            .foregroundStyle(Color.info)
+                    } else if subscription.isShared {
+                        Label(L.t("Dividida por %lld: sua parte %@", subscription.splitCount,
+                                  Money.format(subscription.monthlyCost(in: .shared))),
+                              systemImage: "person.2.fill")
+                            .font(.caption2)
+                            .foregroundStyle(Color.brand)
+                    }
 
                     if subscription.isForeignCurrency(base: CurrencyService.shared.baseCode) {
                         Text(L.t("Convertido para %@", CurrencyService.shared.baseCode))

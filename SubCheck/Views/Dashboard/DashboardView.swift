@@ -25,6 +25,8 @@ struct DashboardView: View {
     @AppStorage(SalaryStore.amountKey) private var salary = 0.0
     @Query private var bills: [Bill]
     @Query private var billEntries: [BillEntry]
+    @Query(sort: \OneOffPayment.paidAt, order: .reverse) private var oneOffs: [OneOffPayment]
+    @State private var showAddOneOff = false
 
     private var store = StoreService.shared
 
@@ -107,6 +109,9 @@ struct DashboardView: View {
                         )
                         .revealOnScroll()
                     }
+
+                    OneOffCard(payments: oneOffs) { showAddOneOff = true }
+                        .revealOnScroll()
 
                     LazyVGrid(
                         columns: [GridItem(.flexible(), spacing: Spacing.md),
@@ -223,6 +228,12 @@ struct DashboardView: View {
                 }
             }
             .sheet(isPresented: $showTour) { ProTourView() }
+            .sheet(isPresented: $showAddOneOff) { AddOneOffView() }
+            #if DEBUG
+            .onAppear {
+                if CommandLine.arguments.contains("oneoff") { showAddOneOff = true }
+            }
+            #endif
             .sheet(isPresented: $showAddSheet) {
                 AddSubscriptionView()
             }
