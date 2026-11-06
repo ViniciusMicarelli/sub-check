@@ -89,3 +89,17 @@ Para cada item que falhar: o que você esperava, o que aconteceu e, se der, uma 
 - Siri/Atalhos: "Registrar conta de luz no SubCheck" → pergunta o valor → grava na linha em aberto (a vencida mais antiga, senão a do mês). "Contas para pagar no SubCheck" lista as vencidas/de hoje.
 - iPad / dobrável aberto / janela dividida: conteúdo em coluna centralizada (720 pt), abas no topo; girar o aparelho e redimensionar o Split View sem cortes.
 - Pendente: validar em um dobrável real; para a App Store, o iPad exige capturas próprias.
+
+## 6f. v1.1 (build 3) — rodar no iPhone real
+- **Campo de dinheiro:** salário, orçamento, conta, assinatura e pagamento avulso mostram a máscara (digitar 1-2-3-4-5 → 123,45); o botão "OK" fecha o teclado.
+- **Ilha/Atividade ao Vivo:** só com Pro; aparece só se algo vence em até 3 dias; some em 1 minuto; respeita "Avisos por dia" (Ajustes). Em iPhone **sem** Ilha o texto diz "Atividade ao Vivo". Botão "Registrar pagamento" mostra "Pago ✓" e segue para a próxima.
+- **Ícones:** logo da marca na tela de bloqueio e na Ilha; texto da legenda ("Próxima cobrança") correto.
+- **Pro:** comprar (Sandbox) cria a despesa "SubCheck Pro" de R$ 49,90 (uma vez). Preço também precisa estar em R$ 49,90 no App Store Connect.
+- **Pagamentos avulsos:** registrar em USD sem internet (modo avião) com cotação digitada e com valor aproximado.
+- **Assinatura:** descrição, "Pessoas dividindo" (preço cheio × sua parte), pacote (Apple One → iCloud+: não soma em dobro), tipo "Por uso" (pede o valor ao registrar).
+- **Resumo:** alternância Hoje × Futuro com teste grátis em curso; rosquinha de categorias responde ao toque.
+- **Contas:** no dia do salário aparece "Marcar todas como pagas" (e fora dele, para vencidas).
+- **Simulador (Pro):** arrastar o gráfico, horizonte 1–10 anos, inflação e rendimento.
+- **Onboarding:** passo "Do seu jeito" (idioma e aparência mudam na hora).
+- **Siri/Atalhos:** "Registrar conta de luz no SubCheck", "Quais contas vencem"; dicas prontas na tela de Siri e Atalhos.
+- **Landing no iPhone (Safari):** cabeçalho cabe, tour fixo cabe na tela, cartões novos.
