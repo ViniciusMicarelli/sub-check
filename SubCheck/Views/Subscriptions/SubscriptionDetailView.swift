@@ -159,9 +159,7 @@ struct SubscriptionDetailView: View {
             DatePicker("Início", selection: $subscription.startDate, displayedComponents: .date)
 
             LabeledContent("Valor") {
-                TextField("0,00", value: $subscription.cost, format: .number)
-                    .keyboardType(.decimalPad)
-                    .multilineTextAlignment(.trailing)
+                CurrencyField("0,00", value: $subscription.cost)
             }
 
             Picker("Moeda", selection: $subscription.currencyCode) {

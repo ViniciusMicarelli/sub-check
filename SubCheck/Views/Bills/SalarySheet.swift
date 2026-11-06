@@ -14,7 +14,6 @@ struct SalarySheet: View {
 
     @State private var amount: Double?
     @State private var day: Int
-    @FocusState private var focused: Bool
 
     init() {
         let stored = UserDefaults.standard.double(forKey: SalaryStore.amountKey)
@@ -29,14 +28,11 @@ struct SalarySheet: View {
                 Section {
                     HStack {
                         Text(Money.symbol).foregroundStyle(Color.textSecondary)
-                        TextField(
-                            "0,00",
-                            value: $amount,
-                            format: .number.precision(.fractionLength(0...2))
+                        CurrencyField(
+                            "0,00", optional: $amount,
+                            textStyle: .title2, weight: .semibold, alignment: .left,
+                            autoFocus: amount == nil
                         )
-                        .keyboardType(.decimalPad)
-                        .font(.title2.weight(.semibold))
-                        .focused($focused)
                     }
                 } header: {
                     Text("Salário líquido")
@@ -81,7 +77,6 @@ struct SalarySheet: View {
                     .disabled((amount ?? 0) <= 0)
                 }
             }
-            .onAppear { focused = (amount == nil) }
         }
         .presentationDetents([.medium, .large])
     }

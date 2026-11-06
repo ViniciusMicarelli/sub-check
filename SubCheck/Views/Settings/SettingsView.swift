@@ -187,9 +187,7 @@ struct SettingsView: View {
         Section {
             if store.hasProAccess {
                 LabeledContent("Orçamento mensal") {
-                    TextField("0,00", value: $monthlyBudget, format: .number)
-                        .keyboardType(.decimalPad)
-                        .multilineTextAlignment(.trailing)
+                    CurrencyField("0,00", value: $monthlyBudget)
                 }
 
                 if monthlyBudget > 0 {

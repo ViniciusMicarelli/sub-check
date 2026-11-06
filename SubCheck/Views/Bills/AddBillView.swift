@@ -90,12 +90,10 @@ struct AddBillView: View {
 
                     HStack {
                         Text(Money.symbol).foregroundStyle(Color.textSecondary)
-                        TextField(
+                        CurrencyField(
                             isFixed ? L.t("Valor") : L.t("Estimativa (opcional)"),
-                            value: $amount,
-                            format: .number.precision(.fractionLength(0...2))
+                            optional: $amount, alignment: .left
                         )
-                        .keyboardType(.decimalPad)
                     }
                 } header: {
                     Text("Valor")
