@@ -84,3 +84,8 @@ Rode isto num **iPhone real**, com uma build de TestFlight (ou do Xcode) antes d
 
 ## O que anotar
 Para cada item que falhar: o que você esperava, o que aconteceu e, se der, uma captura de tela. Erros de "não foi possível salvar" também importam.
+
+## 6e. Siri para contas e telas largas
+- Siri/Atalhos: "Registrar conta de luz no SubCheck" → pergunta o valor → grava na linha em aberto (a vencida mais antiga, senão a do mês). "Contas para pagar no SubCheck" lista as vencidas/de hoje.
+- iPad / dobrável aberto / janela dividida: conteúdo em coluna centralizada (720 pt), abas no topo; girar o aparelho e redimensionar o Split View sem cortes.
+- Pendente: validar em um dobrável real; para a App Store, o iPad exige capturas próprias.

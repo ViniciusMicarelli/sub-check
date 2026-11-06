@@ -75,3 +75,23 @@ enum AppearanceOption: String, CaseIterable, Identifiable {
         }
     }
 }
+
+
+// MARK: - Telas largas (iPad, dobráveis abertos, janela dividida)
+
+enum Layout {
+    /// Largura máxima de uma coluna de leitura. No iPhone nunca chega a valer.
+    static let readableWidth: CGFloat = 720
+}
+
+extension View {
+
+    /// Mantém o conteúdo numa coluna confortável e centralizada quando a tela
+    /// é larga; as laterais seguem com a cor de fundo do app.
+    func readableWidth(_ maxWidth: CGFloat = Layout.readableWidth) -> some View {
+        self
+            .frame(maxWidth: maxWidth)
+            .frame(maxWidth: .infinity)
+            .background(Color.appBackground.ignoresSafeArea())
+    }
+}

@@ -782,3 +782,15 @@
 "Do seu salário" = "Do seu salário";
 "O que mudou" = "O que mudou";
 "Média %@ → %@" = "Média %@ → %@";
+"Não encontrei essa conta." = "Não encontrei essa conta.";
+"Essa conta já está paga neste mês." = "Essa conta já está paga neste mês.";
+"Registrar valor de conta" = "Registrar valor de conta";
+"Informa o valor da conta do mês (luz, água, internet…) e, se quiser, marca como paga." = "Informa o valor da conta do mês (luz, água, internet…) e, se quiser, marca como paga.";
+"Qual conta?" = "Qual conta?";
+"Contas para pagar" = "Contas para pagar";
+"Diz quais contas da casa vencem hoje ou já venceram e ainda não foram pagas." = "Diz quais contas da casa vencem hoje ou já venceram e ainda não foram pagas.";
+"%@ de %@ registrada e marcada como paga." = "%@ de %@ registrada e marcada como paga.";
+"%@ de %@ registrada. Falta marcar como paga." = "%@ de %@ registrada. Falta marcar como paga.";
+"Nenhuma conta para pagar agora." = "Nenhuma conta para pagar agora.";
+"Contas para pagar: %@." = "Contas para pagar: %@.";
+"Registrar conta" = "Registrar conta";
