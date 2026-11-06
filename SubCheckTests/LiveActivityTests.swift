@@ -107,3 +107,39 @@ final class LiveActivityServiceTests: XCTestCase {
         XCTAssertEqual(state.upcoming.first?.icon, sub.resolvedIcon.rawValue)
     }
 }
+
+final class LiveActivityBudgetTests: XCTestCase {
+
+    func testDailyBudgetRule() {
+        XCTAssertTrue(LiveActivityBudget.canStart(usedToday: 0, limit: 3))
+        XCTAssertTrue(LiveActivityBudget.canStart(usedToday: 2, limit: 3))
+        XCTAssertFalse(LiveActivityBudget.canStart(usedToday: 3, limit: 3))
+        XCTAssertFalse(LiveActivityBudget.canStart(usedToday: 99, limit: 3))
+    }
+
+    func testLimitIsClampedBetweenOneAndTen() {
+        XCTAssertEqual(LiveActivityBudget.clamp(0), 1)
+        XCTAssertEqual(LiveActivityBudget.clamp(50), 10)
+        XCTAssertFalse(LiveActivityBudget.canStart(usedToday: 0, limit: 0) == false) // 0 vira 1: ainda cabe
+    }
+
+    func testCountResetsAtMidnightAndCountsStarts() {
+        let defaults = UserDefaults(suiteName: "budget-\(UUID().uuidString)")!
+        let cal = Calendar(identifier: .gregorian)
+        let monday = cal.date(from: DateComponents(year: 2026, month: 11, day: 9, hour: 10))!
+        let tuesday = cal.date(from: DateComponents(year: 2026, month: 11, day: 10, hour: 0, minute: 5))!
+
+        XCTAssertEqual(LiveActivityBudget.usedToday(defaults: defaults, now: monday), 0)
+        LiveActivityBudget.recordStart(defaults: defaults, now: monday)
+        LiveActivityBudget.recordStart(defaults: defaults, now: monday)
+        XCTAssertEqual(LiveActivityBudget.usedToday(defaults: defaults, now: monday), 2)
+        XCTAssertEqual(LiveActivityBudget.usedToday(defaults: defaults, now: tuesday), 0)   // novo dia
+    }
+
+    func testActivityExpiresAfterOneMinute() {
+        let start = Date()
+        XCTAssertFalse(LiveActivityLifecycle.isExpired(startedAt: start, now: start.addingTimeInterval(59)))
+        XCTAssertTrue(LiveActivityLifecycle.isExpired(startedAt: start, now: start.addingTimeInterval(60)))
+        XCTAssertEqual(LiveActivityLifecycle.visibleSeconds, 60)
+    }
+}

@@ -530,7 +530,7 @@
 "Nenhum pagamento registrado ainda." = "No payments recorded yet.";
 "Cotação da época: %@" = "Rate at the time: %@";
 "Sem cotação registrada" = "No rate recorded";
-"live.footer" = "Countdown and upcoming charges on the lock screen. iOS ends the island after about 8 hours; it comes back on its own when you open SubCheck.";
+"live.footer" = "Shows up when a charge is due within 3 days, when you open SubCheck, and disappears on its own after 1 minute. You choose how many times a day. iOS does not let an app start it in the background without a server.";
 "Marcar como pago" = "Mark as paid";
 "Lembrar amanhã" = "Remind me tomorrow";
 "Importar do extrato" = "Import from statement";
@@ -873,3 +873,5 @@
 "%lld mes(es)" = "%lld month(s)";
 "%lld ano(s) e %lld mes(es)" = "%lld year(s) and %lld month(s)";
 "Gráfico da economia ao longo dos anos" = "Chart of savings over the years";
+"Avisos por dia" = "Alerts per day";
+"Você já usou os avisos de hoje." = "You have used today's alerts.";

@@ -18,6 +18,7 @@ struct SettingsView: View {
     @AppStorage("appLockEnabled") private var appLockEnabled = false
     /// Mesma chave lida por `LiveActivityService`.
     @AppStorage(LiveActivityService.enabledKey) private var liveActivityEnabled = true
+    @AppStorage(LiveActivityBudget.dailyLimitKey) private var liveDailyLimit = LiveActivityBudget.defaultDailyLimit
     /// Sincronização com iCloud; vale a partir do próximo lançamento.
     @AppStorage(SharedModelContainer.iCloudSyncKey) private var iCloudSync = false
     @State private var iCloudNeedsRestart = false
@@ -337,6 +338,14 @@ struct SettingsView: View {
                 Label(LiveSurface.name, systemImage: "platter.filled.top.iphone")
             }
 
+            if liveActivityEnabled {
+                Stepper(value: $liveDailyLimit, in: LiveActivityBudget.limitRange) {
+                    LabeledContent("Avisos por dia") {
+                        Text("\(liveDailyLimit)").monospacedDigit().fontWeight(.semibold)
+                    }
+                }
+            }
+
             Button {
                 testLiveActivity()
             } label: {
@@ -386,6 +395,9 @@ struct SettingsView: View {
         case .nothingSoon:
             Haptics.warning()
             message = L.t("Nada vence nos próximos dias.")
+        case .dailyLimitReached:
+            Haptics.warning()
+            message = L.t("Você já usou os avisos de hoje.")
         case .requiresPro:
             Haptics.impact(.light)
             showPaywall = true

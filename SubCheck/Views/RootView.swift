@@ -104,7 +104,10 @@ struct RootView: View {
             Task { await NotificationService.shared.requestAuthorization() }
         }
         .onChange(of: scenePhase) { _, phase in
-            if phase == .background { lockIfNeeded() }
+            if phase == .background {
+                lockIfNeeded()
+                LiveActivityService.shared.endExpired()
+            }
             if phase == .active {
                 store.refreshClock()
                 refreshLiveActivity()

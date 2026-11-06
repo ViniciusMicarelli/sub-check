@@ -14,6 +14,7 @@ struct SubCheckApp: App {
 
     init() {
         NotificationActionHandler.install()
+        LiveActivityAutoEnd.install()
     }
 
     /// Em builds de depuração, `-seedSampleData` evita o diálogo do sistema
