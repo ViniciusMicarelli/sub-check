@@ -115,7 +115,7 @@ struct SettingsView: View {
                 HStack {
                     Label("SubCheck Pro", systemImage: "sparkles")
                     Spacer()
-                    Text(store.isPro ? L.t("Ativo") : L.t("Ver opções"))
+                    Text(store.isPro ? L.t("Ativo") : (store.canStartTrial ? L.t("Testar 7 dias") : L.t("Ver opções")))
                         .foregroundStyle(Color.textSecondary)
                 }
             }
@@ -129,6 +129,12 @@ struct SettingsView: View {
         if store.isPro { return L.t("Obrigado por apoiar o SubCheck.") }
         if store.isTrialActive {
             return L.t("Teste gratuito: %lld dia(s) restante(s).", store.trialDaysRemaining)
+        }
+        if store.canStartTrial {
+            return L.t("Você está no plano grátis. Toque em SubCheck Pro para testar tudo por 7 dias, sem cartão.")
+        }
+        if store.trialState == .expired {
+            return L.t("O teste terminou. Um pagamento único libera todos os recursos para sempre.")
         }
         return L.t("Um pagamento único libera todos os recursos para sempre.")
     }

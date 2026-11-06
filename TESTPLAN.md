@@ -55,6 +55,22 @@ Rode isto num **iPhone real**, com uma build de TestFlight (ou do Xcode) antes d
 - [ ] O cartão **Seu mês** aparece no Resumo e leva à aba Contas.
 - [ ] Histórico de assinaturas excluídas agora está em Ajustes > Dados.
 
+## 6c. Aviso de conta, meses e calendário (6 min)
+- [ ] Cadastre uma conta que vence **amanhã** (lembrete "1 dia antes", depois das 9h): ao fim do dia nada chega, mas **amanhã às 9h** chega "Conta vence hoje" e, à noite (19h), "Falta informar o valor" se ainda não digitou.
+- [ ] Segure a notificação: **Informar valor** abre o app na conta; **Lembrar em 3 h** reaparece; em conta de valor fixo existe **Marcar como paga**.
+- [ ] Cadastre uma conta que vence **hoje**: o app já abre a tela do valor.
+- [ ] Abra o app com uma conta vencida: aparece **"Contas para informar"** (Preencher agora / Depois). "Depois" só volta amanhã.
+- [ ] Com o Pro ativo e uma conta vencendo hoje, a **Ilha Dinâmica** mostra a conta com "Informar valor" (abre a tela da conta).
+- [ ] Setas do cartão passam de mês: meses passados mostram o que foi pago; futuros mostram **Previstas** com "~valor".
+- [ ] **Calendário**: pontinhos por situação; tocar num dia lista contas, assinaturas e o salário.
+- [ ] **Evolução**: barras por categoria, "contra o mês anterior" e "O que mudou".
+
+## 6d. Pro só quando a pessoa escolhe (3 min)
+- [ ] Instalação limpa: na introdução aparecem **"Ativar 7 dias grátis"** e **"Continuar no grátis"**; escolhendo grátis, recursos Pro ficam travados.
+- [ ] No Resumo aparece o card **"Experimente o Pro por 7 dias"**; "Ativar" libera tudo na hora.
+- [ ] Ajustes > SubCheck Pro e o paywall mostram **"Testar 7 dias grátis"** enquanto o teste não foi ativado.
+- [ ] Depois de 7 dias (avance o relógio) o card vira "Seu teste do Pro terminou".
+
 ## 7. iCloud (4 min) — precisa de **dois** aparelhos no mesmo Apple ID
 - [ ] Ligue "Sincronizar com iCloud" nos dois e **reabra** o app.
 - [ ] Uma assinatura criada no aparelho A aparece no B em alguns minutos.

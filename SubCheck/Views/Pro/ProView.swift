@@ -211,6 +211,30 @@ struct ProView: View {
                     )
                 }
 
+                if store.canStartTrial {
+                    Button {
+                        store.startTrial()
+                        Haptics.success()
+                        dismiss()
+                    } label: {
+                        VStack(spacing: 2) {
+                            Text("Testar 7 dias grátis")
+                                .font(.headline)
+                            Text("Sem cartão e sem cobrança")
+                                .font(.caption)
+                                .opacity(0.8)
+                        }
+                        .foregroundStyle(Color.brand)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, Spacing.md)
+                        .background(
+                            Color.brand.opacity(0.12),
+                            in: RoundedRectangle(cornerRadius: Radius.md, style: .continuous)
+                        )
+                    }
+                    .buttonStyle(PressableStyle())
+                }
+
                 Button {
                     Task {
                         if await store.purchase() { dismiss() }

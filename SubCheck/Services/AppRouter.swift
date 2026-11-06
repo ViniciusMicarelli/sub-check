@@ -23,6 +23,8 @@ final class AppRouter {
     var tab: AppTab = .dashboard
     /// Conta cujo valor deve ser informado ao abrir o app (notificação).
     var billToOpen: UUID?
+    /// Mostra a folha "Contas para informar" (conta venceu e falta o valor).
+    var showBillPrompt = false
 
     func openBill(_ id: UUID) {
         tab = .bills

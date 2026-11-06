@@ -35,8 +35,9 @@ final class StoreService {
 
     private(set) var product: Product?
     private(set) var isPro: Bool
-    /// Primeira abertura do app, que marca o começo do teste.
-    private(set) var trialStartDate: Date
+    /// Quando a pessoa ativou o teste. `nil` = ainda não ativou (o Pro fica
+    /// trancado até ela escolher testar ou comprar).
+    private(set) var trialStartDate: Date?
     /// Relógio do teste: avança em `refreshClock()` e nunca volta, mesmo que
     /// o usuário atrase a data do aparelho.
     private(set) var now = Date()
@@ -49,7 +50,7 @@ final class StoreService {
 
     private init() {
         isPro = UserDefaults.standard.bool(forKey: Self.unlockedKey)
-        trialStartDate = Self.startTrialIfNeeded()
+        trialStartDate = Self.storedTrialStart()
         refreshClock()
         updatesTask = observeTransactions()
         Task { await refresh() }
@@ -59,20 +60,43 @@ final class StoreService {
 
     /// Libera os recursos Pro: compra registrada ou teste ainda em curso.
     /// Todos os portões do app devem usar isto, nunca `isPro` direto.
-    var hasProAccess: Bool { policy.hasProAccess(isPurchased: isPro, now: now) }
-
-    private var policy: TrialPolicy {
-        TrialPolicy(startDate: trialStartDate, days: Self.trialDays)
+    var hasProAccess: Bool {
+        guard let policy else { return isPro }
+        return policy.hasProAccess(isPurchased: isPro, now: now)
     }
 
-    var trialEndDate: Date { policy.endDate }
+    private var policy: TrialPolicy? {
+        trialStartDate.map { TrialPolicy(startDate: $0, days: Self.trialDays) }
+    }
 
-    var isTrialActive: Bool { !isPro && policy.isActive(now: now) }
+    var trialEndDate: Date? { policy?.endDate }
 
-    /// Dias inteiros que ainda restam do teste. Zero quando expirou ou
-    /// quando a compra já foi feita.
+    /// Não ativou o teste e não comprou: pode escolher "testar 7 dias".
+    var canStartTrial: Bool { !isPro && trialStartDate == nil }
+
+    var trialState: TrialState {
+        TrialPolicy.state(start: trialStartDate, days: Self.trialDays, now: now)
+    }
+
+    var isTrialActive: Bool { !isPro && policy?.isActive(now: now) == true }
+
+    /// Dias inteiros que ainda restam do teste. Zero quando não começou,
+    /// expirou ou quando a compra já foi feita.
     var trialDaysRemaining: Int {
-        isPro ? 0 : policy.daysRemaining(now: now)
+        guard !isPro, let policy else { return 0 }
+        return policy.daysRemaining(now: now)
+    }
+
+    /// A pessoa escolheu testar o Pro: o relógio de 7 dias começa agora.
+    /// Só vale uma vez; o Keychain mantém a data mesmo se o app for reinstalado.
+    func startTrial() {
+        guard canStartTrial else { return }
+        refreshClock()
+        let start = now
+        let defaults = UserDefaults.standard
+        defaults.set(start, forKey: Self.trialStartKey)
+        KeychainStore.set(start, for: Self.trialStartKey)
+        trialStartDate = start
     }
 
     /// Atualiza o relógio do teste; chamado ao abrir e ao voltar ao primeiro
@@ -85,20 +109,14 @@ final class StoreService {
         KeychainStore.set(effective, for: Self.lastSeenKey)
     }
 
-    /// Grava a data da primeira abertura no Keychain (sobrevive à
-    /// reinstalação) e espelha no UserDefaults. Vale a data mais antiga.
-    private static func startTrialIfNeeded() -> Date {
+    /// Data em que o teste foi ativado, se foi. Lê o Keychain (sobrevive à
+    /// reinstalação) e o UserDefaults; vale a mais antiga.
+    private static func storedTrialStart() -> Date? {
         let defaults = UserDefaults.standard
-        let start = TrialPolicy.startDate(
-            from: [
-                KeychainStore.date(for: trialStartKey),
-                defaults.object(forKey: trialStartKey) as? Date
-            ],
-            now: Date()
-        )
-        defaults.set(start, forKey: trialStartKey)
-        KeychainStore.set(start, for: trialStartKey)
-        return start
+        return TrialPolicy.earliestStart(from: [
+            KeychainStore.date(for: trialStartKey),
+            defaults.object(forKey: trialStartKey) as? Date
+        ])
     }
 
     // MARK: - Preço

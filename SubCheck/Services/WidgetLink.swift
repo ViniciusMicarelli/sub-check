@@ -17,6 +17,9 @@ enum WidgetLink {
 
     static func subscription(_ id: UUID) -> URL { url("subscription/\(id.uuidString)") }
 
+    /// Abre a tela de valor de uma conta da casa (Ilha Dinâmica, notificação).
+    static func bill(_ id: UUID) -> URL { url("bill/\(id.uuidString)") }
+
     static func category(_ category: String) -> URL { url("category/\(category)") }
 
     private static func url(_ path: String) -> URL {

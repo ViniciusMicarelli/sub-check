@@ -37,6 +37,9 @@ Free must be useful and honest (5 subscriptions, dashboard, widgets, reminders, 
 
 ## Contas do mês (household bills)
 
+**v2 (2026-11-06):** month navigation (past months, forecast up to 3 months ahead), calendar view (bills, subscription charges, payday), evolution view (stacked bars by category, month-over-month, "what changed"), reminders planned by `BillReminderPlanner` (advance, **due day 9am**, 7pm nudge when the amount is still missing, overdue next morning) with notification actions, an in-app "Bills to enter" sheet, bills in the Live Activity. **Pro is opt-in:** the 7-day trial only starts when the user taps "Activate 7 free days" (onboarding, paywall, Settings or the Overview card).
+
+
 Tab **Contas** (replaces the History tab, which now lives in Settings > Data): net salary (already after deductions, stored in `UserDefaults`, **not** synced), recurring bills with a due day and a fixed or variable amount, one `BillEntry` per bill per month, and a month plan ("sobra do mês" = salary − subscriptions − bills). On the due day a notification opens the amount sheet; variable bills show an estimate (average of the last three paid months) and a "x% above average" hint; per-bill history chart. Free: 5 active bills (`StoreService.freeBillLimit`); Pro: unlimited.
 
 Next for bills: Siri intent ("registrar conta de luz de R$ 180"), a widget with what is due this week, month navigation, CSV/PDF export of bills, syncing the salary through iCloud key-value storage.

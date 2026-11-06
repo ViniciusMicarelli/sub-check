@@ -70,7 +70,7 @@ struct BillEntrySheet: View {
                     Section {
                         Button(role: .destructive) {
                             BillLedger.unpay(entry, in: context)
-                            BillLedger.rescheduleNotifications(in: context)
+                            BillLedger.refreshSurfaces(in: context)
                             dismiss()
                         } label: {
                             Label("Desmarcar pagamento", systemImage: "arrow.uturn.backward")
@@ -189,7 +189,7 @@ struct BillEntrySheet: View {
     private func save() {
         guard let amount, amount > 0 else { return }
         BillLedger.record(entry, amount: amount, paid: paid, paidAt: paidAt, in: context)
-        BillLedger.rescheduleNotifications(in: context)
+        BillLedger.refreshSurfaces(in: context)
         Haptics.success()
         dismiss()
     }

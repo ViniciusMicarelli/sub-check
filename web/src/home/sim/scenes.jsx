@@ -359,6 +359,112 @@ export function SceneBills({ s, lang, onDone }) {
   )
 }
 
+/* ---------------------------- Calendário e evolução ---------------------------- */
+
+export function SceneCalendar({ s, lang, onDone }) {
+  const c = s.calScene
+  const days = Array.from({ length: 30 }, (_, i) => i + 1)
+  // 1 de novembro de 2026 é domingo: a grade começa na primeira coluna.
+  const dots = { 1: ['g'], 3: ['r'], 5: ['o', 'm'], 9: ['b'], 12: ['b', 'p'], 15: ['b'], 18: ['p'], 27: ['p'] }
+  const bars = [
+    { m: c.months[0], seg: [22, 6, 3.4, 2.6, 2.2], o: 1 },
+    { m: c.months[1], seg: [22, 6, 3.2, 2.8, 2.2], o: 1 },
+    { m: c.months[2], seg: [22, 6, 3.8, 2.8, 2.4], o: 1 },
+    { m: c.months[3], seg: [22, 6, 3.4, 2.8, 2.4], o: 0.55 },
+  ]
+  const colors = ['#5b66e0', '#8d6fd0', '#f5a621', '#4aa8ff', '#34d399']
+
+  const ref = useScene(({ q, tl, kit }) => {
+    tl.set(q('[data-a=detail]'), { opacity: 0, y: 18 })
+    tl.set(q('[data-a=evo]'), { opacity: 0, y: 24 })
+    tl.set(q('[data-a=bar]'), { scaleY: 0 })
+    tl.from(q('[data-a=head]'), { y: -12, opacity: 0, duration: 0.5 }, 0)
+    tl.from(q('[data-a=seg]'), { y: 12, opacity: 0, duration: 0.5 }, 0.2)
+    tl.from(q('[data-a~=day]'), { opacity: 0, scale: 0.6, stagger: 0.014, duration: 0.35 }, 0.4)
+    tl.from(q('[data-a=dot]'), { scale: 0, stagger: 0.05, duration: 0.3, ease: 'back.out(3)' }, 1.1)
+
+    let t = kit.tap('[data-a~=d12]', 2.2)
+    tl.call(() => q('[data-a~=d12]')[0]?.classList.add('is-sel'), null, t)
+    tl.to(q('[data-a=detail]'), { opacity: 1, y: 0, duration: 0.5 }, t + 0.1)
+
+    t = kit.tap('[data-a=segevo]', t + 2.0)
+    tl.call(() => {
+      q('[data-a=segcal]')[0]?.classList.remove('on')
+      q('[data-a=segevo]')[0]?.classList.add('on')
+    }, null, t)
+    tl.to(q('[data-a=calwrap]'), { opacity: 0, y: -14, duration: 0.35 }, t + 0.1)
+    kit.hideCursor(t + 0.3)
+    tl.to(q('[data-a=evo]'), { opacity: 1, y: 0, duration: 0.5 }, t + 0.4)
+    tl.to(q('[data-a=bar]'), { scaleY: 1, transformOrigin: 'bottom', stagger: 0.025, duration: 0.7, ease: 'power3.out' }, t + 0.6)
+    tl.from(q('[data-a=chg]'), { x: -20, opacity: 0, duration: 0.5 }, t + 1.6)
+    tl.to({}, { duration: 2.2 }, t + 2.0)
+  }, onDone)
+
+  return (
+    <div className="sim-scene" ref={ref}>
+      <div className="sim-head" data-a="head">
+        <div>
+          <small>{c.month}</small>
+          <h4 className="sim-h4-sm">{s.tabs[2]}</h4>
+        </div>
+        <span className="sim-plus"><Icon name="plus" size={16} strokeWidth={2.4} /></span>
+      </div>
+
+      <div className="sim-segmented" data-a="seg">
+        <span>{c.list}</span>
+        <span className="on" data-a="segcal">{c.calendar}</span>
+        <span data-a="segevo">{c.evolution}</span>
+      </div>
+
+      <div className="sim-calwrap" data-a="calwrap">
+        <div className="sim-card sim-cal">
+          <div className="sim-cal-week">{c.weekdays.map((d, i) => <i key={i}>{d}</i>)}</div>
+          <div className="sim-cal-grid">
+            {days.map((d) => (
+              <b key={d} className="sim-cd" data-a={d === 12 ? 'day d12' : 'day'}>
+                <span>{d}</span>
+                <em>
+                  {(dots[d] || []).map((k) => <u key={k} className={`dot-${k}`} data-a="dot" />)}
+                </em>
+              </b>
+            ))}
+          </div>
+        </div>
+
+        <div className="sim-card sim-detail" data-a="detail">
+          <b className="sim-detail-title">{c.dayTitle}</b>
+          <div className="sim-detail-row"><Badge icon="bolt" tint={COLORS.orange} size="7.5cqw" /><span>{c.light}</span><em>~{money(215.8, lang)}</em></div>
+          <div className="sim-detail-row"><Badge icon="play" tint={COLORS.red} size="7.5cqw" /><span>Netflix</span><em>{money(55.9, lang)}</em></div>
+        </div>
+      </div>
+
+      <div className="sim-evo" data-a="evo">
+        <div className="sim-card">
+          <b className="sim-evo-title">{c.evoTitle}</b>
+          <div className="sim-evo-bars">
+            {bars.map((bar) => (
+              <div key={bar.m} className="sim-evo-col">
+                <div className="sim-evo-stack" style={{ opacity: bar.o }}>
+                  {bar.seg.map((h, i) => (
+                    <i key={i} data-a="bar" style={{ height: `${h}cqw`, background: colors[i] }} />
+                  ))}
+                </div>
+                <small>{bar.m}</small>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="sim-card sim-chg" data-a="chg">
+          <b>{c.changed}</b>
+          <div className="sim-detail-row"><Badge icon="bolt" tint={COLORS.orange} size="7.5cqw" /><span>{c.light}</span><em className="warn">+18%</em></div>
+        </div>
+      </div>
+
+      <TabBar labels={s.tabs} active={2} />
+    </div>
+  )
+}
+
 /* ------------------------------ 4. Câmbio ------------------------------ */
 
 export function SceneFx({ s, lang, onDone }) {
@@ -597,8 +703,8 @@ export function ScenePro({ s, onDone }) {
     tl.from(q('[data-a=note]'), { opacity: 0, duration: 0.5 }, 2.4)
     tl.from(q('[data-a=cont]'), { y: 24, opacity: 0, duration: 0.6 }, 2.4)
     tl.fromTo(q('[data-a=disc]'), { boxShadow: '0 0 0 0 rgba(156,74,240,.45)' }, { boxShadow: '0 0 0 26px rgba(156,74,240,0)', duration: 1.4, repeat: 2 }, 1.2)
-    const t = kit.tap('[data-a=cont]', 3.4)
-    tl.to(q('[data-a=cont]'), { scale: 0.96, yoyo: true, repeat: 1, duration: 0.12 }, t - 0.25)
+    const t = kit.tap('[data-a=activate]', 3.4)
+    tl.to(q('[data-a=activate]'), { scale: 0.96, yoyo: true, repeat: 1, duration: 0.12 }, t - 0.25)
     kit.hideCursor(t + 0.2)
     tl.to({}, { duration: 2.4 }, t + 0.3)
   }, onDone)
@@ -622,7 +728,10 @@ export function ScenePro({ s, onDone }) {
         </ul>
         <p className="sim-trial-note" data-a="note">{s.trialNote}</p>
       </div>
-      <button className="sim-cta sim-cta-bottom" data-a="cont" type="button" tabIndex={-1}>{s.cont}</button>
+      <div className="sim-choice" data-a="cont">
+        <button className="sim-cta" data-a="activate" type="button" tabIndex={-1}>{s.trialActivate}</button>
+        <button className="sim-cta-ghost" type="button" tabIndex={-1}>{s.trialSkip}</button>
+      </div>
     </div>
   )
 }
@@ -632,6 +741,7 @@ export const SCENES = {
   add: SceneAdd,
   import: SceneImport,
   bills: SceneBills,
+  calendar: SceneCalendar,
   fx: SceneFx,
   island: SceneIsland,
   siri: SceneSiri,

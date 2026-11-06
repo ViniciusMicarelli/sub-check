@@ -128,3 +128,74 @@ struct MonthPlan: Equatable {
         return min(max(part / base, 0), 1)
     }
 }
+
+// MARK: - Quando avisar
+
+/// Um aviso planejado para uma conta. Separado do UserNotifications para ser
+/// testável: o erro de "conta de amanhã sem aviso nenhum" nasceu aqui.
+struct PlannedBillReminder: Equatable {
+    enum Kind: String { case advance, dueDay, evening, overdue }
+
+    let kind: Kind
+    let fireDate: Date
+    let dueDate: Date
+}
+
+enum BillReminderPlanner {
+
+    static let morningHour = 9
+    static let eveningHour = 19
+
+    /// Avisos de um vencimento, só os que ainda estão no futuro:
+    /// - antes (se a pessoa pediu antecedência), às 9h;
+    /// - **no dia do vencimento**, às 9h (sempre);
+    /// - à noite, às 19h, quando a conta ainda precisa que a pessoa digite o valor;
+    /// - no dia seguinte, às 9h, para a conta atrasada.
+    /// Cadastrar depois das 9h não pode apagar o aviso do dia do vencimento.
+    static func plan(
+        dueDate: Date,
+        advanceDays: Int,
+        needsAmount: Bool,
+        now: Date,
+        calendar: Calendar = .current
+    ) -> [PlannedBillReminder] {
+        func at(_ hour: Int, daysFromDue: Int) -> Date? {
+            guard let day = calendar.date(byAdding: .day, value: daysFromDue, to: dueDate) else { return nil }
+            var parts = calendar.dateComponents([.year, .month, .day], from: day)
+            parts.hour = hour
+            parts.minute = 0
+            return calendar.date(from: parts)
+        }
+
+        var result: [PlannedBillReminder] = []
+        func add(_ kind: PlannedBillReminder.Kind, _ date: Date?) {
+            guard let date, date > now else { return }
+            result.append(PlannedBillReminder(kind: kind, fireDate: date, dueDate: dueDate))
+        }
+
+        if advanceDays > 0 { add(.advance, at(morningHour, daysFromDue: -advanceDays)) }
+        add(.dueDay, at(morningHour, daysFromDue: 0))
+        if needsAmount { add(.evening, at(eveningHour, daysFromDue: 0)) }
+        add(.overdue, at(morningHour, daysFromDue: 1))
+        return result.sorted { $0.fireDate < $1.fireDate }
+    }
+}
+
+// MARK: - Aviso dentro do app
+
+enum BillPrompt {
+
+    static let snoozeKey = "billPromptSnoozedDay"
+
+    /// Número do dia (20261106) para guardar até quando a pessoa adiou.
+    static func dayNumber(_ date: Date, calendar: Calendar = .current) -> Int {
+        let c = calendar.dateComponents([.year, .month, .day], from: date)
+        return (c.year ?? 0) * 10_000 + (c.month ?? 0) * 100 + (c.day ?? 0)
+    }
+
+    /// Mostra o aviso quando há conta vencida ou vencendo hoje sem valor/
+    /// pagamento e a pessoa não adiou para hoje.
+    static func shouldShow(dueCount: Int, snoozedDay: Int, now: Date, calendar: Calendar = .current) -> Bool {
+        dueCount > 0 && snoozedDay != dayNumber(now, calendar: calendar)
+    }
+}

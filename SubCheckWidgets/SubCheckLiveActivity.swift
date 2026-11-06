@@ -28,7 +28,7 @@ struct SubCheckLiveActivity: Widget {
 
                 DynamicIslandExpandedRegion(.trailing) {
                     VStack(alignment: .trailing, spacing: 1) {
-                        Text(Money.format(context.state.nextAmount))
+                        Text(amountText(context.state.nextAmount, kind: context.state.nextKind))
                             .font(.subheadline.weight(.bold))
                             .foregroundStyle(.white)
                             .lineLimit(1)
@@ -53,17 +53,17 @@ struct SubCheckLiveActivity: Widget {
                     islandBottom(context.state)
                 }
             } compactLeading: {
-                Image(systemName: symbol(for: context.state.nextCategory))
-                    .foregroundStyle(color(for: context.state.nextCategory))
+                Image(systemName: symbol(kind: context.state.nextKind, category: context.state.nextCategory))
+                    .foregroundStyle(color(kind: context.state.nextKind, category: context.state.nextCategory))
             } compactTrailing: {
                 // Só o dia: um cronômetro de semanas estoura a largura compacta.
                 CompactCountdown(until: context.state.nextDueDate)
             } minimal: {
-                Image(systemName: symbol(for: context.state.nextCategory))
-                    .foregroundStyle(color(for: context.state.nextCategory))
+                Image(systemName: symbol(kind: context.state.nextKind, category: context.state.nextCategory))
+                    .foregroundStyle(color(kind: context.state.nextKind, category: context.state.nextCategory))
             }
             .widgetURL(deepLink(context.state))
-            .keylineTint(color(for: context.state.nextCategory))
+            .keylineTint(color(kind: context.state.nextKind, category: context.state.nextCategory))
         }
     }
 
@@ -74,14 +74,14 @@ struct SubCheckLiveActivity: Widget {
 
         return VStack(alignment: .leading, spacing: Spacing.md) {
             HStack(spacing: Spacing.md) {
-                Image(systemName: symbol(for: state.nextCategory))
+                Image(systemName: symbol(kind: state.nextKind, category: state.nextCategory))
                     .font(.headline)
                     .foregroundStyle(.white)
                     .frame(width: 34, height: 34)
-                    .background(color(for: state.nextCategory).gradient, in: RoundedRectangle(cornerRadius: Radius.sm, style: .continuous))
+                    .background(color(kind: state.nextKind, category: state.nextCategory).gradient, in: RoundedRectangle(cornerRadius: Radius.sm, style: .continuous))
 
                 VStack(alignment: .leading, spacing: 1) {
-                    Text(L.t("widget.nextLine"))
+                    Text(state.nextKind == "bill" ? L.t("Conta da casa") : L.t("widget.nextLine"))
                         .font(.caption2)
                         .foregroundStyle(Color.textSecondary)
                     Text(state.nextName)
@@ -93,7 +93,7 @@ struct SubCheckLiveActivity: Widget {
                 Spacer(minLength: 0)
 
                 VStack(alignment: .trailing, spacing: 1) {
-                    Text(Money.format(state.nextAmount))
+                    Text(amountText(state.nextAmount, kind: state.nextKind))
                         .font(.subheadline.weight(.bold))
                         .foregroundStyle(Color.textPrimary)
                         .contentTransition(.numericText())
@@ -108,19 +108,28 @@ struct SubCheckLiveActivity: Widget {
             } currentValueLabel: {
                 EmptyView()
             }
-            .tint(color(for: state.nextCategory))
+            .tint(color(kind: state.nextKind, category: state.nextCategory))
 
             if !state.upcoming.isEmpty {
                 Divider().overlay(Color.hairline)
                 upcomingList(state)
             }
 
-            Button(intent: MarkPaidIntent(subscriptionID: state.nextID)) {
-                Label(L.t("Registrar pagamento"), systemImage: "checkmark.circle")
-                    .font(.caption.weight(.semibold))
+            if state.nextKind == "bill" {
+                // Digitar o valor exige o app: o botão abre a tela da conta.
+                Link(destination: deepLink(state)) {
+                    Label(L.t("Informar valor"), systemImage: "square.and.pencil")
+                        .font(.caption.weight(.semibold))
+                }
+                .foregroundStyle(Color.brand)
+            } else {
+                Button(intent: MarkPaidIntent(subscriptionID: state.nextID)) {
+                    Label(L.t("Registrar pagamento"), systemImage: "checkmark.circle")
+                        .font(.caption.weight(.semibold))
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(Color.brand)
             }
-            .buttonStyle(.plain)
-            .foregroundStyle(Color.brand)
         }
         .padding(Spacing.lg)
     }
@@ -129,9 +138,9 @@ struct SubCheckLiveActivity: Widget {
         VStack(spacing: Spacing.sm) {
             ForEach(state.upcoming.dropFirst()) { charge in
                 HStack(spacing: Spacing.sm) {
-                    Image(systemName: symbol(for: charge.category))
+                    Image(systemName: symbol(kind: charge.kind, category: charge.category))
                         .font(.caption2)
-                        .foregroundStyle(color(for: charge.category))
+                        .foregroundStyle(color(kind: charge.kind, category: charge.category))
                         .frame(width: 16)
 
                     Text(charge.name)
@@ -145,7 +154,7 @@ struct SubCheckLiveActivity: Widget {
                         .font(.caption2)
                         .foregroundStyle(Color.textSecondary)
 
-                    Text(Money.format(charge.amount))
+                    Text(amountText(charge.amount, kind: charge.kind))
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(Color.textPrimary)
                         .monospacedDigit()
@@ -157,12 +166,12 @@ struct SubCheckLiveActivity: Widget {
     // MARK: - Ilha dinâmica
 
     private func islandBadge(_ state: SubCheckActivityAttributes.ContentState) -> some View {
-        Image(systemName: symbol(for: state.nextCategory))
+        Image(systemName: symbol(kind: state.nextKind, category: state.nextCategory))
             .font(.subheadline)
             .foregroundStyle(.white)
             .frame(width: 28, height: 28)
             .background(
-                color(for: state.nextCategory).gradient,
+                color(kind: state.nextKind, category: state.nextCategory).gradient,
                 in: RoundedRectangle(cornerRadius: 8, style: .continuous)
             )
     }
@@ -178,19 +187,30 @@ struct SubCheckLiveActivity: Widget {
                         .foregroundStyle(.white.opacity(0.8))
                         .lineLimit(1)
                     Spacer(minLength: 0)
-                    Text(Money.format(following.amount))
+                    Text(amountText(following.amount, kind: following.kind))
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(.white)
                         .monospacedDigit()
                 }
             }
 
-            Button(intent: MarkPaidIntent(subscriptionID: state.nextID)) {
-                Label(L.t("Registrar pagamento"), systemImage: "checkmark.circle.fill")
-                    .font(.caption.weight(.semibold))
-                    .frame(maxWidth: .infinity)
+            if state.nextKind == "bill" {
+                Link(destination: deepLink(state)) {
+                    Label(L.t("Informar valor"), systemImage: "square.and.pencil")
+                        .font(.caption.weight(.semibold))
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 6)
+                        .background(color(kind: state.nextKind, category: state.nextCategory), in: Capsule())
+                        .foregroundStyle(.white)
+                }
+            } else {
+                Button(intent: MarkPaidIntent(subscriptionID: state.nextID)) {
+                    Label(L.t("Registrar pagamento"), systemImage: "checkmark.circle.fill")
+                        .font(.caption.weight(.semibold))
+                        .frame(maxWidth: .infinity)
+                }
+                .tint(color(kind: state.nextKind, category: state.nextCategory))
             }
-            .tint(color(for: state.nextCategory))
         }
     }
 
@@ -234,7 +254,23 @@ struct SubCheckLiveActivity: Widget {
     }
 
     private func deepLink(_ state: SubCheckActivityAttributes.ContentState) -> URL {
-        UUID(uuidString: state.nextID).map(WidgetLink.subscription) ?? WidgetLink.dashboard
+        guard let id = UUID(uuidString: state.nextID) else { return WidgetLink.dashboard }
+        return state.nextKind == "bill" ? WidgetLink.bill(id) : WidgetLink.subscription(id)
+    }
+
+    /// Conta variável ainda sem valor mostra "—" em vez de R$ 0,00.
+    private func amountText(_ amount: Double, kind: String?) -> String {
+        (kind == "bill" && amount <= 0) ? "—" : Money.format(amount)
+    }
+
+    private func color(kind: String?, category: String) -> Color {
+        if kind == "bill" { return BillCategory(rawValue: category)?.color ?? .brand }
+        return color(for: category)
+    }
+
+    private func symbol(kind: String?, category: String) -> String {
+        if kind == "bill" { return BillCategory(rawValue: category)?.icon ?? "doc.text.fill" }
+        return symbol(for: category)
     }
 
     private func color(for category: String) -> Color {

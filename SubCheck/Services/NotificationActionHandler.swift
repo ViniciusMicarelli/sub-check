@@ -40,6 +40,22 @@ final class NotificationActionHandler: NSObject, UNUserNotificationCenterDelegat
         case NotificationService.markPaidAction:
             guard let idString else { return }
             await MainActor.run { Self.markPaid(idString) }
+        case NotificationService.billEnterAction:
+            if let raw = content.userInfo[NotificationService.billIDKey] as? String, let id = UUID(uuidString: raw) {
+                await MainActor.run { AppRouter.shared.openBill(id) }
+            }
+        case NotificationService.billSnoozeAction:
+            if let raw = content.userInfo[NotificationService.billIDKey] as? String {
+                await MainActor.run { NotificationService.shared.snoozeBill(content, billID: raw) }
+            }
+        case NotificationService.billMarkPaidAction:
+            if let raw = content.userInfo[NotificationService.billIDKey] as? String, let id = UUID(uuidString: raw) {
+                await MainActor.run {
+                    // Conta de valor fixo: marca com o valor combinado. Sem valor,
+                    // abre a tela para digitar.
+                    if !Self.markBillPaid(id) { AppRouter.shared.openBill(id) }
+                }
+            }
         case UNNotificationDefaultActionIdentifier:
             if let raw = content.userInfo[NotificationService.billIDKey] as? String,
                let id = UUID(uuidString: raw) {
@@ -51,6 +67,24 @@ final class NotificationActionHandler: NSObject, UNUserNotificationCenterDelegat
         default:
             break
         }
+    }
+
+    /// Marca a conta pendente como paga com o valor fixo. `false` se não deu.
+    @MainActor
+    private static func markBillPaid(_ id: UUID) -> Bool {
+        let context = SharedModelContainer.shared.mainContext
+        let billDescriptor = FetchDescriptor<Bill>(predicate: #Predicate { $0.id == id })
+        let entryDescriptor = FetchDescriptor<BillEntry>(
+            predicate: #Predicate { $0.billID == id && !$0.isPaid && !$0.isSkipped },
+            sortBy: [SortDescriptor(\.dueDate, order: .reverse)]
+        )
+        guard let bill = try? context.fetch(billDescriptor).first,
+              let entry = try? context.fetch(entryDescriptor).first else { return false }
+        let amount = entry.amount > 0 ? entry.amount : bill.expectedAmount
+        guard amount > 0 else { return false }
+        BillLedger.record(entry, amount: amount, paid: true, in: context)
+        BillLedger.refreshSurfaces(in: context)
+        return true
     }
 
     @MainActor

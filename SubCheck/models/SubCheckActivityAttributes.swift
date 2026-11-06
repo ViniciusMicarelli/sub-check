@@ -28,6 +28,9 @@ struct SubCheckActivityAttributes: ActivityAttributes {
         var monthlyTotal: Double
         /// Cobranças seguintes, da mais próxima para a mais distante.
         var upcoming: [UpcomingCharge]
+        /// `"bill"` quando o próximo item é uma conta da casa; `nil` = assinatura.
+        /// Opcional para continuar lendo atividades criadas por versões antigas.
+        var nextKind: String? = nil
     }
 
     /// Uma cobrança futura listada na visão expandida.
@@ -37,6 +40,8 @@ struct SubCheckActivityAttributes: ActivityAttributes {
         var amount: Double
         var dueDate: Date
         var category: String
+        /// `"bill"` para conta da casa; `nil` = assinatura.
+        var kind: String? = nil
     }
 
     /// Momento em que a atividade foi criada.

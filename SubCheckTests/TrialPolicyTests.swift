@@ -47,8 +47,16 @@ final class TrialPolicyTests: XCTestCase {
 
     func testReinstallKeepsOldestStartDate() {
         let older = start.addingTimeInterval(-10 * 86_400)
-        XCTAssertEqual(TrialPolicy.startDate(from: [start, older, nil], now: day(1)), older)
-        XCTAssertEqual(TrialPolicy.startDate(from: [nil, nil], now: day(1)), day(1))
+        XCTAssertEqual(TrialPolicy.earliestStart(from: [start, older, nil]), older)
+        // Sem data guardada o teste ainda não começou: nada começa sozinho.
+        XCTAssertNil(TrialPolicy.earliestStart(from: [nil, nil]))
+    }
+
+    func testStateNotStartedActiveAndExpired() {
+        XCTAssertEqual(TrialPolicy.state(start: nil, now: day(0)), .notStarted)
+        XCTAssertEqual(TrialPolicy.state(start: start, now: day(0)), .active(daysLeft: 7))
+        XCTAssertEqual(TrialPolicy.state(start: start, now: day(3)), .active(daysLeft: 4))
+        XCTAssertEqual(TrialPolicy.state(start: start, now: day(7)), .expired)
     }
 
     func testRollingClockBackDoesNotReopenTrial() {

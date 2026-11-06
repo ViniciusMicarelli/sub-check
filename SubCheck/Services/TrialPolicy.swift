@@ -8,6 +8,13 @@
 
 import Foundation
 
+/// O teste grátis é uma escolha: começa quando a pessoa ativa, não sozinho.
+enum TrialState: Equatable {
+    case notStarted
+    case active(daysLeft: Int)
+    case expired
+}
+
 struct TrialPolicy: Equatable {
 
     static let defaultDays = 7
@@ -43,9 +50,19 @@ struct TrialPolicy: Equatable {
     // MARK: - Anti-fraude simples
 
     /// Entre cópias da data de início (Keychain, UserDefaults) vale a mais
-    /// antiga; sem nenhuma, o teste começa agora.
-    static func startDate(from stored: [Date?], now: Date) -> Date {
-        stored.compactMap { $0 }.min() ?? now
+    /// antiga. Sem nenhuma, o teste **ainda não começou**: ele só começa quando
+    /// a pessoa escolhe ativar.
+    static func earliestStart(from stored: [Date?]) -> Date? {
+        stored.compactMap { $0 }.min()
+    }
+
+    /// Situação do teste para mostrar na tela.
+    static func state(
+        start: Date?, days: Int = defaultDays, now: Date, calendar: Calendar = .current
+    ) -> TrialState {
+        guard let start else { return .notStarted }
+        let policy = TrialPolicy(startDate: start, days: days, calendar: calendar)
+        return policy.isActive(now: now) ? .active(daysLeft: policy.daysRemaining(now: now)) : .expired
     }
 
     /// Voltar o relógio do aparelho não pode reabrir o teste: o "agora"

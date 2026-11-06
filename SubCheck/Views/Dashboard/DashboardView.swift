@@ -14,6 +14,7 @@ struct DashboardView: View {
     private var subscriptions: [Subscription]
 
     @State private var showAddSheet = false
+    @State private var showTour = false
     /// Paywall aberto pelo limite de assinaturas ou pela Análise bloqueada.
     @State private var showPaywall = false
     @State private var paywallReason: String?
@@ -91,6 +92,19 @@ struct DashboardView: View {
                             ),
                             toInform: billsToInform
                         ) { AppRouter.shared.tab = .bills }
+                        .revealOnScroll()
+                    }
+
+                    if !store.isPro, store.canStartTrial || store.trialState == .expired {
+                        ProTrialCard(
+                            state: store.trialState,
+                            onActivate: { withAnimation(.snappy) { store.startTrial() } },
+                            onSeeDifferences: { showTour = true },
+                            onUnlock: {
+                                paywallReason = nil
+                                showPaywall = true
+                            }
+                        )
                         .revealOnScroll()
                     }
 
@@ -208,6 +222,7 @@ struct DashboardView: View {
                     }
                 }
             }
+            .sheet(isPresented: $showTour) { ProTourView() }
             .sheet(isPresented: $showAddSheet) {
                 AddSubscriptionView()
             }

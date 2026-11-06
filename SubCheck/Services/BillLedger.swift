@@ -80,6 +80,14 @@ enum BillLedger {
         Task { await NotificationService.shared.scheduleBills(bills, entries: entries) }
     }
 
+    /// Atualiza tudo que mostra as contas fora da tela: avisos, Ilha Dinâmica e
+    /// widgets. Chamar depois de criar, editar, pagar ou pular uma conta.
+    static func refreshSurfaces(in context: ModelContext) {
+        rescheduleNotifications(in: context)
+        let subscriptions = (try? context.fetch(FetchDescriptor<Subscription>())) ?? []
+        LiveActivityService.shared.syncAll(with: subscriptions)
+    }
+
     /// Registra o valor do mês. `paid` marca como paga na data `paidAt`.
     static func record(
         _ entry: BillEntry,
@@ -159,6 +167,18 @@ enum BillPlanning {
         return result
     }
 
+    /// Linhas deste e do mês passado que já venceram (ou vencem hoje) e seguem
+    /// sem pagamento: são as que pedem uma ação da pessoa.
+    static func dueEntries(
+        _ entries: [BillEntry], now: Date = Date(), calendar: Calendar = .current
+    ) -> [BillEntry] {
+        guard let oldest = calendar.date(byAdding: .month, value: -1, to: BillSchedule.monthStart(of: now, calendar: calendar)) else { return [] }
+        return entries
+            .filter { !$0.isPaid && !$0.isSkipped && $0.monthStart >= oldest
+                && BillMath.daysUntil($0.dueDate, now: now, calendar: calendar) <= 0 }
+            .sorted { $0.dueDate < $1.dueDate }
+    }
+
     /// Valor que uma linha ainda não paga deve custar: o informado ou, sem
     /// ele, a estimativa da conta.
     static func pendingAmount(_ entry: BillEntry, bill: Bill?, history: [UUID: [Double]]) -> Double {
@@ -169,29 +189,22 @@ enum BillPlanning {
 
 extension MonthPlan {
 
-    /// Monta o plano do mês atual com o que está salvo.
+    /// Monta o plano de um mês (o atual por padrão) com o que está salvo.
+    /// Contas ainda sem linha em mês atual/futuro entram como previsão.
     static func make(
         salary: Double,
         subscriptions: [Subscription],
         bills: [Bill],
         entries: [BillEntry],
+        month: Date? = nil,
         now: Date = Date(),
         calendar: Calendar = .current
     ) -> MonthPlan {
-        let month = BillSchedule.monthStart(of: now, calendar: calendar)
-        let history = BillPlanning.history(of: entries, before: month)
-        let byID = Dictionary(bills.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
-        let thisMonth = entries.filter { $0.monthStart == month && !$0.isSkipped }
-
-        var paid = 0.0
-        var pending = 0.0
-        for entry in thisMonth {
-            if entry.isPaid {
-                paid += entry.amount
-            } else {
-                pending += BillPlanning.pendingAmount(entry, bill: byID[entry.billID], history: history)
-            }
-        }
+        let occurrences = BillCalendar.occurrences(
+            bills: bills, entries: entries, month: month ?? now, now: now, calendar: calendar
+        )
+        let paid = occurrences.filter { $0.status == .paid }.reduce(0) { $0 + $1.amount }
+        let pending = occurrences.filter { $0.status != .paid }.reduce(0) { $0 + $1.amount }
 
         return MonthPlan(
             salary: salary,

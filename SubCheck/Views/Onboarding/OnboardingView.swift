@@ -285,8 +285,8 @@ struct OnboardingView: View {
     /// Deixa explícito que testar não custa nada e o que acontece depois.
     private var afterTrialText: String {
         var text = L.t(
-            "Sem cartão e sem cobrança. Depois dos %lld dias, o app continua grátis com até %lld assinaturas.",
-            StoreService.trialDays, StoreService.freeLimit
+            "O teste só começa quando você ativar, sem cartão e sem cobrança. Depois dos %lld dias, o app continua grátis com até %lld assinaturas e %lld contas.",
+            StoreService.trialDays, StoreService.freeLimit, StoreService.freeBillLimit
         )
         if let price = store.displayPrice {
             text += " " + L.t("Para manter o Pro: %@, uma única vez.", price)
@@ -386,20 +386,11 @@ struct OnboardingView: View {
 
     private var footer: some View {
         VStack(spacing: Spacing.sm) {
-            Button {
-                advance()
-            } label: {
-                Text(isLast ? L.t("Começar") : L.t("Continuar"))
-                    .font(.headline)
-                    .foregroundStyle(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, Spacing.lg)
-                    .background(
-                        Color.brandGradient,
-                        in: RoundedRectangle(cornerRadius: Radius.md, style: .continuous)
-                    )
+            if steps[page] == .pro && store.canStartTrial {
+                proChoice
+            } else {
+                primaryButton(isLast ? L.t("Começar") : L.t("Continuar")) { advance() }
             }
-            .buttonStyle(PressableStyle())
 
             Button {
                 editingName = false
@@ -415,6 +406,47 @@ struct OnboardingView: View {
             .animation(Motion.snappy, value: page)
         }
         .padding(.horizontal, Spacing.xl)
+    }
+
+    private func primaryButton(_ title: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(title)
+                .font(.headline)
+                .foregroundStyle(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, Spacing.lg)
+                .background(
+                    Color.brandGradient,
+                    in: RoundedRectangle(cornerRadius: Radius.md, style: .continuous)
+                )
+        }
+        .buttonStyle(PressableStyle())
+    }
+
+    /// O Pro não liga sozinho: a pessoa escolhe testar ou seguir no grátis.
+    private var proChoice: some View {
+        VStack(spacing: Spacing.sm) {
+            primaryButton(L.t("Ativar 7 dias grátis")) {
+                store.startTrial()
+                Haptics.success()
+                advance()
+            }
+
+            Button {
+                advance()
+            } label: {
+                Text(L.t("Continuar no grátis"))
+                    .font(.headline)
+                    .foregroundStyle(Color.brand)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, Spacing.lg)
+                    .background(
+                        Color.brand.opacity(0.1),
+                        in: RoundedRectangle(cornerRadius: Radius.md, style: .continuous)
+                    )
+            }
+            .buttonStyle(PressableStyle())
+        }
     }
 
     // MARK: - Ações
@@ -480,9 +512,9 @@ private enum Step: Int, CaseIterable, Identifiable {
         case .savings:
             L.t("Insights, previsão de 12 meses e o simulador de cancelamento mostram onde cortar.")
         case .pro:
-            L.t("Use tudo do SubCheck Pro de graça por %lld dias. É só para testar: ninguém te cobra nada.", StoreService.trialDays)
+            L.t("Teste tudo do SubCheck Pro de graça por %lld dias. Ou continue no grátis e ative quando quiser.", StoreService.trialDays)
         case .sync:
-            L.t("Com o iCloud, suas assinaturas ficam iguais no iPhone e no iPad. Quer ligar a sincronização?")
+            L.t("Com o iCloud, suas assinaturas e contas ficam iguais em todos os seus aparelhos. Quer ligar a sincronização?")
         }
     }
 }

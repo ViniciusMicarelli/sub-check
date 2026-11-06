@@ -7,8 +7,21 @@ final class ProAccessSnapshotTests: XCTestCase {
     private let day: TimeInterval = 86_400
     private let now = Date(timeIntervalSince1970: 1_800_000_000)
 
-    func testFreshInstallHasTrialAccess() {
-        XCTAssertTrue(ProAccessSnapshot.hasAccess(purchased: false, trialStart: [nil, nil], lastSeen: nil, now: now))
+    func testFreshInstallHasNoProUntilTheTrialIsActivated() {
+        // O Pro não liga sozinho: a pessoa precisa escolher ativar o teste.
+        XCTAssertFalse(ProAccessSnapshot.hasAccess(purchased: false, trialStart: [nil, nil], lastSeen: nil, now: now))
+    }
+
+    func testActivatingTheTrialGivesAccessForSevenDays() {
+        XCTAssertTrue(ProAccessSnapshot.hasAccess(purchased: false, trialStart: [now], lastSeen: now, now: now))
+        let later = now.addingTimeInterval(6 * day)
+        XCTAssertTrue(ProAccessSnapshot.hasAccess(purchased: false, trialStart: [now], lastSeen: later, now: later))
+        let after = now.addingTimeInterval(8 * day)
+        XCTAssertFalse(ProAccessSnapshot.hasAccess(purchased: false, trialStart: [now], lastSeen: after, now: after))
+    }
+
+    func testPurchaseWorksWithoutEverStartingTheTrial() {
+        XCTAssertTrue(ProAccessSnapshot.hasAccess(purchased: true, trialStart: [nil], lastSeen: nil, now: now))
     }
 
     func testExpiredTrialWithoutPurchaseHasNoAccess() {
