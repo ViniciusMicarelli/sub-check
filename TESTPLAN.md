@@ -44,6 +44,17 @@ Rode isto num **iPhone real**, com uma build de TestFlight (ou do Xcode) antes d
 - [ ] "Ei Siri, adicionar assinatura no SubCheck" pergunta nome e valor.
 - [ ] Ajustes > Siri e Atalhos abre o tutorial e o botão abre o app Atalhos.
 
+## 6b. Contas do mês (5 min)
+- [ ] Aba **Contas**: toque em "Informar salário", digite o líquido (já com descontos) e salve: o cartão mostra "Sobra do mês".
+- [ ] Cadastre **Conta de água** (vence hoje, varia todo mês) e **Aluguel** (valor fixo). O aluguel já vem com o valor.
+- [ ] Na água, toque em "Informar valor", digite e salve: vai para "Pagas este mês" e a sobra diminui.
+- [ ] Mês anterior sem histórico não quebra nada; depois de 2+ meses aparece "x% acima da média".
+- [ ] Crie uma conta que vença **amanhã** com lembrete "1 dia antes": chega a notificação às 9h; **tocar nela abre a tela de valor** dessa conta.
+- [ ] "Pular este mês" e "Desmarcar pagamento" (segurar a linha) funcionam.
+- [ ] A 6ª conta ativa pede o Pro (depois do teste).
+- [ ] O cartão **Seu mês** aparece no Resumo e leva à aba Contas.
+- [ ] Histórico de assinaturas excluídas agora está em Ajustes > Dados.
+
 ## 7. iCloud (4 min) — precisa de **dois** aparelhos no mesmo Apple ID
 - [ ] Ligue "Sincronizar com iCloud" nos dois e **reabra** o app.
 - [ ] Uma assinatura criada no aparelho A aparece no B em alguns minutos.

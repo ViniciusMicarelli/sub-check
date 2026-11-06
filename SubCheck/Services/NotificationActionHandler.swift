@@ -40,6 +40,11 @@ final class NotificationActionHandler: NSObject, UNUserNotificationCenterDelegat
         case NotificationService.markPaidAction:
             guard let idString else { return }
             await MainActor.run { Self.markPaid(idString) }
+        case UNNotificationDefaultActionIdentifier:
+            if let raw = content.userInfo[NotificationService.billIDKey] as? String,
+               let id = UUID(uuidString: raw) {
+                await MainActor.run { AppRouter.shared.openBill(id) }
+            }
         case NotificationService.snoozeAction:
             let id = idString ?? response.notification.request.identifier
             await MainActor.run { NotificationService.shared.snooze(content, id: id) }

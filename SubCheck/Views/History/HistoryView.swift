@@ -20,8 +20,18 @@ struct HistoryView: View {
         records.reduce(0) { $0 + $1.cost }
     }
 
+    /// Dentro dos Ajustes já existe uma NavigationStack.
+    var embedded = false
+
     var body: some View {
-        NavigationStack {
+        if embedded {
+            content
+        } else {
+            NavigationStack { content }
+        }
+    }
+
+    private var content: some View {
             Group {
                 if records.isEmpty {
                     ScrollView {
@@ -75,7 +85,6 @@ struct HistoryView: View {
                 }
                 Button("Cancelar", role: .cancel) {}
             }
-        }
     }
 
     private func delete(at offsets: IndexSet) {

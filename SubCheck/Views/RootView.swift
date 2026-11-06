@@ -8,11 +8,7 @@ import SwiftData
 
 struct RootView: View {
 
-    enum Tab: Hashable {
-        case dashboard, subscriptions, categories, history, settings
-    }
-
-    @State private var selection: Tab = .dashboard
+    @Bindable private var router = AppRouter.shared
     @AppStorage("appearance") private var appearance: AppearanceOption = .system
     @AppStorage(L.languageKey) private var language: AppLanguage = .system
     @AppStorage("appLockEnabled") private var appLockEnabled = false
@@ -28,26 +24,26 @@ struct RootView: View {
     private var store = StoreService.shared
 
     var body: some View {
-        TabView(selection: $selection) {
+        TabView(selection: $router.tab) {
             DashboardView()
                 .tabItem { Label("Resumo", systemImage: "chart.pie.fill") }
-                .tag(Tab.dashboard)
+                .tag(AppTab.dashboard)
 
             SubscriptionsView()
                 .tabItem { Label("Assinaturas", systemImage: "list.bullet.rectangle.portrait.fill") }
-                .tag(Tab.subscriptions)
+                .tag(AppTab.subscriptions)
+
+            BillsView()
+                .tabItem { Label("Contas", systemImage: "wallet.pass.fill") }
+                .tag(AppTab.bills)
 
             CategoriesView()
                 .tabItem { Label("Categorias", systemImage: "square.grid.2x2.fill") }
-                .tag(Tab.categories)
-
-            HistoryView()
-                .tabItem { Label("Histórico", systemImage: "clock.arrow.circlepath") }
-                .tag(Tab.history)
+                .tag(AppTab.categories)
 
             SettingsView()
                 .tabItem { Label("Ajustes", systemImage: "gearshape.fill") }
-                .tag(Tab.settings)
+                .tag(AppTab.settings)
         }
         .tint(.brand)
         .id(language)
@@ -83,6 +79,18 @@ struct RootView: View {
         } message: {
             Text(L.t("Suas últimas alterações podem não ter sido gravadas. Feche e abra o SubCheck de novo. Se continuar, libere espaço no aparelho."))
         }
+        #if DEBUG
+        // `-startTab bills` ao lançar no simulador abre direto na aba.
+        .onAppear {
+            switch UserDefaults.standard.string(forKey: "startTab") {
+            case "bills": router.tab = .bills
+            case "subscriptions": router.tab = .subscriptions
+            case "categories": router.tab = .categories
+            case "settings": router.tab = .settings
+            default: break
+            }
+        }
+        #endif
         .onChange(of: onboardingDone) { _, done in
             guard done else { return }
             Task { await NotificationService.shared.requestAuthorization() }
@@ -105,6 +113,11 @@ struct RootView: View {
         let context = SharedModelContainer.shared.mainContext
         let all = (try? context.fetch(FetchDescriptor<Subscription>())) ?? []
         LiveActivityService.shared.syncAll(with: all)
+
+        // Virou o mês? Cada conta ganha a linha do novo mês.
+        let bills = (try? context.fetch(FetchDescriptor<Bill>())) ?? []
+        BillLedger.ensureEntries(for: bills, in: context)
+        BillLedger.rescheduleNotifications(in: context)
     }
 
     // MARK: - Bloqueio
@@ -126,11 +139,11 @@ struct RootView: View {
                   let id = UUID(uuidString: raw) else { return }
             linkedSubscription = LinkedSubscription(id: id)
 
-        case "subscriptions": selection = .subscriptions
-        case "categories":    selection = .categories
-        case "history":       selection = .history
-        case "settings":      selection = .settings
-        default:              selection = .dashboard
+        case "subscriptions": router.tab = .subscriptions
+        case "bills":         router.tab = .bills
+        case "categories":    router.tab = .categories
+        case "history", "settings": router.tab = .settings
+        default:              router.tab = .dashboard
         }
     }
 }

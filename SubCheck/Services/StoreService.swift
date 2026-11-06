@@ -20,6 +20,9 @@ final class StoreService {
     /// Assinaturas ativas permitidas na versão gratuita.
     static let freeLimit = 5
 
+    /// Contas recorrentes ativas permitidas na versão gratuita.
+    static let freeBillLimit = 5
+
     /// Dias de teste liberados a partir da primeira abertura do app. O teste
     /// é local: não existe oferta introdutória em compra única na App Store.
     static let trialDays = ProAccessSnapshot.trialDays
