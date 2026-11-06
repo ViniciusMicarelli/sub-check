@@ -27,6 +27,9 @@ struct DashboardView: View {
     @Query private var billEntries: [BillEntry]
     @Query(sort: \OneOffPayment.paidAt, order: .reverse) private var oneOffs: [OneOffPayment]
     @State private var showAddOneOff = false
+    #if DEBUG
+    @State private var debugSavings = false
+    #endif
 
     private var store = StoreService.shared
 
@@ -234,6 +237,11 @@ struct DashboardView: View {
             #if DEBUG
             .onAppear {
                 if CommandLine.arguments.contains("oneoff") { showAddOneOff = true }
+                if CommandLine.arguments.contains("savings") { debugSavings = true }
+            }
+            .sheet(isPresented: $debugSavings) {
+                ScrollView { SavingsChartCard(monthlyTotal: 739.54, monthlySaved: 300).padding() }
+                    .background(Color.appBackground)
             }
             #endif
             .sheet(isPresented: $showAddSheet) {

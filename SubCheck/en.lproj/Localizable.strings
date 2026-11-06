@@ -861,3 +861,15 @@
 "Marcar todas como pagas" = "Mark all as paid";
 "Marcar %lld conta(s) como pagas?" = "Mark %lld bill(s) as paid?";
 "Dá para desfazer em cada conta." = "You can undo each bill.";
+"Quanto isso vira com o tempo" = "What this adds up to over time";
+"Horizonte" = "Horizon";
+"Horizonte em anos" = "Horizon in years";
+"Inflação ao ano" = "Inflation per year";
+"Investir a economia" = "Invest the savings";
+"Rendimento ao ano" = "Yield per year";
+"Estimativa: os preços sobem pela inflação a cada ano. Não é promessa de rendimento." = "Estimate: prices rise with inflation every year. Not a promise of returns.";
+"economizados · sem cancelar seriam %@" = "saved · without cancelling you'd spend %@";
+"%lld ano(s)" = "%lld year(s)";
+"%lld mes(es)" = "%lld month(s)";
+"%lld ano(s) e %lld mes(es)" = "%lld year(s) and %lld month(s)";
+"Gráfico da economia ao longo dos anos" = "Chart of savings over the years";

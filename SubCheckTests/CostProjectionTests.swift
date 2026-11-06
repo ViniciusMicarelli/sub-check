@@ -51,3 +51,44 @@ final class DonutSelectionTests: XCTestCase {
         XCTAssertNil(DonutSelection.category(atAngleValue: 1, in: []))
     }
 }
+
+final class SavingsProjectionTests: XCTestCase {
+
+    func testNoInflationIsLinear() {
+        let curve = SavingsProjection.curve(monthlyTotal: 100, monthlySaved: 40, years: 2, inflation: 0)
+        XCTAssertEqual(curve.count, 25)
+        XCTAssertEqual(curve.first?.saved, 0)
+        XCTAssertEqual(curve[12].saved, 480, accuracy: 0.001)
+        XCTAssertEqual(curve[24].saved, 960, accuracy: 0.001)
+        XCTAssertEqual(curve[24].spentWithoutCancelling, 2400, accuracy: 0.001)
+    }
+
+    func testInflationApplesFromTheSecondYear() {
+        let curve = SavingsProjection.curve(monthlyTotal: 100, monthlySaved: 100, years: 2, inflation: 0.10)
+        XCTAssertEqual(curve[12].saved, 1200, accuracy: 0.001)          // 1º ano: valor atual
+        XCTAssertEqual(curve[24].saved, 1200 + 1320, accuracy: 0.001)   // 2º ano: +10%
+    }
+
+    func testInvestingTheSavingsBeatsJustSaving() {
+        let plain = SavingsProjection.curve(monthlyTotal: 100, monthlySaved: 50, years: 5, inflation: 0.05, yield: 0)
+        let invested = SavingsProjection.curve(monthlyTotal: 100, monthlySaved: 50, years: 5, inflation: 0.05, yield: 0.10)
+        XCTAssertEqual(plain.last?.saved, plain.last?.savedInvested)    // sem rendimento, igual
+        XCTAssertGreaterThan(invested.last!.savedInvested, invested.last!.saved)
+    }
+
+    func testHorizonAndInputsAreClamped() {
+        XCTAssertEqual(SavingsProjection.curve(monthlyTotal: 10, monthlySaved: 5, years: 99, inflation: 0).count, 121)
+        XCTAssertEqual(SavingsProjection.curve(monthlyTotal: 10, monthlySaved: 5, years: 0, inflation: 0).count, 13)
+        // Não economiza mais do que gasta.
+        let capped = SavingsProjection.curve(monthlyTotal: 10, monthlySaved: 999, years: 1, inflation: 0)
+        XCTAssertEqual(capped.last?.saved ?? 0, 120, accuracy: 0.001)
+        XCTAssertTrue(SavingsProjection.curve(monthlyTotal: .nan, monthlySaved: 1, years: 1, inflation: 0).isEmpty)
+    }
+
+    func testScrubbingFindsTheNearestMonth() {
+        let curve = SavingsProjection.curve(monthlyTotal: 10, monthlySaved: 10, years: 1, inflation: 0)
+        XCTAssertEqual(SavingsProjection.point(atMonth: 5.4, in: curve)?.month, 5)
+        XCTAssertEqual(SavingsProjection.point(atMonth: -3, in: curve)?.month, 0)
+        XCTAssertEqual(SavingsProjection.point(atMonth: 500, in: curve)?.month, 12)
+    }
+}
