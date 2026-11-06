@@ -884,3 +884,7 @@
 "Toque em um deles para adicionar à Siri. O iOS não deixa um app criar automações sozinho: por horário ou local, você confirma no app Atalhos (veja as ideias abaixo)." = "Tap one to add it to Siri. iOS doesn't let an app create automations on its own: for time or location you confirm in the Shortcuts app (see the ideas below).";
 "Do seu jeito" = "Make it yours";
 "Escolha o idioma e a aparência. Você muda quando quiser nos Ajustes." = "Pick the language and the look. You can change it any time in Settings.";
+"Valor (%@)" = "Amount (%@)";
+"Última cobrança registrada: %@. Informe o valor real deste mês." = "Last recorded charge: %@. Enter this month's real amount.";
+"Digitar a cotação" = "Type the exchange rate";
+"Sem digitar, usa a cotação guardada no app (funciona sem internet)." = "If you skip it, the rate saved in the app is used (works offline).";

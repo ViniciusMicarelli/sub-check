@@ -92,6 +92,31 @@ enum PaymentLedger {
         return record
     }
 
+    /// Registra a cobrança com o valor real do mês (assinatura por uso) e,
+    /// opcionalmente, a cotação que valeu no dia. O valor passa a ser a
+    /// estimativa da próxima cobrança.
+    @discardableResult
+    static func markPaid(
+        _ subscription: Subscription,
+        actualAmount: Double,
+        manualRate: Double? = nil,
+        in context: ModelContext,
+        at date: Date = Date()
+    ) -> PaymentRecord {
+        let record = markPaid(subscription, in: context, at: date)
+        if actualAmount > 0 {
+            record.amount = actualAmount
+            subscription.cost = actualAmount
+        }
+        if let manualRate, manualRate > 0 {
+            record.rateToBase = manualRate
+            record.baseCodeAtPayment = CurrencyService.shared.baseCode
+            record.rateIsManual = true
+        }
+        context.saveReporting()
+        return record
+    }
+
     /// Quantas cobranças já foram registradas para uma assinatura.
     static func records(for subscription: Subscription, in context: ModelContext) -> [PaymentRecord] {
         let id = subscription.id

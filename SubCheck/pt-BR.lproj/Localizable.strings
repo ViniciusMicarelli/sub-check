@@ -885,3 +885,7 @@
 "Toque em um deles para adicionar à Siri. O iOS não deixa um app criar automações sozinho: por horário ou local, você confirma no app Atalhos (veja as ideias abaixo)." = "Toque em um deles para adicionar à Siri. O iOS não deixa um app criar automações sozinho: por horário ou local, você confirma no app Atalhos (veja as ideias abaixo).";
 "Do seu jeito" = "Do seu jeito";
 "Escolha o idioma e a aparência. Você muda quando quiser nos Ajustes." = "Escolha o idioma e a aparência. Você muda quando quiser nos Ajustes.";
+"Valor (%@)" = "Valor (%@)";
+"Última cobrança registrada: %@. Informe o valor real deste mês." = "Última cobrança registrada: %@. Informe o valor real deste mês.";
+"Digitar a cotação" = "Digitar a cotação";
+"Sem digitar, usa a cotação guardada no app (funciona sem internet)." = "Sem digitar, usa a cotação guardada no app (funciona sem internet).";

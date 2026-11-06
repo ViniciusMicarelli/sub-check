@@ -189,3 +189,26 @@ final class CostViewTests: XCTestCase {
         XCTAssertEqual(plan.subscriptions, 40, accuracy: 0.001)   // só a que cobra ainda neste mês
     }
 }
+
+@MainActor
+final class VariableSubscriptionPaymentTests: XCTestCase {
+
+    func testRealAmountReplacesTheEstimateAndManualRateIsKept() throws {
+        let container = try ModelContainer(
+            for: SharedModelContainer.schema,
+            configurations: ModelConfiguration(isStoredInMemoryOnly: true, cloudKitDatabase: .none)
+        )
+        let context = ModelContext(container)
+        let sub = Subscription(name: "OpenAI API", cost: 20, currencyCode: "USD",
+                               startDate: Date().addingTimeInterval(-86_400 * 5))
+        sub.billingKind = .variable
+        context.insert(sub)
+
+        let record = PaymentLedger.markPaid(sub, actualAmount: 37.5, manualRate: 5.25, in: context)
+        XCTAssertEqual(record.amount, 37.5, accuracy: 0.001)
+        XCTAssertEqual(sub.cost, 37.5, accuracy: 0.001)            // vira a estimativa seguinte
+        XCTAssertTrue(record.rateIsManual)
+        XCTAssertEqual(record.rateToBase, 5.25, accuracy: 0.0001)
+        XCTAssertNotNil(sub.lastPaymentDate)
+    }
+}

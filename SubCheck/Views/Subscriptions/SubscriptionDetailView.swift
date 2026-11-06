@@ -15,6 +15,7 @@ struct SubscriptionDetailView: View {
 
     @State private var showDeleteConfirmation = false
     @State private var showIconPicker = false
+    @State private var showAmountSheet = false
     /// Sobe a cada pagamento registrado e dispara o selo de sucesso.
     @State private var paidCount = 0
     /// Valor ao abrir a tela, para registrar o reajuste ao sair.
@@ -40,6 +41,13 @@ struct SubscriptionDetailView: View {
         }
         .navigationTitle(subscription.name)
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showAmountSheet) {
+            PaymentAmountSheet(subscription: subscription) { amount, rate in
+                PaymentLedger.markPaid(subscription, actualAmount: amount, manualRate: rate, in: context)
+                Haptics.success()
+                paidCount += 1
+            }
+        }
         .sheet(isPresented: $showIconPicker) {
             IconPickerView(
                 serviceName: subscription.name,
@@ -226,9 +234,13 @@ struct SubscriptionDetailView: View {
     private var paymentsSection: some View {
         Section("Pagamentos") {
             Button {
-                PaymentLedger.markPaid(subscription, in: context)
-                Haptics.success()
-                paidCount += 1
+                if subscription.isVariable {
+                    showAmountSheet = true
+                } else {
+                    PaymentLedger.markPaid(subscription, in: context)
+                    Haptics.success()
+                    paidCount += 1
+                }
             } label: {
                 Label("Registrar pagamento", systemImage: "checkmark.circle")
             }
