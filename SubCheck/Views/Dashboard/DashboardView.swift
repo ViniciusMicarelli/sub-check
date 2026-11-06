@@ -51,7 +51,9 @@ struct DashboardView: View {
         return active.filter { $0.categoryType == selectedCategory }
     }
 
-    private var monthlyTotal: Double { active.monthlyTotal(in: .shared) }
+    @AppStorage(CostView.storageKey) private var costView: CostView = .today
+    private var monthlyTotal: Double { active.monthlyTotal(in: .shared, view: costView) }
+    private var trialMonthly: Double { active.trialMonthlyTotal(in: .shared) }
     private var yearlyTotal: Double { monthlyTotal * 12 }
     private var averageCost: Double { active.isEmpty ? 0 : monthlyTotal / Double(active.count) }
     private var dueSoonCount: Int { active.filter { $0.daysUntilNextBilling <= 7 }.count }
@@ -341,6 +343,28 @@ struct DashboardView: View {
         .cardSurface()
     }
 
+    /// Hoje | Futuro, só aparece quando há teste grátis em curso.
+    private var costViewToggle: some View {
+        HStack(spacing: 2) {
+            ForEach(CostView.allCases) { option in
+                Button {
+                    withAnimation(.snappy) { costView = option }
+                    Haptics.selection()
+                } label: {
+                    Text(option == .today ? L.t("Hoje") : L.t("Futuro"))
+                        .font(.caption2.weight(.semibold))
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
+                        .background(costView == option ? Color.white.opacity(0.28) : .clear, in: Capsule())
+                        .foregroundStyle(.white)
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(2)
+        .background(.white.opacity(0.12), in: Capsule())
+    }
+
     private var heroCard: some View {
         VStack(alignment: .leading, spacing: Spacing.sm) {
             if let greeting = Profile.greeting {
@@ -350,9 +374,13 @@ struct DashboardView: View {
                     .transition(.opacity)
             }
 
-            Text("Total mensal")
-                .font(.subheadline)
-                .foregroundStyle(.white.opacity(0.85))
+            HStack(spacing: Spacing.sm) {
+                Text(costView == .today ? L.t("Total mensal hoje") : L.t("Total mensal no futuro"))
+                    .font(.subheadline)
+                    .foregroundStyle(.white.opacity(0.85))
+                Spacer(minLength: 0)
+                if active.hasActiveTrials { costViewToggle }
+            }
 
             Text(Money.format(monthlyTotal))
                 .font(.system(.largeTitle, design: .rounded, weight: .bold))
@@ -373,6 +401,21 @@ struct DashboardView: View {
             .contentTransition(.numericText())
             .animation(.snappy, value: active.count)
             .padding(.top, Spacing.xs)
+
+            if active.hasActiveTrials {
+                Label(
+                    costView == .today
+                        ? L.t("+ %@/mês quando os testes grátis acabarem", Money.format(trialMonthly))
+                        : L.t("Inclui %@/mês de testes grátis (hoje não cobram)", Money.format(trialMonthly)),
+                    systemImage: "hourglass"
+                )
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.white)
+                .padding(.horizontal, Spacing.md)
+                .padding(.vertical, Spacing.xs)
+                .background(.white.opacity(0.18), in: Capsule())
+                .padding(.top, Spacing.xs)
+            }
 
             if let nextCharge {
                 Label(

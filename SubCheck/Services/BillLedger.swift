@@ -226,9 +226,18 @@ extension MonthPlan {
         let paid = occurrences.filter { $0.status == .paid }.reduce(0) { $0 + $1.amount }
         let pending = occurrences.filter { $0.status != .paid }.reduce(0) { $0 + $1.amount }
 
+        // Um teste grátis que só acaba depois deste mês não é cobrado nele.
+        let reference = month ?? now
+        let monthEnd = calendar.dateInterval(of: .month, for: reference)?.end ?? reference
+        let charged = subscriptions.filter { sub in
+            guard !sub.isCancelled else { return false }
+            if let end = sub.trialEndsAt, end >= monthEnd { return false }
+            return true
+        }
+
         return MonthPlan(
             salary: salary,
-            subscriptions: subscriptions.filter { !$0.isCancelled }.monthlyTotal(in: .shared),
+            subscriptions: charged.monthlyTotal(in: .shared),
             billsPaid: paid,
             billsPending: pending
         )

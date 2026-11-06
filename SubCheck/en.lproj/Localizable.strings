@@ -850,3 +850,8 @@
 "em %lld pagamento(s) neste mês" = "in %lld payment(s) this month";
 "Ver tela" = "Open";
 "Ver todos (%lld)" = "See all (%lld)";
+"Total mensal hoje" = "Monthly total today";
+"Total mensal no futuro" = "Monthly total in the future";
+"Futuro" = "Future";
+"+ %@/mês quando os testes grátis acabarem" = "+ %@/month when the free trials end";
+"Inclui %@/mês de testes grátis (hoje não cobram)" = "Includes %@/month of free trials (not charged today)";

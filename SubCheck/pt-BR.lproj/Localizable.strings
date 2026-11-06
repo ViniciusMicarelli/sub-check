@@ -851,3 +851,8 @@
 "em %lld pagamento(s) neste mês" = "em %lld pagamento(s) neste mês";
 "Ver tela" = "Ver tela";
 "Ver todos (%lld)" = "Ver todos (%lld)";
+"Total mensal hoje" = "Total mensal hoje";
+"Total mensal no futuro" = "Total mensal no futuro";
+"Futuro" = "Futuro";
+"+ %@/mês quando os testes grátis acabarem" = "+ %@/mês quando os testes grátis acabarem";
+"Inclui %@/mês de testes grátis (hoje não cobram)" = "Inclui %@/mês de testes grátis (hoje não cobram)";

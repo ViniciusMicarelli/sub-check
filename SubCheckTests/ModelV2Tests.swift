@@ -146,3 +146,46 @@ final class ModelV2Tests: XCTestCase {
         XCTAssertEqual(try context.fetch(FetchDescriptor<OneOffPayment>()).count, 1)
     }
 }
+
+@MainActor
+final class CostViewTests: XCTestCase {
+
+    private func service() -> CurrencyService {
+        CurrencyService(defaults: UserDefaults(suiteName: "test-\(UUID().uuidString)")!)
+    }
+
+    func testTodayExcludesTrialsAndFutureIncludesThem() {
+        let svc = service()
+        let paid = Subscription(name: "Netflix", cost: 50, currencyCode: svc.baseCode)
+        let trial = Subscription(name: "Cursor", cost: 100, currencyCode: svc.baseCode,
+                                 trialEndsAt: Date().addingTimeInterval(86_400 * 5))
+        let all = [paid, trial]
+
+        XCTAssertTrue(trial.isInTrial)
+        XCTAssertFalse(paid.isInTrial)
+        XCTAssertEqual(all.monthlyTotal(in: svc, view: .today), 50, accuracy: 0.001)
+        XCTAssertEqual(all.monthlyTotal(in: svc, view: .future), 150, accuracy: 0.001)
+        XCTAssertEqual(all.trialMonthlyTotal(in: svc), 100, accuracy: 0.001)
+        XCTAssertTrue(all.hasActiveTrials)
+    }
+
+    func testFinishedTrialCountsAsToday() {
+        let svc = service()
+        let ended = Subscription(name: "X", cost: 30, currencyCode: svc.baseCode,
+                                 trialEndsAt: Date().addingTimeInterval(-86_400 * 2))
+        XCTAssertFalse(ended.isInTrial)
+        XCTAssertEqual([ended].monthlyTotal(in: svc, view: .today), 30, accuracy: 0.001)
+    }
+
+    func testMonthPlanIgnoresTrialsThatEndAfterTheMonth() {
+        let cal = Calendar(identifier: .gregorian)
+        let now = cal.date(from: DateComponents(year: 2026, month: 11, day: 6, hour: 12))!
+        let svc = CurrencyService.shared
+        let later = Subscription(name: "Later", cost: 100, currencyCode: svc.baseCode,
+                                 trialEndsAt: cal.date(from: DateComponents(year: 2026, month: 12, day: 3)))
+        let soon = Subscription(name: "Soon", cost: 40, currencyCode: svc.baseCode,
+                                trialEndsAt: cal.date(from: DateComponents(year: 2026, month: 11, day: 20)))
+        let plan = MonthPlan.make(salary: 1000, subscriptions: [later, soon], bills: [], entries: [], now: now, calendar: cal)
+        XCTAssertEqual(plan.subscriptions, 40, accuracy: 0.001)   // só a que cobra ainda neste mês
+    }
+}

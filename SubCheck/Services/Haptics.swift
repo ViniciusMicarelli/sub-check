@@ -19,6 +19,10 @@ enum Haptics {
         #endif
     }
 
+    static func selection() {
+        UISelectionFeedbackGenerator().selectionChanged()
+    }
+
     static func success() {
         #if canImport(UIKit)
         UINotificationFeedbackGenerator().notificationOccurred(.success)
